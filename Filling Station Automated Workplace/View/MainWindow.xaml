@@ -8,6 +8,7 @@
     x:Name="_MainWindow"
     x:Class="Filling_Station_Automated_Workplace.View.MainWindow"
     xmlns:uc="clr-namespace:Filling_Station_Automated_Workplace.View"
+    Closed="MainWindow_OnClosed"
     mc:Ignorable="d"
     Title="АРМ оператора АЗС"
     FontFamily="Bahnschrift" FontSize="18"
@@ -16,238 +17,7 @@
     Width="1320" Height="760" ResizeMode="CanResizeWithGrip"
     WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow">
 
-    <Window.Resources>
-
-        <!-- Flat ComboBox -->
-        <SolidColorBrush x:Key="ComboBoxNormalBorderBrush" Color="#A5D6A7" />
-        <SolidColorBrush x:Key="ComboBoxNormalBackgroundBrush" Color="#C8E6C9" />
-        <SolidColorBrush x:Key="ComboBoxDisabledForegroundBrush" Color="#66BB6A" />
-        <SolidColorBrush x:Key="ComboBoxDisabledBackgroundBrush" Color="#C8E6C9" />
-        <SolidColorBrush x:Key="ComboBoxDisabledBorderBrush" Color="#66BB6A" />
-
-        <ControlTemplate TargetType="ToggleButton" x:Key="ComboBoxToggleButtonTemplate">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="20" />
-                </Grid.ColumnDefinitions>
-                <Border Grid.ColumnSpan="2" Name="Border"
-                        BorderBrush="{StaticResource ComboBoxNormalBorderBrush}"
-                        CornerRadius="4" BorderThickness="3"
-                        Background="{StaticResource ComboBoxNormalBackgroundBrush}" />
-                <Border Grid.Column="1" Margin="0" Name="ButtonBorder"
-                        CornerRadius="0" BorderThickness="3, 3, 3, 3"
-                        Background="{StaticResource ComboBoxNormalBackgroundBrush}" />
-
-                <Path Name="Arrow" Grid.Column="1"
-                      Data="M0,0 L0,2 L4,6 L8,2 L8,0 L4,4 z"
-                      HorizontalAlignment="Center" Fill="Gray"
-                      VerticalAlignment="Center" />
-            </Grid>
-            <ControlTemplate.Triggers>
-                <Trigger Property="UIElement.IsMouseOver" Value="True">
-                    <Setter Property="Panel.Background" TargetName="ButtonBorder" Value="#C8E6C9" />
-                </Trigger>
-                <Trigger Property="ToggleButton.IsChecked" Value="True">
-                    <Setter Property="Panel.Background" TargetName="ButtonBorder" Value="#C8E6C9" />
-                    <Setter Property="Shape.Fill" TargetName="Arrow" Value="#FF4CAF50" />
-                </Trigger>
-                <Trigger Property="UIElement.IsEnabled" Value="False">
-                    <Setter Property="Panel.Background" TargetName="Border"
-                            Value="{StaticResource ComboBoxDisabledBackgroundBrush}" />
-                    <Setter Property="Panel.Background" TargetName="ButtonBorder"
-                            Value="{StaticResource ComboBoxDisabledBackgroundBrush}" />
-                    <Setter Property="Border.BorderBrush" TargetName="ButtonBorder"
-                            Value="{StaticResource ComboBoxDisabledBorderBrush}" />
-                    <Setter Property="TextElement.Foreground" Value="{StaticResource ComboBoxDisabledForegroundBrush}" />
-                    <Setter Property="Shape.Fill" TargetName="Arrow" Value="#4CAF50" />
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
-
-
-        <Style TargetType="{x:Type ComboBox}">
-            <Setter Property="IsEditable" Value="False" />
-            <Setter Property="IsTextSearchEnabled" Value="True" />
-            <Setter Property="IsTextSearchCaseSensitive" Value="False" />
-            <Setter Property="MinWidth" Value="100" />
-            <Setter Property="Margin" Value="3" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-
-            <Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
-            <Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
-            <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
-            <Setter Property="TextElement.Foreground" Value="#1B5E20" />
-            <Setter Property="IsDropDownOpen" Value="False" />
-
-            <Setter Property="FrameworkElement.FocusVisualStyle" Value="{x:Null}" />
-            <Setter Property="Control.Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ComboBox">
-                        <Grid>
-                            <ToggleButton Name="ToggleButton" Grid.Column="2"
-                                          ClickMode="Press" Focusable="False"
-                                          IsChecked="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-                                          Template="{StaticResource ComboBoxToggleButtonTemplate}" />
-
-                            <ContentPresenter Name="ContentSite" Margin="5, 3, 23, 3" IsHitTestVisible="False"
-                                              HorizontalAlignment="Left" VerticalAlignment="Center"
-                                              Content="{TemplateBinding ComboBox.SelectionBoxItem}"
-                                              ContentTemplate="{TemplateBinding ComboBox.SelectionBoxItemTemplate}"
-                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" />
-                            <TextBox Name="PART_EditableTextBox" Margin="3, 3, 23, 3"
-                                     IsReadOnly="{TemplateBinding IsReadOnly}"
-                                     Visibility="Hidden" Background="Transparent"
-                                     HorizontalAlignment="Left" VerticalAlignment="Center"
-                                     Focusable="True">
-                                <TextBox.Template>
-                                    <ControlTemplate TargetType="TextBox">
-                                        <Border Name="PART_ContentHost" CornerRadius="4" Focusable="False" />
-                                    </ControlTemplate>
-                                </TextBox.Template>
-                            </TextBox>
-                            <!-- Popup showing items -->
-                            <Popup Name="Popup" Placement="Bottom"
-                                   Focusable="False" AllowsTransparency="True"
-                                   IsOpen="{TemplateBinding ComboBox.IsDropDownOpen}"
-                                   PopupAnimation="Slide">
-                                <Grid Name="DropDown" SnapsToDevicePixels="True"
-                                      MinWidth="{TemplateBinding FrameworkElement.ActualWidth}"
-                                      MaxHeight="{TemplateBinding ComboBox.MaxDropDownHeight}" Background="#C8E6C9">
-                                    <Border Name="DropDownBorder" Background="#C8E6C9" Margin="0, 1, 0, 0"
-                                            CornerRadius="4" BorderThickness="0"
-                                            BorderBrush="{StaticResource ComboBoxNormalBorderBrush}" />
-                                    <ScrollViewer Margin="4" SnapsToDevicePixels="True">
-                                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
-                                    </ScrollViewer>
-                                </Grid>
-                            </Popup>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="ItemsControl.HasItems" Value="False">
-                                <Setter Property="FrameworkElement.MinHeight" TargetName="DropDownBorder" Value="95" />
-                            </Trigger>
-                            <Trigger Property="UIElement.IsEnabled" Value="False">
-                                <Setter Property="TextElement.Foreground"
-                                        Value="{StaticResource ComboBoxDisabledForegroundBrush}" />
-                            </Trigger>
-                            <Trigger Property="ItemsControl.IsGrouping" Value="True">
-                                <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
-                            </Trigger>
-                            <Trigger Property="ComboBox.IsEditable" Value="True">
-                                <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
-                                <Setter Property="UIElement.Visibility" TargetName="PART_EditableTextBox"
-                                        Value="Visible" />
-                                <Setter Property="UIElement.Visibility" TargetName="ContentSite" Value="Hidden" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Foreground" Value="#FF1B5E20" />
-            <Setter Property="Background" Value="#FFC8E6C9" />
-            <Setter Property="BorderBrush" Value="#FFC8E6C9" />
-            <Setter Property="SelectionBrush" Value="#FF2E7D32" />
-            <Setter Property="SelectionTextBrush" Value="#FFC8E6C9" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="AutoWordSelection" Value="True" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TextBox">
-
-                        <Grid x:Name="RootElement">
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal" />
-                                    <VisualState x:Name="MouseOver" />
-                                    <VisualState x:Name="Disabled">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="0" To="0.55" Storyboard.TargetProperty="Opacity"
-                                                             Storyboard.TargetName="DisabledVisualElement" />
-                                            <DoubleAnimation Duration="0" To="0.5"
-                                                             Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                             Storyboard.TargetName="PART_ContentHost" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="ReadOnly">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="0" To="0.55" Storyboard.TargetProperty="Opacity"
-                                                             Storyboard.TargetName="ReadOnlyVisualElement" />
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                                <VisualStateGroup x:Name="FocusStates">
-                                    <VisualState x:Name="Focused">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="0" Storyboard.TargetName="FocusVisualElement"
-                                                             Storyboard.TargetProperty="(FrameworkElement.Opacity)"
-                                                             To="1" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Unfocused" />
-                                </VisualStateGroup>
-                                <VisualStateGroup x:Name="ValidationStates">
-                                    <VisualState x:Name="Valid" />
-                                    <VisualState x:Name="InvalidUnfocused">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
-                                                                           Storyboard.TargetName="ValidationErrorElement">
-                                                <DiscreteObjectKeyFrame KeyTime="0"
-                                                                        Value="{x:Static Visibility.Visible}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            <Border x:Name="Border" Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                    CornerRadius="5" Opacity="1">
-                                <Grid>
-                                    <Border x:Name="ReadOnlyVisualElement"
-                                            CornerRadius="8" Opacity="0" Margin="0,0,-14,0" />
-                                    <ScrollViewer x:Name="PART_ContentHost" Foreground="{TemplateBinding Foreground}"
-                                                  BorderThickness="0" IsTabStop="False" Margin="1"
-                                                  Padding="{TemplateBinding Padding}" />
-                                </Grid>
-                            </Border>
-
-
-                            <Border x:Name="DisabledVisualElement" Background="Black"
-                                    IsHitTestVisible="False" Margin="1" Opacity="0" CornerRadius="20" />
-                            <Rectangle x:Name="FocusVisualElement" IsHitTestVisible="False" Margin="2" Opacity="0"
-                                       RadiusX="20"
-                                       RadiusY="20"
-                                       StrokeThickness="1,1,1,1" />
-                            <Border x:Name="ValidationErrorElement" BorderBrush="Crimson" BorderThickness="1"
-                                    CornerRadius="30" Visibility="Collapsed">
-                                <Grid Background="Transparent" HorizontalAlignment="Right" Height="12"
-                                      Margin="1,-4,-4,0"
-                                      VerticalAlignment="Top" Width="12">
-                                    <Path Data="M 1,0 L6,0 A 2,2 90 0 1 8,2 L8,7 z" Fill="Crimson"
-                                          Margin="1,3,0,0" />
-                                </Grid>
-                            </Border>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="Button">
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="5" />
-                </Style>
-            </Style.Resources>
-        </Style>
-    </Window.Resources>
+   
 
 
     <Window.Background>
@@ -268,7 +38,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel x:Name="Footer" HorizontalAlignment="Center" Height="50" VerticalAlignment="Bottom"
                     Orientation="Horizontal" Grid.Row="1" Width="1260" Grid.ColumnSpan="2">
-            <Grid x:Name="userTypeFoot" HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" Width="250"
+            <Grid x:Name="UserTypeFoot" HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" Width="250"
                   VerticalAlignment="Top">
                 <Rectangle Fill="#FF1B5E20" RadiusX="10" RadiusY="10">
                     <Rectangle.DataContext>
@@ -279,7 +49,7 @@
                 <Label Content="Администратор" Foreground="#FFE8F5E9" HorizontalAlignment="Center"
                        Background="{x:Null}" />
             </Grid>
-            <Grid x:Name="nameFoot" Height="30" Width="400" Margin="10,10,0,0" HorizontalAlignment="Left"
+            <Grid x:Name="NameFoot" Height="30" Width="400" Margin="10,10,0,0" HorizontalAlignment="Left"
                   VerticalAlignment="Top">
                 <Rectangle Fill="#FF1B5E20" RadiusX="10" RadiusY="10">
                     <Rectangle.DataContext>
@@ -290,7 +60,7 @@
                 <Label Content="Кашаев Аскер Муратович" Foreground="#FFE8F5E9" HorizontalAlignment="Center"
                        Margin="10,0,0,0" />
             </Grid>
-            <Grid x:Name="shiftPersonFoot" Height="30" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top"
+            <Grid x:Name="ShiftPersonFoot" Height="30" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top"
                   Margin="10,10,10,10">
                 <Rectangle Fill="#FF1B5E20" RadiusX="10" RadiusY="10">
                     <Rectangle.DataContext>
@@ -298,18 +68,18 @@
                     </Rectangle.DataContext>
 
                 </Rectangle>
-                <TextBlock Name="shiftTime" Foreground="#FFE8F5E9" HorizontalAlignment="Center" Padding="0,5,0,0" />
+                <TextBlock Name="ShiftTime" Foreground="#FFE8F5E9" HorizontalAlignment="Center" Padding="0,5,0,0" />
             </Grid>
-            <Grid x:Name="currDateFoot" Height="30" Width="200">
+            <Grid x:Name="CurrDateFoot" Height="30" Width="200">
                 <Rectangle Fill="#FF1B5E20" RadiusX="10" RadiusY="10">
                     <Rectangle.DataContext>
                         <ComponentModel:Win32Exception />
                     </Rectangle.DataContext>
 
                 </Rectangle>
-                <TextBlock Name="dateTime" Foreground="#FFE8F5E9" HorizontalAlignment="Center" Padding="0,5,0,0" />
+                <TextBlock Name="DateTimeFoot" Foreground="#FFE8F5E9" HorizontalAlignment="Center" Padding="0,5,0,0" />
             </Grid>
-            <Grid x:Name="currTimeFoot" Height="30" Width="110" HorizontalAlignment="Left" VerticalAlignment="Top"
+            <Grid x:Name="CurrTimeFoot" Height="30" Width="110" HorizontalAlignment="Left" VerticalAlignment="Top"
                   Margin="10,10,0,0">
                 <Rectangle Fill="#FF1B5E20" RadiusX="10" RadiusY="10">
                     <Rectangle.DataContext>
@@ -319,7 +89,7 @@
                 </Rectangle>
                 <TextBlock Name="CurrentTime" Foreground="#FFE8F5E9" HorizontalAlignment="Center" Padding="0,5,0,0" />
             </Grid>
-            <Grid x:Name="langFoot" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10,10,10,0"
+            <Grid x:Name="LangFoot" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10,10,10,0"
                   Width="40">
                 <Rectangle Height="30" VerticalAlignment="Top" Width="40" Fill="#FFC8E6C9" RadiusX="10" RadiusY="10"
                            StrokeThickness="0">
@@ -367,10 +137,10 @@
                 </WrapPanel>
             </Canvas>
         </Viewbox>
-        <Viewbox x:Name="MainMenuBorderViewBox" Grid.Column="1" Margin="0,10,0,10" HorizontalAlignment="Right">
+        <Viewbox x:Name="MainMenuBorderViewBox" Grid.Row="0" Grid.Column="1" Margin="0,10,0,10" HorizontalAlignment="Right">
             <Grid x:Name="MainMenuBorder" HorizontalAlignment="Center" Height="654" VerticalAlignment="Top" Width="432"
                   Margin="10,10,0,10">
-                <Rectangle x:Name="borderOfMainMenu" Fill="#FF1B5E20" RadiusX="10" RadiusY="10" Width="427"
+                <Rectangle x:Name="BorderOfMainMenu" Fill="#FF1B5E20" RadiusX="10" RadiusY="10" Width="427"
                            Height="655" Margin="-4,0,0,0">
                     <Rectangle.DataContext>
                         <ComponentModel:Win32Exception />
@@ -379,35 +149,35 @@
                 </Rectangle>
                 <StackPanel x:Name="MainMenu" Height="654" Width="427" HorizontalAlignment="Left"
                             VerticalAlignment="Center">
-                    <Grid x:Name="feeTypeMainMenu" Height="80" VerticalAlignment="Top" Margin="10,10,10,0"
+                    <Grid x:Name="FeeTypeMainMenu" Height="80" VerticalAlignment="Top" Margin="10,10,10,0"
                           UseLayoutRounding="False" IsManipulationEnabled="True">
-                        <Rectangle x:Name="border_Copy3" Fill="#FFC8E6C9" RadiusX="10" RadiusY="10">
+                        <Rectangle Fill="#FFC8E6C9" RadiusX="10" RadiusY="10">
                             <Rectangle.DataContext>
                                 <ComponentModel:Win32Exception />
                             </Rectangle.DataContext>
 
                         </Rectangle>
-                        <Path x:Name="header"
+                        <Path 
                               Data="M4.9999986,0 L402,0 C404.76141,1.5199184E-06 407,2.2385777 407,4.9999987 L407,22 0,22 0,4.9999987 C0,2.2385777 2.2385762,1.5199184E-06 4.9999986,0 z"
                               Fill="#FF66BB6A" HorizontalAlignment="Center" Height="22" Stretch="Fill"
                               VerticalAlignment="Top" Width="407" />
                         <Label Content="вид оплаты" VerticalAlignment="Top" HorizontalContentAlignment="Center"
                                Padding="0,0,0,0" Grid.IsSharedSizeScope="True" Background="{x:Null}"
                                Foreground="#FFE8F5E9" />
-                        <ComboBox x:Name="comboBox" Height="39" Margin="10,30,10,0" SelectedIndex="0" FontSize="30"
+                        <ComboBox x:Name="PaymentTypeComboBox" Height="39" Margin="10,30,10,0" SelectedIndex="0" FontSize="30"
                                   VerticalAlignment="Top" Foreground="#FF1B5E20" FontStretch="SemiCondensed">
                             <ComboBoxItem Content="Пластиковая карта" />
                             <ComboBoxItem Content="Наличные" />
                         </ComboBox>
                     </Grid>
-                    <Grid x:Name="fuelInfoMainMenu" Height="80" Margin="10,10,10,0">
-                        <Rectangle x:Name="border_Copy" Fill="#FFC8E6C9" RadiusX="10" RadiusY="10" Margin="0,0,0,-2">
+                    <Grid x:Name="FuelInfoMainMenu" Height="80" Margin="10,10,10,0">
+                        <Rectangle Fill="#FFC8E6C9" RadiusX="10" RadiusY="10" Margin="0,0,0,-2">
                             <Rectangle.DataContext>
                                 <ComponentModel:Win32Exception />
                             </Rectangle.DataContext>
 
                         </Rectangle>
-                        <Path x:Name="header_Copy3"
+                        <Path 
                               Data="M4.9999986,0 L402,0 C404.76141,1.5199184E-06 407,2.2385777 407,4.9999987 L407,22 0,22 0,4.9999987 C0,2.2385777 2.2385762,1.5199184E-06 4.9999986,0 z"
                               Fill="#FF66BB6A" HorizontalAlignment="Center" Height="22" Stretch="Fill"
                               VerticalAlignment="Top" Width="407" />
@@ -421,14 +191,14 @@
                                    FontStretch="SemiCondensed">
                             <Run Text="П" /><Run Language="ru-ru" Text="ОСТ" /><Run Text=" 1" />
                         </TextBlock>
-                        <TextBlock x:Name="PickedNozzle_Copy" TextAlignment="Left" Height="21"
+                        <TextBlock x:Name="PickedNozzleFuel" TextAlignment="Left" Height="21"
                                    VerticalAlignment="Bottom" Width="187" FontSize="20" HorizontalAlignment="Left"
                                    Foreground="#FF1B5E20" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0"
                                    FontStretch="ExtraExpanded" Margin="15,0,0,5">
                             <Run Text="АИ-92" /><Run />
                         </TextBlock>
-                        <TextBlock x:Name="PickedNozzle_Copy1" TextAlignment="Right" Height="38"
+                        <TextBlock x:Name="PickedNozzleSummaryPrice" TextAlignment="Right" Height="38"
                                    VerticalAlignment="Bottom" Width="203" FontSize="30" HorizontalAlignment="Right"
                                    Margin="0,0,15,9" Foreground="#FF1B5E20"
                                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -437,14 +207,14 @@
                             <Run Text="5 208.0" /><Run Language="ru-ru" Text="0" />
                         </TextBlock>
                     </Grid>
-                    <Grid x:Name="goodsMainMenu" Height="300" Margin="10,10,10,0" VerticalAlignment="Top">
-                        <Rectangle x:Name="border_Copy1" Fill="#FFC8E6C9" RadiusX="10" RadiusY="10" Margin="0,0,0,-5">
+                    <Grid x:Name="GoodsMainMenu" Height="300" Margin="10,10,10,0" VerticalAlignment="Top">
+                        <Rectangle Fill="#FFC8E6C9" RadiusX="10" RadiusY="10" Margin="0,0,0,-5">
                             <Rectangle.DataContext>
                                 <ComponentModel:Win32Exception />
                             </Rectangle.DataContext>
 
                         </Rectangle>
-                        <Path x:Name="header_Copy2"
+                        <Path 
                               Data="M4.9999986,0 L402,0 C404.76141,1.5199184E-06 407,2.2385777 407,4.9999987 L407,22 0,22 0,4.9999987 C0,2.2385777 2.2385762,1.5199184E-06 4.9999986,0 z"
                               Fill="#FF66BB6A" HorizontalAlignment="Center" Height="22" Stretch="Fill"
                               VerticalAlignment="Top" Width="407" />
@@ -454,16 +224,16 @@
                         <Path Data="M240.18433,162.65637 L72.960022,162.65637" HorizontalAlignment="Left" Height="1"
                               Margin="10,0,0,40" Stroke="#FF1B5E20" Stretch="Fill" VerticalAlignment="Bottom"
                               Width="387" />
-                        <TextBlock x:Name="PickedNozzle_Copy2" TextAlignment="Right" Height="38"
+                        <TextBlock x:Name="GoodsSummaryTextBlock" TextAlignment="Right" Height="38"
                                    VerticalAlignment="Bottom" Width="203" FontSize="30" HorizontalAlignment="Right"
                                    Margin="0,0,15,-2" Foreground="#FF1B5E20"
                                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0"
                                    FontStretch="SemiCondensed" Text="Сумма: 2 022.88" />
-                        <Button x:Name="FullLiter_Copy" Content="добавить товар" HorizontalAlignment="Left" Height="30"
+                        <Button x:Name="AddGoodsButton" Content="добавить товар" HorizontalAlignment="Left" Height="30"
                                 Margin="10,0,0,3" VerticalAlignment="Bottom" Width="160" Background="#FFA5D6A7"
-                                BorderBrush="#FF388E3C" Foreground="#FF1B5E20" BorderThickness="0,0,0,0" />
-                        <DataGrid RowHeaderWidth="0" x:Name="grid" Margin="10,33,10,51" Background="#FFC8E6C9"
+                                BorderBrush="#FF388E3C" Foreground="#FF1B5E20" BorderThickness="0,0,0,0" Click="AddGoodsButton_OnClick" />
+                        <DataGrid RowHeaderWidth="0" x:Name="GoodsMainMenuGrid" Margin="10,33,10,51" Background="#FFC8E6C9"
                                   BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" Loaded="grid_Loaded"
                                   GridLinesVisibility="None" IsReadOnly="True">
                             <DataGrid.ColumnHeaderStyle>
@@ -487,14 +257,14 @@
                             </DataGrid.RowStyle>
                         </DataGrid>
                     </Grid>
-                    <Grid x:Name="totalInfoMainMenu" Height="145" VerticalAlignment="Top" Margin="10,10,10,0">
-                        <Rectangle x:Name="border_Copy2" Fill="#FFC8E6C9" RadiusX="10" RadiusY="10">
+                    <Grid x:Name="TotalInfoMainMenu" Height="145" VerticalAlignment="Top" Margin="10,10,10,0">
+                        <Rectangle Fill="#FFC8E6C9" RadiusX="10" RadiusY="10">
                             <Rectangle.DataContext>
                                 <ComponentModel:Win32Exception />
                             </Rectangle.DataContext>
 
                         </Rectangle>
-                        <Path x:Name="header_Copy"
+                        <Path 
                               Data="M4.9999986,0 L402,0 C404.76141,1.5199184E-06 407,2.2385777 407,4.9999987 L407,22 0,22 0,4.9999987 C0,2.2385777 2.2385762,1.5199184E-06 4.9999986,0 z"
                               Fill="#FF66BB6A" HorizontalAlignment="Center" Height="22" Stretch="Fill"
                               VerticalAlignment="Top" Width="407" />
@@ -533,7 +303,7 @@
                                  FontSize="20" TextWrapping="WrapWithOverflow" HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Disabled"
                                  BorderThickness="3,3,3,3" MaxLength="4" Focusable="False" />
-                        <Button x:Name="FullLiter_Copy1" Content="ОПЛАТА" HorizontalAlignment="Right" Height="63"
+                        <Button x:Name="FinishPaymentButton" Content="ОПЛАТА" HorizontalAlignment="Right" Height="63"
                                 Margin="0,0,17,7" VerticalAlignment="Bottom" Width="130" Background="#FF66BB6A"
                                 BorderBrush="#FF388E3C" Foreground="#FFE8F5E9" BorderThickness="0,0,0,0" FontSize="28"
                                 VerticalContentAlignment="Center" RenderTransformOrigin="0.5,0.5" />

@@ -17,6 +17,14 @@
       <Content Include="Assets\gas_station.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <None Remove="Assets\Goods.csv" />
+      <Content Include="Assets\Goods.csv">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="ViewModel" />
     </ItemGroup>
 
 </Project>

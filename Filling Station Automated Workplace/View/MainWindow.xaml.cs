@@ -54,9 +54,11 @@ namespace Filling_Station_Automated_Workplace.View
             result.Add(new MyTable(3123, "Киндер Сюрприз", 1, 99.90));
             result.Add(new MyTable(3012, "Шоколад Алёнка 100гр", 3, 119.50));
             result.Add(new MyTable(2165, "Аптечка автомобильная Аполо ", 1, 999));
-            grid.ItemsSource = result;
+            GoodsMainMenuGrid.ItemsSource = result;
         }
-
+        
+        //Init GoodSelector window
+        GoodsSelector _goodsSelector = new GoodsSelector();
         public MainWindow()
         {
             InitializeComponent();
@@ -66,6 +68,8 @@ namespace Filling_Station_Automated_Workplace.View
             _timer.Tick += new EventHandler(_timer_Tick);
             _timer.Interval = new TimeSpan(0, 0, 1);
             _timer.Start();
+            
+            
 
 
         }
@@ -73,12 +77,12 @@ namespace Filling_Station_Automated_Workplace.View
         private void _timer_Tick(object sender, EventArgs e)
         {
             // Updating the Label which displays the current second
-            dateTime.Text = DateTime.Now.ToString("D");
+            DateTimeFoot.Text = DateTime.Now.ToString("D");
             CurrentTime.Text = DateTime.Now.ToString("H:mm:ss");
 
             // updating onsession timer
             _sessionTime = _sessionTime.AddSeconds(1);
-            shiftTime.Text = String.Format("Смена открыта: {0}", _sessionTime.ToString("H:mm"));
+            ShiftTime.Text = $"Смена открыта: {_sessionTime.ToString("H:mm")}";
 
             // Forcing the CommandManager to raise the RequerySuggested event
             CommandManager.InvalidateRequerySuggested();
@@ -99,6 +103,16 @@ namespace Filling_Station_Automated_Workplace.View
         {
 
             return !_regex.IsMatch(text);
+        }
+
+        private void AddGoodsButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _goodsSelector.Show();
+        }
+
+        private void MainWindow_OnClosed(object? sender, EventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }
