@@ -1,33 +1,31 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Reflection;
 using Microsoft.VisualBasic.FileIO;
 
 namespace Filling_Station_Automated_Workplace.Model;
 
-public class Goods
+public static
+class GoodsData
 {
-    public static readonly DataTable DataTable = GetDataTabletFromCsvFile(System.Reflection.Assembly.GetExecutingAssembly().Location + @"\Assets\Goods.csv");
-
-    private Goods()
-    {
-        
-        
-        
-    }
+    public static DataTable GoodsDataTable { get; } = GetDataTabletFromCsvFile(
+        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\Goods.csv");
 
     private static DataTable GetDataTabletFromCsvFile(string csvFilePath)
     {
         var csvData = new DataTable();
         try
         {
-            using TextFieldParser csvReader = new TextFieldParser(csvFilePath);
+            using var csvReader = new TextFieldParser(csvFilePath);
             csvReader.SetDelimiters(new string[] { ";" });
             csvReader.HasFieldsEnclosedInQuotes = true;
             var colFields = csvReader.ReadFields();
             if (colFields != null)
                 foreach (var column in colFields)
                 {
-                    DataColumn dateColumn = new DataColumn(column);
+                    var dateColumn = new DataColumn(column);
                     dateColumn.AllowDBNull = true;
                     csvData.Columns.Add(dateColumn);
                 }

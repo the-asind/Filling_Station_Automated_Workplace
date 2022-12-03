@@ -1,6 +1,7 @@
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -32,15 +33,20 @@ namespace Filling_Station_Automated_Workplace.View
 
         }
         
+        private void MovingWindow(object sender, RoutedEventArgs e)
+        {
+            this.DragMove();
+        }
+        
         void Window_Deactivated(object sender, EventArgs e)
         {
             Hide();
         }
+        
         public GoodsSelector()
         {
             InitializeComponent();
-            
-            GoodsGrid.ItemsSource = Goods.DataTable.DefaultView;
+            GoodsGrid.ItemsSource = GoodsData.GoodsDataTable.DefaultView;
             ShoppingCartGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
             GoodsGrid.GridLinesVisibility = DataGridGridLinesVisibility.All;
         }
@@ -61,23 +67,51 @@ namespace Filling_Station_Automated_Workplace.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Попробуйте снова, иначе, обратитесь к техническому специалисту\n"+ex.Message, "Возникла ошибка при выборе товарной позиции");
+                MessageBox.Show("Попробуйте снова, иначе обратитесь к техническому специалисту\n"+ex.Message, "Возникла ошибка при выборе товарной позиции");
             }
 
         }
 
-        
-
         private void CancelButton_OnClick(object sender, RoutedEventArgs e)
         {
-            Hide();
+            Close();
         }
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
         }
-    }
+        
+        private void SearchGoodsTextBox_OnTextChanged(object sender, TextChangedEventArgs e) 
+        {
+            var t = (TextBox) sender;
+            var filterText = t.Text.ToLower();
 
-    
+            if (filterText == "")
+            {
+                GoodsGrid.ItemsSource = GoodsData.GoodsDataTable.DefaultView;
+                return;
+            }
+
+            try
+            {
+                var dataTableFiltered = GoodsData.GoodsDataTable.AsEnumerable()
+                    .Where(row => row.Field<string>("Name")!.ToLower().Contains(filterText))
+                    .OrderByDescending(row => row.Field<string>("Id"))
+                    .CopyToDataTable();
+            
+                GoodsGrid.ItemsSource = dataTableFiltered.DefaultView;
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        private void SearchGoodsTextBox_OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            var t = (TextBox) sender;
+            t.Text = "";
+        }
+    }
 }
