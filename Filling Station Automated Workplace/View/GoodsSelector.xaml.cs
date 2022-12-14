@@ -1,7 +1,9 @@
 using System;
 using System.Data;
+using System.Reflection.Metadata;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using Filling_Station_Automated_Workplace.Model;
 using Filling_Station_Automated_Workplace.ViewModel;
@@ -13,8 +15,6 @@ namespace Filling_Station_Automated_Workplace.View;
 /// </summary>
 public partial class GoodsSelector
 {
-    private readonly Receipt _receipt = new();
-
     public class GoodsGridData
     {
         public GoodsGridData(int id, string name, int count, double price)
@@ -48,7 +48,7 @@ public partial class GoodsSelector
     {
         InitializeComponent();
         GoodsGrid.ItemsSource = GoodsData.GoodsDataTable.DefaultView;
-        _shoppingCartGoodsTable = ShoppingCartGoodsTable.Update();
+        _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
         ShoppingCartGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
         GoodsGrid.GridLinesVisibility = DataGridGridLinesVisibility.All;
     }
@@ -64,8 +64,8 @@ public partial class GoodsSelector
 
             var itemId = int.Parse(Convert.ToString(dr1?.ItemArray[0]) ?? throw new InvalidOperationException());
 
-            _receipt.AddIdToCommodityItem(itemId);
-            _shoppingCartGoodsTable = ShoppingCartGoodsTable.Update(_receipt);
+            CurrentReceipt.Receipt.AddIdToCommodityItem(itemId);
+            _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
             ShoppingCartGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
         }
         catch (Exception ex)
@@ -74,12 +74,7 @@ public partial class GoodsSelector
                 "Возникла ошибка при выборе товарной позиции");
         }
     }
-
-    private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
+    
     private void SearchGoodsTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {
         var t = (TextBox)sender;
@@ -111,4 +106,38 @@ public partial class GoodsSelector
         var t = (TextBox)sender;
         t.Text = "";
     }
+
+    private void ShoppingCartGrid_OnCellEditEnding(object? sender, DataGridCellEditEndingEventArgs e)
+    {
+        DataGrid dataGrid = sender as DataGrid;
+        DataGridColumn column = e.Column;
+
+        string value = (e.EditingElement as TextBox)?.Text;
+        int count = int.Parse(value);
+        
+        // Get the index of the edited row
+        int index = dataGrid.ItemContainerGenerator.IndexFromContainer(e.Row);
+        
+        _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
+
+        DataRow row = _shoppingCartGoodsTable.Rows[index];
+        object[] values = row.ItemArray;
+        int id = (int)values[0];
+
+        try
+        {
+            CurrentReceipt.Receipt.ChangeCountById(id, count);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
+        _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
+        ShoppingCartGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
+        
+        
+        
+        
+    }
 }
+
