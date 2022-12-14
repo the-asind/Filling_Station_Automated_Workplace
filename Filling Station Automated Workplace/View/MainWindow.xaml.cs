@@ -43,6 +43,7 @@ namespace Filling_Station_Automated_Workplace.View
             public int Count { get; set; }
             public double Price { get; set; }
         }
+        
 
         //Добавим информацию в таблицу
         private void grid_Loaded(object sender, RoutedEventArgs e)
@@ -57,21 +58,17 @@ namespace Filling_Station_Automated_Workplace.View
             GoodsMainMenuGrid.ItemsSource = result;
         }
         
-        //Init GoodSelector window
-        GoodsSelector _goodsSelector = new GoodsSelector();
         public MainWindow()
         {
             InitializeComponent();
+            
+            
 
             //  DispatcherTimer setup
             _timer = new System.Windows.Threading.DispatcherTimer();
             _timer.Tick += new EventHandler(_timer_Tick);
             _timer.Interval = new TimeSpan(0, 0, 1);
             _timer.Start();
-            
-            
-
-
         }
 
         private void _timer_Tick(object sender, EventArgs e)
@@ -107,7 +104,11 @@ namespace Filling_Station_Automated_Workplace.View
 
         private void AddGoodsButton_OnClick(object sender, RoutedEventArgs e)
         {
-            _goodsSelector.Show();
+            // Create a new instance of the GoodsSelector window
+            GoodsSelector goodsSelector = new GoodsSelector();
+
+            // Show the window
+            goodsSelector.ShowDialog();
         }
 
         private void MainWindow_OnClosed(object? sender, EventArgs e)
