@@ -229,7 +229,7 @@
                                    Margin="0,0,15,-2" Foreground="#FF1B5E20"
                                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0"
-                                   FontStretch="SemiCondensed" Text="Сумма: 2 022.88" />
+                                   FontStretch="SemiCondensed" Text="Сумма: 0.00" />
                         <Button x:Name="AddGoodsButton" Content="добавить товар" HorizontalAlignment="Left" Height="30"
                                 Margin="10,0,0,3" VerticalAlignment="Bottom" Width="160" Background="#FFA5D6A7"
                                 BorderBrush="#FF388E3C" Foreground="#FF1B5E20" BorderThickness="0,0,0,0" Click="AddGoodsButton_OnClick" />

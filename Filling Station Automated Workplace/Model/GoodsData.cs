@@ -70,6 +70,19 @@ public static class GoodsData
             : throw new ValueUnavailableException($"Не удалось найти {id}");
     }
     
+    public static double GetPriceById(int id)
+    {
+        // Find the row in the DataTable with the matching Id
+        var row = GoodsDataTable.Rows.Find(id);
+
+        // Return the goods data from the row, or null if no matching row was found
+        return row != null
+            ? (double.Parse(row["Price"].ToString(), 
+                    NumberStyles.AllowDecimalPoint, 
+                    CultureInfo.InvariantCulture))
+            : throw new ValueUnavailableException($"Не удалось найти {id}");
+    }
+    
     public static int GetRemainingById(int id)
     {
         // Find the row in the DataTable with the matching Id

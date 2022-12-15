@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Filling_Station_Automated_Workplace.Model;
 using Filling_Station_Automated_Workplace.ViewModel;
 
 namespace Filling_Station_Automated_Workplace.View;
@@ -71,12 +73,25 @@ public partial class MainWindow : Window
     {
         // Create a new instance of the GoodsSelector window
         var goodsSelector = new GoodsSelector();
-
+        goodsSelector.Topmost = true;
+        goodsSelector.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         // Show the window
         goodsSelector.ShowDialog();
         
         _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
         GoodsMainMenuGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
+        
+        SetGoodsSummaryTextBlockValue(CurrentReceipt.Receipt.GetGoodsSummary());
+        
+    }
+    
+    public void SetGoodsSummaryTextBlockValue(double value)
+    {
+        double rounded = Math.Round(value, 2);
+        CultureInfo culture = CultureInfo.InvariantCulture;
+        string sum = rounded.ToString("0.00", culture);
+    
+        GoodsSummaryTextBlock.Text = string.Concat("Сумма: ", sum);
     }
 
     private void MainWindow_OnClosed(object? sender, EventArgs e)

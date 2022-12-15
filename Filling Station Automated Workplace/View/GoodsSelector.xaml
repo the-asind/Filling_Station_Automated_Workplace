@@ -8,16 +8,18 @@
         Title="Выбор товара" ResizeMode="NoResize" AllowsTransparency="True" WindowStyle="None" Background="#00000000"
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FontFamily="Bahnschrift">
     <Grid>
-        <Rectangle Fill="#FF81C784" RadiusX="20" RadiusY="20" StrokeThickness="6" Stroke="#FF43A047" MinWidth="600" Width="{Binding Path=ActualWidth, ElementName=GoodsGrid}" Height="600">
+        <Rectangle Fill="#FF81C784" RadiusX="20" RadiusY="20" StrokeThickness="6" Stroke="#FF43A047" MinWidth="600"
+                   Width="{Binding Path=ActualWidth, ElementName=GoodsGrid}" Height="600">
             <Rectangle.Effect>
                 <DropShadowEffect BlurRadius="25" Direction="-90"
-                                  RenderingBias="Quality" ShadowDepth="2"/>
+                                  RenderingBias="Quality" ShadowDepth="2" />
             </Rectangle.Effect>
         </Rectangle>
         <Path
             Data="M0,0 C0,11.0457 8.9543047,20.000004 20.000004,20.000004 L780,20.000004 C791.04572,20.000004 800,11.0457 800,0 L800,48.000004 C800,59.045696 791.04572,68.000004 780,68.000004 L20.000004,68.000004 C8.9543047,68.000004 0,59.045696 0,48.000004 z"
-            Fill="#FF43A047" Height="48" MinWidth="600" Width="{Binding Path=ActualWidth, ElementName=GoodsGrid}" Stretch="Fill" StrokeThickness="6" Margin="0, -560 , 0, 0"
-            RenderTransformOrigin="0.5,0.5" MouseLeftButtonDown="MovingWindow" >
+            Fill="#FF43A047" Height="48" MinWidth="600" Width="{Binding Path=ActualWidth, ElementName=GoodsGrid}"
+            Stretch="Fill" StrokeThickness="6" Margin="0, -560 , 0, 0"
+            RenderTransformOrigin="0.5,0.5" MouseLeftButtonDown="MovingWindow">
             <Path.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleY="-1" />
@@ -27,24 +29,25 @@
                 </TransformGroup>
             </Path.RenderTransform>
         </Path>
-        <Grid Name="GoodsSelectorGrid" MinWidth="600" Width="{Binding Path=ActualWidth, ElementName=GoodsGrid}" Height="600">
-            <Button x:Name="AcceptButton" Content="добавить товары" HorizontalAlignment="Center" Height="40"
+        <Grid Name="GoodsSelectorGrid" MinWidth="600" Width="{Binding Path=ActualWidth, ElementName=GoodsGrid}"
+              Height="600">
+            <Button Content="добавить товары" HorizontalAlignment="Center" Height="40"
                     VerticalAlignment="Bottom" Width="260" Background="#FFA5D6A7" BorderBrush="#FF388E3C"
                     Foreground="#FF1B5E20" FontSize="22" FontFamily="Bahnschrift" BorderThickness="0,0,0,0"
-                    Margin="0,0,0,21" Click="WindowClose"/>
-            
+                    Margin="0,0,0,21" Click="WindowClose" />
+
             <DataGrid RowHeaderWidth="0" x:Name="GoodsGrid" Margin="0,0,0,76" Background="#FFC8E6C9"
-                      BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0" IsReadOnly="True" 
+                      BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0" IsReadOnly="True"
                       MouseDoubleClick="Row_MouseDoubleClick"
                       AutoGenerateColumns="False" FontSize="16" FontFamily="Bahnschrift" HorizontalAlignment="Center"
                       VerticalAlignment="Bottom" MaxWidth="588" Width="{Binding Path=ActualWidth}" Height="250">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header=" Артикуль " Binding="{Binding Id}" />
-                    <DataGridTextColumn Header=" Название " Binding="{Binding Name}" />
+                    <DataGridTextColumn Header=" Название " Binding="{Binding Name}" Width="350" />
                     <DataGridTextColumn Header=" Остаток " Binding="{Binding Count}" />
                     <DataGridTextColumn Header=" Цена " Binding="{Binding Price}" />
                 </DataGrid.Columns>
-                
+
                 <DataGrid.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="10" />
@@ -79,21 +82,24 @@
             <AdornerDecorator>
                 <TextBox x:Name="SearchGoodsTextBox" HorizontalAlignment="Center" Height="40" Margin="0,0,0,341"
                          Width="340" Foreground="#FF1B5E20" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7"
-                         SelectionBrush="#FF2E7D32" SelectionTextBrush="#FFC8E6C9" VerticalAlignment="Bottom" FontSize="30"
-                         TextWrapping="WrapWithOverflow" HorizontalContentAlignment="Left" 
+                         SelectionBrush="#FF2E7D32" SelectionTextBrush="#FFC8E6C9" VerticalAlignment="Bottom"
+                         FontSize="30"
+                         TextWrapping="WrapWithOverflow" HorizontalContentAlignment="Left"
                          VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Disabled"
-                         BorderThickness="3,3,3,3" TextChanged="SearchGoodsTextBox_OnTextChanged" GotFocus="SearchGoodsTextBox_OnGotFocus">
+                         BorderThickness="3,3,3,3" TextChanged="SearchGoodsTextBox_OnTextChanged"
+                         GotFocus="SearchGoodsTextBox_OnGotFocus">
                     <global:WatermarkService.Watermark>
                         <TextBlock FontSize="24" FontFamily="Bahnschrift" Padding="5,8,0,5">Поиск</TextBlock>
                     </global:WatermarkService.Watermark>
                 </TextBox>
             </AdornerDecorator>
-            
-            
-            <Label Content="Выбор товара" VerticalAlignment="Top" Focusable="False" HorizontalContentAlignment="Center" Padding="0,0,0,0"
+
+
+            <Label Content="Выбор товара" VerticalAlignment="Top" Focusable="False" HorizontalContentAlignment="Center"
+                   Padding="0,0,0,0"
                    Grid.IsSharedSizeScope="True" Background="{x:Null}" Foreground="#FFE8F5E9" FontSize="24"
                    HorizontalAlignment="Center" />
-            <Button x:Name="FullLiter_Copy2" Content="✓" HorizontalAlignment="Right" Height="40"
+            <Button Content="✓" HorizontalAlignment="Right" Height="40"
                     VerticalAlignment="Top" Width="30" Background="#FF81C784" BorderBrush="#FF388E3C"
                     Foreground="#FF1B5E20" FontSize="22" FontFamily="Bahnschrift" BorderThickness="0,0,0,0"
                     Margin="0,6,6,0" Cursor="Hand" Click="WindowClose">
@@ -107,28 +113,30 @@
             <DataGrid RowHeaderWidth="0" x:Name="ShoppingCartGrid" Margin="0,0,0,396" Background="#FFC8E6C9"
                       BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0"
                       AutoGenerateColumns="False" FontSize="16" FontFamily="Bahnschrift" HorizontalAlignment="Center"
-                      VerticalAlignment="Bottom" Width="{Binding Path=ActualWidth}" Height="152" CellEditEnding="ShoppingCartGrid_OnCellEditEnding">
-                
+                      VerticalAlignment="Bottom" Width="{Binding Path=ActualWidth}" Height="152"
+                      CellEditEnding="ShoppingCartGrid_OnCellEditEnding" CanUserSortColumns="False"
+                      MouseDoubleClick="ShoppingCartGrid_OnMouseDoubleClick" CanUserAddRows="False">
+
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header=" Артикуль " Binding="{Binding Id}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header=" Название " Binding="{Binding Name}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header=" Артикуль " Binding="{Binding Id}" IsReadOnly="True" />
+                    <DataGridTextColumn Header=" Название " Binding="{Binding Name}" IsReadOnly="True" />
                     <DataGridTextColumn Header=" Кол-во " Binding="{Binding Count}" />
-                    <DataGridTextColumn Header=" Сумма " Binding="{Binding Price}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header=" Сумма " Binding="{Binding TotalCost}" IsReadOnly="True" />
                 </DataGrid.Columns>
-                
+
                 <DataGrid.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="10" />
                     </Style>
                 </DataGrid.Resources>
-                
+
                 <DataGrid.ColumnHeaderStyle>
                     <Style TargetType="{x:Type DataGridColumnHeader}">
                         <Setter Property="Background" Value="#A5D6A7" />
                         <Setter Property="Foreground" Value="#FF1B5E20" />
                     </Style>
                 </DataGrid.ColumnHeaderStyle>
-                
+
                 <DataGrid.CellStyle>
                     <Style TargetType="{x:Type DataGridCell}">
                         <Setter Property="Background" Value="#C8E6C9" />
