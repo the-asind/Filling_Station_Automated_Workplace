@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,41 +14,24 @@ namespace Filling_Station_Automated_Workplace.View;
 /// </summary>
 public partial class GoodsSelector
 {
-    public class GoodsGridData
-    {
-        public GoodsGridData(int id, string name, int count, double price)
-        {
-            Id = id;
-            Name = name;
-            Count = count;
-            Price = price;
-        }
-
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int Count { get; set; }
-        public double Price { get; set; }
-    }
-
     private void MovingWindow(object sender, RoutedEventArgs e)
     {
         DragMove();
     }
-    
+
     private void WindowClose(object sender, RoutedEventArgs e)
     {
         Close();
     }
 
-    private DataTable _shoppingCartGoodsTable;
+    private DataTable? _shoppingCartGoodsTable;
 
     public GoodsSelector()
     {
         InitializeComponent();
+
         GoodsGrid.ItemsSource = GoodsData.GoodsDataTable.DefaultView;
-        _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
-        _shoppingCartGoodsTable.AcceptChanges();
-        ShoppingCartGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
+        ShowShoppingCartChanges();
         GoodsGrid.GridLinesVisibility = DataGridGridLinesVisibility.All;
     }
 
@@ -62,11 +46,10 @@ public partial class GoodsSelector
 
             var itemId = int.Parse(Convert.ToString(dr1?.ItemArray[0]) ?? throw new InvalidOperationException());
 
-            CurrentReceipt.Receipt.AddIdToCommodityItem(itemId);
-            _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
-            ShoppingCartGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
+            CurrentReceipt.Receipt.AddIdToCommodityItem(itemId);  
+            ShowShoppingCartChanges();
         }
-        catch (Exception ex)
+        catch
         {
             // Ignored
         }
@@ -107,27 +90,29 @@ public partial class GoodsSelector
     private void ShoppingCartGrid_OnCellEditEnding(object? sender, DataGridCellEditEndingEventArgs e)
     {
         var dataGrid = sender as DataGrid;
-        var column = e.Column;
-        var count = new int();
+        int count;
         try
         {
             var value = (e.EditingElement as TextBox)?.Text;
+            Debug.Assert(value != null, nameof(value) + " != null");
             count = int.Parse(value);
         }
         catch (Exception exception)
         {
-            MessageBox.Show(string.Concat("Ошибка в введённом количестве!\n",exception.Message));
+            MessageBox.Show(string.Concat("Ошибка в введённом количестве!\n", exception.Message));
+            ShowShoppingCartChanges();
             return;
         }
 
         // Get the index of the edited row
+        Debug.Assert(dataGrid != null, nameof(dataGrid) + " != null");
         var index = dataGrid.ItemContainerGenerator.IndexFromContainer(e.Row);
 
         _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
 
         var row = _shoppingCartGoodsTable.Rows[index];
-        object[] values = row.ItemArray;
-        var id = (int)values[0];
+        object?[] values = row.ItemArray;
+        var id = (int)(values[0] ?? 0);
 
         try
         {
@@ -136,11 +121,9 @@ public partial class GoodsSelector
         catch (Exception ex)
         {
             MessageBox.Show(ex.Message);
-            return;
         }
 
-        _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
-        ShoppingCartGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
+        ShowShoppingCartChanges();
     }
 
     private void ShoppingCartGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -150,24 +133,27 @@ public partial class GoodsSelector
 
         // Check if the double-click did not occur in the Count column
         if (cell != null && cell != ShoppingCartGrid.Columns[2])
-        {
             try
             {
                 if (ShoppingCartGrid.SelectedItem == null)
                     return;
                 var dr = ShoppingCartGrid.SelectedItem as DataRowView;
                 var dr1 = dr?.Row;
-                
+
                 var itemId = int.Parse(Convert.ToString(dr1?.ItemArray[0]) ?? throw new InvalidOperationException());
 
                 CurrentReceipt.Receipt.RemoveIdFromCommodityItem(itemId);
-                _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
-                ShoppingCartGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
+                ShowShoppingCartChanges();
             }
-            catch (Exception ex)
+            catch
             {
                 // Ignored
             }
-        }
+    }
+    
+    private void ShowShoppingCartChanges()
+    {
+        _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
+        ShoppingCartGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
     }
 }

@@ -57,7 +57,8 @@ public class Receipt
         }
         else
         {
-            // Increase the count of the existing position
+            if (count == 0) RemoveIdFromCommodityItem(id);
+            // Change the count of the existing position
             if (GoodsData.GetRemainingById(id) >= count)
             {
                 position.Count = count;

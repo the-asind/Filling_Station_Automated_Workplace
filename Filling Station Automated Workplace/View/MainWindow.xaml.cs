@@ -19,7 +19,7 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _timer;
     private DateTime _sessionTime = new(0, 0);
 
-    private DataTable _shoppingCartGoodsTable;
+    private DataTable? _shoppingCartGoodsTable;
     //Добавим информацию в таблицу
     private void grid_Loaded(object sender, RoutedEventArgs e)
     {
@@ -71,7 +71,7 @@ public partial class MainWindow : Window
 
     private void AddGoodsButton_OnClick(object sender, RoutedEventArgs e)
     {
-        // Create a new instance of the GoodsSelector window
+        // Create a new instance of the GoodsSelectorViewModel window
         var goodsSelector = new GoodsSelector();
         goodsSelector.Topmost = true;
         goodsSelector.WindowStartupLocation = WindowStartupLocation.CenterScreen;

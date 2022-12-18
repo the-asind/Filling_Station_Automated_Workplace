@@ -6,7 +6,9 @@
         xmlns:global="clr-namespace:"
         mc:Ignorable="d"
         Title="Выбор товара" ResizeMode="NoResize" AllowsTransparency="True" WindowStyle="None" Background="#00000000"
-        WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FontFamily="Bahnschrift">
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FontFamily="Bahnschrift"
+        xmlns:view="clr-namespace:Filling_Station_Automated_Workplace.View">
+    
     <Grid>
         <Rectangle Fill="#FF81C784" RadiusX="20" RadiusY="20" StrokeThickness="6" Stroke="#FF43A047" MinWidth="600"
                    Width="{Binding Path=ActualWidth, ElementName=GoodsGrid}" Height="600">
@@ -115,7 +117,8 @@
                       AutoGenerateColumns="False" FontSize="16" FontFamily="Bahnschrift" HorizontalAlignment="Center"
                       VerticalAlignment="Bottom" Width="{Binding Path=ActualWidth}" Height="152"
                       CellEditEnding="ShoppingCartGrid_OnCellEditEnding" CanUserSortColumns="False"
-                      MouseDoubleClick="ShoppingCartGrid_OnMouseDoubleClick" CanUserAddRows="False">
+                      MouseDoubleClick="ShoppingCartGrid_OnMouseDoubleClick" CanUserAddRows="False"
+                      >
 
                 <DataGrid.Columns>
                     <DataGridTextColumn Header=" Артикуль " Binding="{Binding Id}" IsReadOnly="True" />

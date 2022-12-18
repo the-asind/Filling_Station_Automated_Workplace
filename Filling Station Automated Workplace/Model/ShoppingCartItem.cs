@@ -7,10 +7,10 @@ namespace Filling_Station_Automated_Workplace.Model;
 
 public static class ShoppingCartItem
 {
-    public static DataTable Update(Receipt receipt)
+    public static DataTable? Update(Receipt receipt)
     {
         List<PositionInReceipt> commodityItem = receipt.CommodityItem;
-        DataTable table = new DataTable();
+        DataTable? table = new DataTable();
         table.Columns.Add("Id", typeof(int));
         table.Columns.Add("Name", typeof(string));
         table.Columns.Add("Count", typeof(int));
