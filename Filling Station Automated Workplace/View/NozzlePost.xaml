@@ -18,7 +18,7 @@
                   ItemsSource="{Binding NozzlePostDataTable}"
                   DisplayMemberPath="Name" SelectionChanged="SelectionChanged"/>
 
-        <Label x:Name="PriceForLiter" Content="{Binding TextPrice, Mode=TwoWay}" Height="75"
+        <Label x:Name="PriceForLiter" Content="{Binding Path=TextPrice}" ContentStringFormat="Литр за&#10;{0}" Height="75"
                VerticalAlignment="Top" Width="117" FontSize="22" HorizontalAlignment="Left"
                Foreground="#FF1B5E20" VerticalContentAlignment="Center"
                ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -44,9 +44,9 @@
               Height="1" Margin="70,0,0,34" Stroke="#FF1B5E20" Stretch="Fill"
               VerticalAlignment="Bottom" Width="160" />
 
-        <Label x:Name="TotalNozzleAmount" Content="{Binding Summary}" Height="34"
+        <Label x:Name="TotalNozzleAmount" Content="{Binding Path=TextSummary}" ContentStringFormat="Сумма: {0}" Height="34"
                VerticalAlignment="Bottom"
-               Width="167" FontSize="22" HorizontalAlignment="Left" Margin="70,0,0,0"
+               Width="167" FontSize="18" HorizontalAlignment="Left" Margin="70,0,0,0"
                Foreground="#FF1B5E20" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Center"
                Padding="0" />

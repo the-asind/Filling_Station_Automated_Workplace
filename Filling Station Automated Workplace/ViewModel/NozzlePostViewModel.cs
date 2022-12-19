@@ -3,9 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
-using System.Security.AccessControl;
 using Filling_Station_Automated_Workplace.Data;
-using Filling_Station_Automated_Workplace.View;
 
 namespace Filling_Station_Automated_Workplace.ViewModel;
 
@@ -20,16 +18,14 @@ public interface INozzlePostViewModel
             return nozzlePostData.NozzlePostDataTable;
         }
     }
+
     ObservableCollection<string> NozzlePostNames
     {
         get
         {
-            ObservableCollection<string> nozzlePostNames = new ObservableCollection<string>();
+            var nozzlePostNames = new ObservableCollection<string>();
 
-            foreach (DataRow row in NozzlePostDataTable.Rows)
-            {
-                nozzlePostNames.Add(row["Name"].ToString());
-            }
+            foreach (DataRow row in NozzlePostDataTable.Rows) nozzlePostNames.Add(row["Name"].ToString());
 
             return nozzlePostNames;
         }
@@ -55,7 +51,7 @@ public interface INozzlePostDataProvider
 }
 
 // ViewModel class
-public class NozzlePostViewModel : INozzlePostViewModel
+public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
 {
     private readonly INozzlePostDataProvider _nozzlePostData;
 
@@ -73,41 +69,130 @@ public class NozzlePostViewModel : INozzlePostViewModel
     {
         get
         {
-            DataRow? row = NozzlePostDataTable.Rows.Find(SelectedId);
+            var row = NozzlePostDataTable.Rows.Find(SelectedId);
             if (row != null)
-            {
                 return double.Parse(row["Price"].ToString()!,
                     NumberStyles.AllowDecimalPoint,
                     CultureInfo.InvariantCulture);
-            }
 
             return 0;
         }
     }
 
-    public string TextPrice => string.Concat(Price.ToString("C2"), " \nза литр");
+    public string TextPrice => string.Concat(Price.ToString("C2"), " ");
 
+    public double Summary => Price * LiterCount;
 
-    public string Summary
+    public string TextSummary => (Price * LiterCount).ToString("C2");
+
+    private int _literCount;
+
+    public int LiterCount
     {
-        get
+        get => FillUp ? LitersFillProgress : _literCount;
+        
+        set
         {
-            return (Price * LiterCount).ToString();
+            if (_literCount == value) return;
+            _literCount = value;
+            OnPropertyChanged(nameof(SelectedId));
+            OnPropertyChanged(nameof(Price));
+            OnPropertyChanged(nameof(TextPrice));
+            OnPropertyChanged(nameof(Summary));
+            OnPropertyChanged(nameof(TextSummary));
         }
     }
-    
-
-    public int SelectedId = 0;
-    public int LiterCount { get; set; }
 
     public void SelectionChanged(int id)
     {
         SelectedId = id;
-        
     }
 
     public void LiterCountChanged(int count)
     {
         LiterCount = count;
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        var handler = PropertyChanged;
+        handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public void FillUpFullTank(bool value)
+    {
+        FillUp = value;
+    }
+
+    private bool _fillUp;
+
+    public bool FillUp
+    {
+        get => _fillUp;
+        set
+        {
+            OnUserControlActive(_selectedId);
+            if (_fillUp == value) return;
+            _fillUp = value;
+            OnPropertyChanged(nameof(LiterCount));
+            OnPropertyChanged(nameof(LitersFillProgress));
+            OnPropertyChanged(nameof(Summary));
+            OnPropertyChanged(nameof(TextSummary));
+        }
+    }
+    
+    private int _litersFillProgress;
+
+    public int LitersFillProgress
+    {
+        get => _litersFillProgress;
+        set
+        {
+            if (_litersFillProgress == value) return;
+            _litersFillProgress = value;
+            OnPropertyChanged(nameof(LiterCount));
+            OnPropertyChanged(nameof(SelectedId));
+            OnPropertyChanged(nameof(Summary));
+            
+        }
+    }
+    
+    private int _activeUserControlId;
+    public int ActiveUserControlId
+    {
+        get => _activeUserControlId;
+        set
+        {
+            if (_activeUserControlId != value)
+            {
+                _activeUserControlId = value;
+                OnPropertyChanged(nameof(ActiveUserControlId));
+            }
+        }
+    }
+
+    public static event EventHandler<int> UserControlActive;
+    
+    public static void OnUserControlActive(int userControlId)
+    {
+        UserControlActive?.Invoke(null, userControlId);
+    }
+    
+    private int _selectedId;
+
+    public int SelectedId
+    {
+        get => _selectedId;
+        set
+        {
+            if (_selectedId != value)
+            {
+                _selectedId = value;
+                OnPropertyChanged(nameof(SelectedId));
+                OnPropertyChanged(nameof(_selectedId));
+            }
+        }
     }
 }

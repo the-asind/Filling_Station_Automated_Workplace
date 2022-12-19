@@ -28,10 +28,13 @@ public partial class MainWindow : Window
         GoodsMainMenuGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
     }
 
+    private readonly MainWindowViewModel _viewModel;
+    
     public MainWindow()
     {
         InitializeComponent();
-
+        _viewModel = new MainWindowViewModel();
+        PickedNozzle.DataContext = _viewModel;
         CreateNozzlePosts(2);
 
         //  DispatcherTimer setup
@@ -48,7 +51,6 @@ public partial class MainWindow : Window
         // Create a new instance of the NozzlePostViewModel window
         var dataProvider = new ConcreteNozzlePostViewModel();
         
-
         for (int i = 1; i <= count; i++)
         {
             NozzlePostViewModel viewModel = new NozzlePostViewModel(i, dataProvider);
@@ -57,7 +59,6 @@ public partial class MainWindow : Window
             nozzlePostControl.DataContext = viewModel;
 
             NozzleList.Children.Add(nozzlePostControl);
-
         }
     }
     

@@ -53,13 +53,14 @@ public partial class NozzlePost : UserControl
                 LiterAmount.Background = _midColor;
                 LiterAmount.Foreground = _midColor;
                 LiterAmount.IsReadOnly = true;
-                
+                _viewModel.FillUpFullTank(true);
+                _viewModel.LitersFillProgress = 0;
                 break;
             case false:
                 LiterAmount.Background = _lightColor;
                 LiterAmount.Foreground = _darkColor;
                 LiterAmount.IsReadOnly = false;
-                
+                _viewModel.FillUpFullTank(false);
                 break;
         }
     }
