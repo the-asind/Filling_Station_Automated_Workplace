@@ -19,7 +19,7 @@ public static class ShoppingCartItem
         // Add each item in the List to the DataTable
         foreach (var item in commodityItem)
         {
-            var (goodsName, goodsPrice) = GoodsData.GetNameAndPriceById(item.Id);
+            var (goodsName, goodsPrice) = GoodsModel.GetNameAndPriceById(item.Id);
             
             table.Rows.Add(item.Id, goodsName, item.Count, item.TotalCost);
             

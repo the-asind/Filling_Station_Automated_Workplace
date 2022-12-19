@@ -3,7 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-
     xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=Microsoft.Win32.Primitives"
     x:Name="_MainWindow"
     x:Class="Filling_Station_Automated_Workplace.View.MainWindow"
@@ -24,8 +23,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-
-
+    
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FF43A047" />
@@ -102,7 +100,6 @@
                     <Rectangle.DataContext>
                         <ComponentModel:Win32Exception />
                     </Rectangle.DataContext>
-
                 </Rectangle>
                 <Label Content="RU" Foreground="#FF1B5E20" HorizontalAlignment="Center" />
             </Grid>
@@ -139,11 +136,12 @@
 
                 </Grid>
                 <WrapPanel x:Name="NozzleList" Height="500" Width="780" Canvas.Left="10" Canvas.Top="90">
-                    <uc:NozzlePost Title="1" />
+                   
                 </WrapPanel>
             </Canvas>
         </Viewbox>
-        <Viewbox x:Name="MainMenuBorderViewBox" Grid.Row="0" Grid.Column="1" Margin="0,10,0,10" HorizontalAlignment="Right">
+        <Viewbox x:Name="MainMenuBorderViewBox" Grid.Row="0" Grid.Column="1" Margin="0,10,0,10"
+                 HorizontalAlignment="Right">
             <Grid x:Name="MainMenuBorder" HorizontalAlignment="Center" Height="654" VerticalAlignment="Top" Width="432"
                   Margin="10,10,0,10">
                 <Rectangle x:Name="BorderOfMainMenu" Fill="#FF1B5E20" RadiusX="10" RadiusY="10" Width="427"
@@ -163,14 +161,15 @@
                             </Rectangle.DataContext>
 
                         </Rectangle>
-                        <Path 
-                              Data="M4.9999986,0 L402,0 C404.76141,1.5199184E-06 407,2.2385777 407,4.9999987 L407,22 0,22 0,4.9999987 C0,2.2385777 2.2385762,1.5199184E-06 4.9999986,0 z"
-                              Fill="#FF66BB6A" HorizontalAlignment="Center" Height="22" Stretch="Fill"
-                              VerticalAlignment="Top" Width="407" />
+                        <Path
+                            Data="M4.9999986,0 L402,0 C404.76141,1.5199184E-06 407,2.2385777 407,4.9999987 L407,22 0,22 0,4.9999987 C0,2.2385777 2.2385762,1.5199184E-06 4.9999986,0 z"
+                            Fill="#FF66BB6A" HorizontalAlignment="Center" Height="22" Stretch="Fill"
+                            VerticalAlignment="Top" Width="407" />
                         <Label Content="вид оплаты" VerticalAlignment="Top" HorizontalContentAlignment="Center"
                                Padding="0,0,0,0" Grid.IsSharedSizeScope="True" Background="{x:Null}"
                                Foreground="#FFE8F5E9" />
-                        <ComboBox x:Name="PaymentTypeComboBox" Height="39" Margin="10,30,10,0" SelectedIndex="0" FontSize="30"
+                        <ComboBox x:Name="PaymentTypeComboBox" Height="39" Margin="10,30,10,0" SelectedIndex="0"
+                                  FontSize="30"
                                   VerticalAlignment="Top" Foreground="#FF1B5E20" FontStretch="SemiCondensed">
                             <ComboBoxItem Content="Пластиковая карта" />
                             <ComboBoxItem Content="Наличные" />
@@ -183,17 +182,17 @@
                             </Rectangle.DataContext>
 
                         </Rectangle>
-                        <Path 
-                              Data="M4.9999986,0 L402,0 C404.76141,1.5199184E-06 407,2.2385777 407,4.9999987 L407,22 0,22 0,4.9999987 C0,2.2385777 2.2385762,1.5199184E-06 4.9999986,0 z"
-                              Fill="#FF66BB6A" HorizontalAlignment="Center" Height="22" Stretch="Fill"
-                              VerticalAlignment="Top" Width="407" />
+                        <Path
+                            Data="M4.9999986,0 L402,0 C404.76141,1.5199184E-06 407,2.2385777 407,4.9999987 L407,22 0,22 0,4.9999987 C0,2.2385777 2.2385762,1.5199184E-06 4.9999986,0 z"
+                            Fill="#FF66BB6A" HorizontalAlignment="Center" Height="22" Stretch="Fill"
+                            VerticalAlignment="Top" Width="407" />
                         <Label Content="топливо" VerticalAlignment="Top" HorizontalContentAlignment="Center"
                                Padding="0,0,0,0" Grid.IsSharedSizeScope="True" Background="{x:Null}"
                                Foreground="#FFE8F5E9" />
                         <TextBlock x:Name="PickedNozzle" TextAlignment="Left" Height="38" VerticalAlignment="Bottom"
                                    Width="147" FontSize="30" HorizontalAlignment="Left" Margin="15,0,0,18"
                                    Foreground="#FF1B5E20" ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                   ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0"
+                                   ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0"
                                    FontStretch="SemiCondensed">
                             <Run Text="П" /><Run Language="ru-ru" Text="ОСТ" /><Run Text=" 1" />
                         </TextBlock>
@@ -220,10 +219,10 @@
                             </Rectangle.DataContext>
 
                         </Rectangle>
-                        <Path 
-                              Data="M4.9999986,0 L402,0 C404.76141,1.5199184E-06 407,2.2385777 407,4.9999987 L407,22 0,22 0,4.9999987 C0,2.2385777 2.2385762,1.5199184E-06 4.9999986,0 z"
-                              Fill="#FF66BB6A" HorizontalAlignment="Center" Height="22" Stretch="Fill"
-                              VerticalAlignment="Top" Width="407" />
+                        <Path
+                            Data="M4.9999986,0 L402,0 C404.76141,1.5199184E-06 407,2.2385777 407,4.9999987 L407,22 0,22 0,4.9999987 C0,2.2385777 2.2385762,1.5199184E-06 4.9999986,0 z"
+                            Fill="#FF66BB6A" HorizontalAlignment="Center" Height="22" Stretch="Fill"
+                            VerticalAlignment="Top" Width="407" />
                         <Label Content="товары" VerticalAlignment="Top" HorizontalContentAlignment="Center"
                                Padding="0,0,0,0" Grid.IsSharedSizeScope="True" Background="{x:Null}"
                                Foreground="#FFE8F5E9" />
@@ -238,8 +237,10 @@
                                    FontStretch="SemiCondensed" Text="Сумма: 0.00" />
                         <Button x:Name="AddGoodsButton" Content="добавить товар" HorizontalAlignment="Left" Height="30"
                                 Margin="10,0,0,3" VerticalAlignment="Bottom" Width="160" Background="#FFA5D6A7"
-                                BorderBrush="#FF388E3C" Foreground="#FF1B5E20" BorderThickness="0,0,0,0" Click="AddGoodsButton_OnClick" />
-                        <DataGrid RowHeaderWidth="0" x:Name="GoodsMainMenuGrid" Margin="10,33,10,51" Background="#FFC8E6C9"
+                                BorderBrush="#FF388E3C" Foreground="#FF1B5E20" BorderThickness="0,0,0,0"
+                                Click="AddGoodsButton_OnClick" />
+                        <DataGrid RowHeaderWidth="0" x:Name="GoodsMainMenuGrid" Margin="10,33,10,51"
+                                  Background="#FFC8E6C9"
                                   BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" Loaded="grid_Loaded"
                                   GridLinesVisibility="None" IsReadOnly="True" MaxColumnWidth="250">
                             <DataGrid.ColumnHeaderStyle>
@@ -270,10 +271,10 @@
                             </Rectangle.DataContext>
 
                         </Rectangle>
-                        <Path 
-                              Data="M4.9999986,0 L402,0 C404.76141,1.5199184E-06 407,2.2385777 407,4.9999987 L407,22 0,22 0,4.9999987 C0,2.2385777 2.2385762,1.5199184E-06 4.9999986,0 z"
-                              Fill="#FF66BB6A" HorizontalAlignment="Center" Height="22" Stretch="Fill"
-                              VerticalAlignment="Top" Width="407" />
+                        <Path
+                            Data="M4.9999986,0 L402,0 C404.76141,1.5199184E-06 407,2.2385777 407,4.9999987 L407,22 0,22 0,4.9999987 C0,2.2385777 2.2385762,1.5199184E-06 4.9999986,0 z"
+                            Fill="#FF66BB6A" HorizontalAlignment="Center" Height="22" Stretch="Fill"
+                            VerticalAlignment="Top" Width="407" />
                         <Label Content="итог" VerticalAlignment="Top" HorizontalContentAlignment="Center"
                                Padding="0,0,0,0" Grid.IsSharedSizeScope="True" Background="{x:Null}"
                                Foreground="#FFE8F5E9" />

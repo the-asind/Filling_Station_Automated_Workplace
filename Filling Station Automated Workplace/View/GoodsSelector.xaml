@@ -6,8 +6,7 @@
         xmlns:global="clr-namespace:"
         mc:Ignorable="d"
         Title="Выбор товара" ResizeMode="NoResize" AllowsTransparency="True" WindowStyle="None" Background="#00000000"
-        WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FontFamily="Bahnschrift"
-        xmlns:view="clr-namespace:Filling_Station_Automated_Workplace.View">
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FontFamily="Bahnschrift">
     
     <Grid>
         <Rectangle Fill="#FF81C784" RadiusX="20" RadiusY="20" StrokeThickness="6" Stroke="#FF43A047" MinWidth="600"
@@ -89,7 +88,8 @@
                          TextWrapping="WrapWithOverflow" HorizontalContentAlignment="Left"
                          VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Disabled"
                          BorderThickness="3,3,3,3" TextChanged="SearchGoodsTextBox_OnTextChanged"
-                         GotFocus="SearchGoodsTextBox_OnGotFocus">
+                         GotFocus="SearchGoodsTextBox_OnGotFocus" >
+                    
                     <global:WatermarkService.Watermark>
                         <TextBlock FontSize="24" FontFamily="Bahnschrift" Padding="5,8,0,5">Поиск</TextBlock>
                     </global:WatermarkService.Watermark>
@@ -124,7 +124,7 @@
                     <DataGridTextColumn Header=" Артикуль " Binding="{Binding Id}" IsReadOnly="True" />
                     <DataGridTextColumn Header=" Название " Binding="{Binding Name}" IsReadOnly="True" />
                     <DataGridTextColumn Header=" Кол-во " Binding="{Binding Count}" />
-                    <DataGridTextColumn Header=" Сумма " Binding="{Binding TotalCost}" IsReadOnly="True" />
+                    <DataGridTextColumn Header=" Сумма " Binding="{Binding TotalCost, StringFormat='#.##'}" IsReadOnly="True" />
                 </DataGrid.Columns>
 
                 <DataGrid.Resources>

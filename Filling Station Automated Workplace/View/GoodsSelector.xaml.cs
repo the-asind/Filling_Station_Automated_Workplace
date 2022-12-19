@@ -26,15 +26,19 @@ public partial class GoodsSelector
 
     private DataTable? _shoppingCartGoodsTable;
 
-    public GoodsSelector()
+    private readonly GoodsSelectorViewModel _viewModel;
+
+    public GoodsSelector(GoodsSelectorViewModel _viewModel)
     {
+        this._viewModel = _viewModel;
+
         InitializeComponent();
 
-        GoodsGrid.ItemsSource = GoodsData.GoodsDataTable.DefaultView;
+        GoodsGrid.ItemsSource = _viewModel.GoodsDataTable.DefaultView;
         ShowShoppingCartChanges();
         GoodsGrid.GridLinesVisibility = DataGridGridLinesVisibility.All;
     }
-
+    
     private void Row_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         try
@@ -59,26 +63,16 @@ public partial class GoodsSelector
     {
         var t = (TextBox)sender;
         var filterText = t.Text.ToLower();
-
-        if (filterText == "")
+        
+        DataTable filteredDataTable = _viewModel.GetFilteredGoodsDataTable(filterText);
+        
+        if (filteredDataTable.Rows.Count == 0)
         {
-            GoodsGrid.ItemsSource = GoodsData.GoodsDataTable.DefaultView;
+            // If the filtered DataTable is empty, set the ItemsSource to the last matching option that was displayed
             return;
         }
-
-        try
-        {
-            var dataTableFiltered = GoodsData.GoodsDataTable.AsEnumerable()
-                .Where(row => row.Field<string>("Name")!.ToLower().Contains(filterText))
-                .OrderByDescending(row => row.Field<string>("Id"))
-                .CopyToDataTable();
-
-            GoodsGrid.ItemsSource = dataTableFiltered.DefaultView;
-        }
-        catch
-        {
-            // ignored
-        }
+        
+        GoodsGrid.ItemsSource = filteredDataTable.DefaultView;
     }
 
     private void SearchGoodsTextBox_OnGotFocus(object sender, RoutedEventArgs e)

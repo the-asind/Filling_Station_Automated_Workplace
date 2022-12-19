@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -20,6 +20,7 @@ public partial class MainWindow : Window
     private DateTime _sessionTime = new(0, 0);
 
     private DataTable? _shoppingCartGoodsTable;
+
     //Добавим информацию в таблицу
     private void grid_Loaded(object sender, RoutedEventArgs e)
     {
@@ -31,6 +32,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        CreateNozzlePosts(2);
 
         //  DispatcherTimer setup
         _timer = new DispatcherTimer();
@@ -39,6 +41,26 @@ public partial class MainWindow : Window
         _timer.Start();
     }
 
+    private void CreateNozzlePosts(int count)
+    {
+        NozzleList.Children.Clear();
+        
+        // Create a new instance of the NozzlePostViewModel window
+        var dataProvider = new ConcreteNozzlePostViewModel();
+        
+
+        for (int i = 1; i <= count; i++)
+        {
+            NozzlePostViewModel viewModel = new NozzlePostViewModel(i, dataProvider);
+
+            NozzlePost nozzlePostControl = new NozzlePost(i, viewModel);
+            nozzlePostControl.DataContext = viewModel;
+
+            NozzleList.Children.Add(nozzlePostControl);
+
+        }
+    }
+    
     private void _timer_Tick(object sender, EventArgs e)
     {
         // Updating the Label which displays the current second
@@ -72,25 +94,27 @@ public partial class MainWindow : Window
     private void AddGoodsButton_OnClick(object sender, RoutedEventArgs e)
     {
         // Create a new instance of the GoodsSelectorViewModel window
-        var goodsSelector = new GoodsSelector();
+        var dataProvider = new ConcreteGoodsSelectorViewModel();
+        var goodsSelectorViewModel = new GoodsSelectorViewModel(dataProvider);
+
+        var goodsSelector = new GoodsSelector(goodsSelectorViewModel);
         goodsSelector.Topmost = true;
         goodsSelector.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         // Show the window
         goodsSelector.ShowDialog();
-        
+
         _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
         GoodsMainMenuGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
-        
+
         SetGoodsSummaryTextBlockValue(CurrentReceipt.Receipt.GetGoodsSummary());
-        
     }
-    
+
     public void SetGoodsSummaryTextBlockValue(double value)
     {
-        double rounded = Math.Round(value, 2);
-        CultureInfo culture = CultureInfo.InvariantCulture;
-        string sum = rounded.ToString("0.00", culture);
-    
+        var rounded = Math.Round(value, 2);
+        var culture = CultureInfo.InvariantCulture;
+        var sum = rounded.ToString("#.##", culture);
+
         GoodsSummaryTextBlock.Text = string.Concat("Сумма: ", sum);
     }
 

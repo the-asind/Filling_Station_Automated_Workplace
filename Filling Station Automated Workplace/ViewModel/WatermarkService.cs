@@ -55,7 +55,7 @@ public static class WatermarkService
     /// Handles changes to the Watermark property.
     /// </summary>
     /// <param name="d"><see cref="DependencyObject"/> that fired the event</param>
-    /// <param name="e">A <see cref="DependencyPropertyChangedEventArgs"/> that contains the event data.</param>
+    /// <param name="e">A <see cref="DependencyPropertyChangedEventArgs"/> that contains the event goodsData.</param>
     private static void OnWatermarkChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         Control control = (Control)d;
@@ -93,7 +93,7 @@ public static class WatermarkService
     /// Handle the GotFocus event on the control
     /// </summary>
     /// <param name="sender">The source of the event.</param>
-    /// <param name="e">A <see cref="RoutedEventArgs"/> that contains the event data.</param>
+    /// <param name="e">A <see cref="RoutedEventArgs"/> that contains the event goodsData.</param>
     private static void Control_GotKeyboardFocus(object sender, RoutedEventArgs e)
     {
         Control c = (Control)sender;
@@ -111,7 +111,7 @@ public static class WatermarkService
     /// Handle the Loaded and LostFocus event on the control
     /// </summary>
     /// <param name="sender">The source of the event.</param>
-    /// <param name="e">A <see cref="RoutedEventArgs"/> that contains the event data.</param>
+    /// <param name="e">A <see cref="RoutedEventArgs"/> that contains the event goodsData.</param>
     private static void Control_Loaded(object sender, RoutedEventArgs e)
     {
         Control control = (Control)sender;
@@ -125,7 +125,7 @@ public static class WatermarkService
     /// Event handler for the items source changed event
     /// </summary>
     /// <param name="sender">The source of the event.</param>
-    /// <param name="e">A <see cref="EventArgs"/> that contains the event data.</param>
+    /// <param name="e">A <see cref="EventArgs"/> that contains the event goodsData.</param>
     private static void ItemsSourceChanged(object sender, EventArgs e)
     {
         ItemsControl c = (ItemsControl)sender;
@@ -150,7 +150,7 @@ public static class WatermarkService
     /// Event handler for the items changed event
     /// </summary>
     /// <param name="sender">The source of the event.</param>
-    /// <param name="e">A <see cref="ItemsChangedEventArgs"/> that contains the event data.</param>
+    /// <param name="e">A <see cref="ItemsChangedEventArgs"/> that contains the event goodsData.</param>
     private static void ItemsChanged(object sender, ItemsChangedEventArgs e)
     {
         ItemsControl control;

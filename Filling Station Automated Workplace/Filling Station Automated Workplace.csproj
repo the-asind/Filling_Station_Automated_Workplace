@@ -21,6 +21,10 @@
       <Content Include="Assets\Goods.csv">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <None Remove="Assets\Tanks.csv" />
+      <Content Include="Assets\Tanks.csv">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>
