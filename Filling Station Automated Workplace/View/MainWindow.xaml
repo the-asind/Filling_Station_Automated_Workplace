@@ -189,19 +189,18 @@
                         <Label Content="топливо" VerticalAlignment="Top" HorizontalContentAlignment="Center"
                                Padding="0,0,0,0" Grid.IsSharedSizeScope="True" Background="{x:Null}"
                                Foreground="#FFE8F5E9" />
-                        <TextBlock x:Name="PickedNozzle" TextAlignment="Left" Height="38" VerticalAlignment="Bottom"
+                        <TextBlock x:Name="PickedNozzle" Text="{Binding Path=SelectedNozzlePostInstance.NozzlelId, 
+                 StringFormat='ПОСТ {0}'}" TextAlignment="Left" Height="38" VerticalAlignment="Bottom"
                                    Width="147" FontSize="30" HorizontalAlignment="Left" Margin="15,0,0,18"
                                    Foreground="#FF1B5E20" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0"
-                                   FontStretch="SemiCondensed">
-                            <Run Text="{Binding ActiveUserControlId}"/>
+                                   FontStretch="SemiCondensed" d:DataContext="{d:DesignInstance }">
                         </TextBlock>
-                        <TextBlock x:Name="PickedNozzleFuel" TextAlignment="Left" Height="21"
+                        <TextBlock x:Name="PickedNozzleFuel" TextAlignment="Left" Height="21" Text="{Binding Path=SelectedNozzlePostInstance.SelectedName}"
                                    VerticalAlignment="Bottom" Width="187" FontSize="20" HorizontalAlignment="Left"
                                    Foreground="#FF1B5E20" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0"
                                    FontStretch="ExtraExpanded" Margin="15,0,0,5">
-                            <Run Text="АИ-92" /><Run />
                         </TextBlock>
                         <TextBlock x:Name="PickedNozzleSummaryPrice" TextAlignment="Right" Height="38"
                                    VerticalAlignment="Bottom" Width="203" FontSize="30" HorizontalAlignment="Right"

@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
+using System.Windows;
 using Filling_Station_Automated_Workplace.Data;
 
 namespace Filling_Station_Automated_Workplace.ViewModel;
@@ -58,7 +59,7 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
     public MainWindowViewModel()
     {
         var dataProvider = new ConcreteMainWindowViewModel();
-        NozzlePostViewModel.UserControlActive += OnNozzlePostUserControlActive;
+        NozzlePostViewModel.SelectedIdChanged += OnNozzlePostUserControlActive;
         _ConfigurationData = dataProvider;
     }
 
@@ -72,40 +73,23 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
         handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
     
-    private int _selectedNozzlePostId;
+    private NozzlePostViewModel _selectedNozzlePostInstance;
 
-    public int SelectedNozzlePostId
+    public NozzlePostViewModel SelectedNozzlePostInstance
     {
-        get => _selectedNozzlePostId;
+        get => _selectedNozzlePostInstance;
         set
         {
-            if (_selectedNozzlePostId == value) return;
-            _selectedNozzlePostId = value;
+            if (_selectedNozzlePostInstance == value) return;
+            _selectedNozzlePostInstance = value;
             
         }
     }
     
-    private void OnNozzlePostSelectedIdChanged(object sender, int e)
-    {
-        SelectedNozzlePostId = e;
-    }
-    
-    private int _activeUserControlId;
-    public int ActiveUserControlId
-    {
-        get => _activeUserControlId;
-        set
-        {
-            if (_activeUserControlId != value)
-            {
-                _activeUserControlId = value;
-                OnPropertyChanged(nameof(ActiveUserControlId));
-            }
-        }
-    }
 
-    private void OnNozzlePostUserControlActive(object sender, int e)
+    private void OnNozzlePostUserControlActive(object sender, NozzlePostViewModel e)
     {
-        ActiveUserControlId = e;
+        SelectedNozzlePostInstance = e;
+        OnPropertyChanged(nameof(SelectedNozzlePostInstance));
     }
 }

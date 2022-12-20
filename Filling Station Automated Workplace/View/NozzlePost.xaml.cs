@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -67,8 +68,15 @@ public partial class NozzlePost : UserControl
 
     private void SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        int id =  NozzleComboBox.SelectedIndex;
-        _viewModel.SelectionChanged(id);
+        ComboBox comboBox = sender as ComboBox;
+        if (comboBox == null) return;
+
+        DataRowView rowView = comboBox.SelectedItem as DataRowView;
+        if (rowView == null) return;
+
+        string selectedString = rowView["Name"].ToString();
+
+        _viewModel.SelectionChanged(selectedString);
     }
 
     private void LiterAmount_OnTextChanged(object sender, TextChangedEventArgs e)

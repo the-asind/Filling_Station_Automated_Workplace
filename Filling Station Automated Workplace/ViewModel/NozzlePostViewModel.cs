@@ -60,6 +60,7 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
         _nozzlePostData = nozzlePostData;
         NozzlePostNames = new ObservableCollection<string>(_nozzlePostData.NozzlePostDataTable.AsEnumerable()
             .Select(row => row.Field<string>("Name"))!);
+        NozzlelId = count;
     }
 
     public DataTable NozzlePostDataTable => _nozzlePostData.NozzlePostDataTable;
@@ -69,7 +70,7 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
     {
         get
         {
-            var row = NozzlePostDataTable.Rows.Find(SelectedId);
+            var row = NozzlePostDataTable.Rows.Find(SelectedFuelId);
             if (row != null)
                 return double.Parse(row["Price"].ToString()!,
                     NumberStyles.AllowDecimalPoint,
@@ -79,7 +80,7 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
         }
     }
 
-    public string TextPrice => string.Concat(Price.ToString("C2"), " ");
+    public string TextPrice => Price.ToString("C2");
 
     public double Summary => Price * LiterCount;
 
@@ -95,7 +96,7 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
         {
             if (_literCount == value) return;
             _literCount = value;
-            OnPropertyChanged(nameof(SelectedId));
+            OnPropertyChanged(nameof(SelectedFuelId));
             OnPropertyChanged(nameof(Price));
             OnPropertyChanged(nameof(TextPrice));
             OnPropertyChanged(nameof(Summary));
@@ -103,9 +104,20 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
         }
     }
 
-    public void SelectionChanged(int id)
+    public void SelectionChanged(string? name)
     {
-        SelectedId = id;
+        SelectedFuelName = name;
+        
+        DataRow[] rows = NozzlePostDataTable.Select("Name = '" + name + "'");
+        if (rows.Length > 0)
+        {
+            int id = int.Parse(rows[0]["id"].ToString() ?? throw new InvalidOperationException("invalid id in Tanks.csv!"));
+            SelectedFuelId = id;
+        }
+        else
+        {
+            throw new ArgumentException("id of " + name + " doesn't exist");
+        }
     }
 
     public void LiterCountChanged(int count)
@@ -133,7 +145,7 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
         get => _fillUp;
         set
         {
-            OnUserControlActive(_selectedId);
+            OnUserControlActive(this);
             if (_fillUp == value) return;
             _fillUp = value;
             OnPropertyChanged(nameof(LiterCount));
@@ -153,45 +165,78 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
             if (_litersFillProgress == value) return;
             _litersFillProgress = value;
             OnPropertyChanged(nameof(LiterCount));
-            OnPropertyChanged(nameof(SelectedId));
+            OnPropertyChanged(nameof(SelectedFuelId));
             OnPropertyChanged(nameof(Summary));
+            OnPropertyChanged(nameof(TextPrice));
             
         }
     }
     
-    private int _activeUserControlId;
-    public int ActiveUserControlId
+    public static void OnUserControlActive(NozzlePostViewModel nozzlePostVM)
     {
-        get => _activeUserControlId;
+        SelectedIdChanged?.Invoke(null, nozzlePostVM);
+    }
+    
+    public static event EventHandler<NozzlePostViewModel>? SelectedIdChanged;
+
+    private int _selectedFuelId;
+
+    public int SelectedFuelId
+    {
+        get => _selectedFuelId;
         set
         {
-            if (_activeUserControlId != value)
+            if (_selectedFuelId != value)
             {
-                _activeUserControlId = value;
-                OnPropertyChanged(nameof(ActiveUserControlId));
+                _selectedFuelId = value;
+                
+                OnPropertyChanged(nameof(SelectedFuelName));
+                OnPropertyChanged(nameof(Price));
+                OnPropertyChanged(nameof(TextPrice));
+                SelectedIdChanged?.Invoke(this, this);
+                
             }
         }
     }
-
-    public static event EventHandler<int> UserControlActive;
     
-    public static void OnUserControlActive(int userControlId)
-    {
-        UserControlActive?.Invoke(null, userControlId);
-    }
-    
-    private int _selectedId;
+    private string? _selectedFuelName;
 
-    public int SelectedId
+    public string? SelectedFuelName
     {
-        get => _selectedId;
+        get => _selectedFuelName;
         set
         {
-            if (_selectedId != value)
+            if (_selectedFuelName != value)
             {
-                _selectedId = value;
-                OnPropertyChanged(nameof(SelectedId));
-                OnPropertyChanged(nameof(_selectedId));
+                _selectedFuelName = value;
+                OnPropertyChanged(nameof(SelectedFuelId));
+                OnPropertyChanged(nameof(LiterCount));
+                OnPropertyChanged(nameof(LitersFillProgress));
+                OnPropertyChanged(nameof(Summary));
+                OnPropertyChanged(nameof(Price));
+                OnPropertyChanged(nameof(TextSummary));
+            }
+        }
+    }
+    
+    private int _nozzlelId;
+
+    public int NozzlelId
+    {
+        get => _nozzlelId;
+        set
+        {
+            if (_nozzlelId != value)
+            {
+                _nozzlelId = value;
+                OnPropertyChanged(nameof(SelectedFuelId));
+                OnPropertyChanged(nameof(SelectedFuelName));
+                OnPropertyChanged(nameof(LiterCount));
+                OnPropertyChanged(nameof(LitersFillProgress));
+                OnPropertyChanged(nameof(Summary));
+                OnPropertyChanged(nameof(Price));
+                OnPropertyChanged(nameof(TextSummary));
+                SelectedIdChanged?.Invoke(this, this);
             }
         }
     }
