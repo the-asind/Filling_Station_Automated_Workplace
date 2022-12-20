@@ -96,6 +96,7 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
         {
             if (_literCount == value) return;
             _literCount = value;
+            OnUserControlActive(this);
             OnPropertyChanged(nameof(SelectedFuelId));
             OnPropertyChanged(nameof(Price));
             OnPropertyChanged(nameof(TextPrice));
@@ -107,6 +108,7 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
     public void SelectionChanged(string? name)
     {
         SelectedFuelName = name;
+        OnUserControlActive(this);
         
         DataRow[] rows = NozzlePostDataTable.Select("Name = '" + name + "'");
         if (rows.Length > 0)
@@ -168,7 +170,6 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
             OnPropertyChanged(nameof(SelectedFuelId));
             OnPropertyChanged(nameof(Summary));
             OnPropertyChanged(nameof(TextPrice));
-            
         }
     }
     
@@ -194,7 +195,6 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
                 OnPropertyChanged(nameof(Price));
                 OnPropertyChanged(nameof(TextPrice));
                 SelectedIdChanged?.Invoke(this, this);
-                
             }
         }
     }
@@ -210,9 +210,6 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
             {
                 _selectedFuelName = value;
                 OnPropertyChanged(nameof(SelectedFuelId));
-                OnPropertyChanged(nameof(LiterCount));
-                OnPropertyChanged(nameof(LitersFillProgress));
-                OnPropertyChanged(nameof(Summary));
                 OnPropertyChanged(nameof(Price));
                 OnPropertyChanged(nameof(TextSummary));
             }
@@ -231,8 +228,6 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
                 _nozzlelId = value;
                 OnPropertyChanged(nameof(SelectedFuelId));
                 OnPropertyChanged(nameof(SelectedFuelName));
-                OnPropertyChanged(nameof(LiterCount));
-                OnPropertyChanged(nameof(LitersFillProgress));
                 OnPropertyChanged(nameof(Summary));
                 OnPropertyChanged(nameof(Price));
                 OnPropertyChanged(nameof(TextSummary));

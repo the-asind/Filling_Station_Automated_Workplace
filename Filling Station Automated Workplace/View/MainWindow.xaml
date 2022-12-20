@@ -196,19 +196,18 @@
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0"
                                    FontStretch="SemiCondensed" d:DataContext="{d:DesignInstance }">
                         </TextBlock>
-                        <TextBlock x:Name="PickedNozzleFuel" TextAlignment="Left" Height="21" Text="{Binding Path=SelectedNozzlePostInstance.SelectedName}"
+                        <TextBlock x:Name="PickedNozzleFuel" TextAlignment="Left" Height="21" Text="{Binding Path=SelectedNozzlePostInstance.SelectedFuelName}"
                                    VerticalAlignment="Bottom" Width="187" FontSize="20" HorizontalAlignment="Left"
                                    Foreground="#FF1B5E20" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0"
-                                   FontStretch="ExtraExpanded" Margin="15,0,0,5">
+                                   FontStretch="ExtraExpanded" Margin="15,0,0,5" d:DataContext="{d:DesignInstance }">
                         </TextBlock>
                         <TextBlock x:Name="PickedNozzleSummaryPrice" TextAlignment="Right" Height="38"
                                    VerticalAlignment="Bottom" Width="203" FontSize="30" HorizontalAlignment="Right"
-                                   Margin="0,0,15,9" Foreground="#FF1B5E20"
+                                   Margin="0,0,15,9" Foreground="#FF1B5E20" Text="{Binding Path=SelectedNozzlePostInstance.TextSummary}"
                                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0"
-                                   FontStretch="SemiCondensed">
-                            <Run Text="5 208.0" /><Run Language="ru-ru" Text="0" />
+                                   FontStretch="SemiCondensed" d:DataContext="{d:DesignInstance }">
                         </TextBlock>
                     </Grid>
                     <Grid x:Name="GoodsMainMenu" Height="300" Margin="10,10,10,0" VerticalAlignment="Top">

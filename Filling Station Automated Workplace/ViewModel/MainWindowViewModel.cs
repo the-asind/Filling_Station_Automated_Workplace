@@ -85,7 +85,6 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
             
         }
     }
-    
 
     private void OnNozzlePostUserControlActive(object sender, NozzlePostViewModel e)
     {

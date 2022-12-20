@@ -35,6 +35,8 @@ public partial class MainWindow : Window
         InitializeComponent();
         _viewModel = new MainWindowViewModel();
         PickedNozzle.DataContext = _viewModel;
+        PickedNozzleFuel.DataContext = _viewModel;
+        PickedNozzleSummaryPrice.DataContext = _viewModel;
         CreateNozzlePosts(2);
 
         //  DispatcherTimer setup
