@@ -110,7 +110,5 @@
                 </Style>
             </ToggleButton.Style>
         </ToggleButton>
-        <Rectangle x:Name="PickedNozzleStatusStroke" Stroke="#FF00E676" StrokeThickness="4"
-                   RadiusX="8" RadiusY="8" />
     </Grid>
 </UserControl>

@@ -1,10 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Reflection;
+using System.Xml.Serialization;
+using Filling_Station_Automated_Workplace.Data;
 using Microsoft.VisualBasic.FileIO;
 
 namespace Filling_Station_Automated_Workplace.Model;
 
-public static class DataSerializer
+public static class Deserialize
 {
     public static DataTable GetDataTableFromCsvFile(string csvFilePath)
     {
@@ -41,4 +46,27 @@ public static class DataSerializer
 
         return csvData;
     }
+
+    public static UsersData.Users DeserializeUsersData()
+    {
+        var fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\Users.xml";
+        XmlSerializer serializer = new XmlSerializer(typeof(UsersData.Users));
+        UsersData.Users users;
+
+        using (FileStream fs = new FileStream(fileName, FileMode.Open))
+        {
+            users = (UsersData.Users)serializer.Deserialize(fs)!;
+        }
+
+        return users;
+    }
+
+    // public static UsersData DeserializeUsersData()
+    // {
+    //     using var stream = new FileStream("Assets/User.xml", FileMode.Open);
+    //     var serializer = new XmlSerializer(typeof(UsersData));
+    //     var usersData = (UsersData)serializer.Deserialize(stream)!;
+    //
+    //     return usersData;
+    // }
 }

@@ -8,13 +8,12 @@ namespace Filling_Station_Automated_Workplace.ViewModel;
 
 public class Receipt
 {
-    public NozzlePostData RelateNozzlePost;
+    public NozzlePostViewModel RelateNozzlePost;
     public Payment PaymentType;
     public List<PositionInReceipt> CommodityItem;
 
     public Receipt()
     {
-        RelateNozzlePost = new NozzlePostData();
         PaymentType = new Payment();
         CommodityItem = new List<PositionInReceipt>();
     }
@@ -37,6 +36,11 @@ public class Receipt
         if (position != null)
             // Remove the position from the CommodityItem list
             CommodityItem.Remove(position);
+    }
+    
+    public void ClearCommodityItem()
+    {
+        CommodityItem.Clear();
     }
     
     public void ChangeCountById(int id, int count)

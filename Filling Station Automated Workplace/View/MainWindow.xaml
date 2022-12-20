@@ -6,7 +6,6 @@
     xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=Microsoft.Win32.Primitives"
     x:Name="_MainWindow"
     x:Class="Filling_Station_Automated_Workplace.View.MainWindow"
-    xmlns:uc="clr-namespace:Filling_Station_Automated_Workplace.View"
     Closed="MainWindow_OnClosed"
     mc:Ignorable="d"
     Title="АРМ оператора АЗС"
@@ -23,7 +22,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    
+
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FF43A047" />
@@ -117,27 +116,28 @@
                     <Rectangle Width="760" Fill="#FF4CAF50" RadiusX="10" RadiusY="10" />
 
                     <StackPanel x:Name="FunctionalList" Orientation="Horizontal">
-                        <Button x:Name="SystemButton" Content="Система" Height="40" Width="130" Margin="10,10,5,10"
+                        <Button x:Name="SystemButton" Content="Система" Height="40" Width="177.5" Margin="10,10,5,10"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
                                 BorderThickness="3,3,3,3" />
-                        <Button x:Name="ConfigurationButton" Content="Конфигурация" Height="40" Width="150"
-                                Background="#FFC8E6C9" Foreground="#FF1B5E20" BorderThickness="3,3,3,3"
-                                Margin="5,10,5,10" BorderBrush="#FFA5D6A7" />
-                        <Button x:Name="FuelInfoButton" Content="Резервуары" Height="40" Width="130"
+                        <Button x:Name="FuelInfoButton" Content="Резервуары" Height="40" Width="177.5"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
                                 BorderThickness="3,3,3,3" Margin="5,10,5,10" />
-                        <Button x:Name="HistoryInfoButton" Content="Детализация" Height="40" Width="130"
+                        <Button x:Name="HistoryInfoButton" Content="Товары" Height="40" Width="177.5"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
                                 BorderThickness="3,3,3,3" Margin="5,10,5,10" />
-                        <Button x:Name="EndShiftButton" Content="Закрыть смену" Height="40" Width="160"
+                        <Button x:Name="EndShiftButton" Content="Закрыть смену" Height="40" Width="177.5"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
                                 BorderThickness="3,3,3,3" Margin="5,10,5,10" />
                     </StackPanel>
 
                 </Grid>
-                <WrapPanel x:Name="NozzleList" Height="500" Width="780" Canvas.Left="10" Canvas.Top="90">
-                   
-                </WrapPanel>
+
+                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Visible"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="500" Width="800"
+                              Canvas.Left="10" Canvas.Top="90">
+
+                    <WrapPanel x:Name="NozzleList" />
+                </ScrollViewer>
             </Canvas>
         </Viewbox>
         <Viewbox x:Name="MainMenuBorderViewBox" Grid.Row="0" Grid.Column="1" Margin="0,10,0,10"
@@ -189,26 +189,27 @@
                         <Label Content="топливо" VerticalAlignment="Top" HorizontalContentAlignment="Center"
                                Padding="0,0,0,0" Grid.IsSharedSizeScope="True" Background="{x:Null}"
                                Foreground="#FFE8F5E9" />
-                        <TextBlock x:Name="PickedNozzle" Text="{Binding Path=SelectedNozzlePostInstance.NozzlelId, 
-                 StringFormat='ПОСТ {0}'}" TextAlignment="Left" Height="38" VerticalAlignment="Bottom"
+                        <TextBlock x:Name="PickedNozzle"
+                                   Text="{Binding Path=SelectedNozzlePostInstance.NozzlelId, 
+                 StringFormat='ПОСТ {0}'}"
+                                   TextAlignment="Left" Height="38" VerticalAlignment="Bottom"
                                    Width="147" FontSize="30" HorizontalAlignment="Left" Margin="15,0,0,18"
                                    Foreground="#FF1B5E20" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0"
-                                   FontStretch="SemiCondensed" d:DataContext="{d:DesignInstance }">
-                        </TextBlock>
-                        <TextBlock x:Name="PickedNozzleFuel" TextAlignment="Left" Height="21" Text="{Binding Path=SelectedNozzlePostInstance.SelectedFuelName}"
+                                   FontStretch="SemiCondensed" d:DataContext="{d:DesignInstance }" />
+                        <TextBlock x:Name="PickedNozzleFuel" TextAlignment="Left" Height="21"
+                                   Text="{Binding Path=SelectedNozzlePostInstance.SelectedFuelName}"
                                    VerticalAlignment="Bottom" Width="187" FontSize="20" HorizontalAlignment="Left"
                                    Foreground="#FF1B5E20" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0"
-                                   FontStretch="ExtraExpanded" Margin="15,0,0,5" d:DataContext="{d:DesignInstance }">
-                        </TextBlock>
+                                   FontStretch="ExtraExpanded" Margin="15,0,0,5" d:DataContext="{d:DesignInstance }" />
                         <TextBlock x:Name="PickedNozzleSummaryPrice" TextAlignment="Right" Height="38"
                                    VerticalAlignment="Bottom" Width="203" FontSize="30" HorizontalAlignment="Right"
-                                   Margin="0,0,15,9" Foreground="#FF1B5E20" Text="{Binding Path=SelectedNozzlePostInstance.TextSummary}"
+                                   Margin="0,0,15,9" Foreground="#FF1B5E20"
+                                   Text="{Binding Path=SelectedNozzlePostInstance.TextSummary}"
                                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0"
-                                   FontStretch="SemiCondensed" d:DataContext="{d:DesignInstance }">
-                        </TextBlock>
+                                   FontStretch="SemiCondensed" d:DataContext="{d:DesignInstance }" />
                     </Grid>
                     <Grid x:Name="GoodsMainMenu" Height="300" Margin="10,10,10,0" VerticalAlignment="Top">
                         <Rectangle Fill="#FFC8E6C9" RadiusX="10" RadiusY="10" Margin="0,0,0,-5">

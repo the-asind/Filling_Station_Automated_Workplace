@@ -122,7 +122,6 @@ public partial class GoodsSelector
 
     private void ShoppingCartGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        // Check if the double-click did not occur in the Count column
         var cell = ShoppingCartGrid.CurrentCell.Column;
 
         // Check if the double-click did not occur in the Count column
@@ -149,5 +148,11 @@ public partial class GoodsSelector
     {
         _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
         ShoppingCartGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
+    }
+
+    private void ClearShoppingCart(object sender, RoutedEventArgs e)
+    {
+        CurrentReceipt.Receipt.ClearCommodityItem();
+        ShowShoppingCartChanges();
     }
 }

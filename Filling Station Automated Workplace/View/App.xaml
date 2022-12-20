@@ -11,6 +11,30 @@
         <SolidColorBrush x:Key="ComboBoxDisabledBackgroundBrush" Color="#C8E6C9" />
         <SolidColorBrush x:Key="ComboBoxDisabledBorderBrush" Color="#66BB6A" />
 
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="yellow" />
+            <Setter Property="Width" Value="20" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid>
+                            <Track Name="PART_Track" IsDirectionReversed="True">
+                                <Track.Thumb>
+                                    <Thumb Background="Green">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Rectangle Width="5" Height="1000" Fill="Green"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
         <ControlTemplate TargetType="ToggleButton" x:Key="ComboBoxToggleButtonTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>

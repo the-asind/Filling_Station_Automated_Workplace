@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Filling_Station_Automated_Workplace.Model;
 using Filling_Station_Automated_Workplace.ViewModel;
+using System.Windows.Media.Effects;
 
 namespace Filling_Station_Automated_Workplace.View;
 
@@ -37,7 +38,24 @@ public partial class MainWindow : Window
         PickedNozzle.DataContext = _viewModel;
         PickedNozzleFuel.DataContext = _viewModel;
         PickedNozzleSummaryPrice.DataContext = _viewModel;
-        CreateNozzlePosts(2);
+        
+        var blur = new BlurEffect();
+        blur.Radius = 10;
+        this.Effect = blur;
+
+        var login = new Login();
+        login.Topmost = true;
+        login.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        login.Show();
+        
+        login.Closed += (sender, args) =>
+        {
+            // Remove the Blur effect from the main window
+            this.Effect = null;
+        };
+
+
+        CreateNozzlePosts(12);
 
         //  DispatcherTimer setup
         _timer = new DispatcherTimer();
@@ -45,7 +63,7 @@ public partial class MainWindow : Window
         _timer.Interval = new TimeSpan(0, 0, 1);
         _timer.Start();
     }
-
+    
     private void CreateNozzlePosts(int count)
     {
         NozzleList.Children.Clear();
@@ -76,22 +94,6 @@ public partial class MainWindow : Window
 
         // Forcing the CommandManager to raise the RequerySuggested event
         CommandManager.InvalidateRequerySuggested();
-    }
-
-    private void LitreAmountCliked(object sender, RoutedEventArgs e)
-    {
-    }
-
-    private void LiterAmountTextInput(object sender, TextCompositionEventArgs e)
-    {
-        e.Handled = _regex.IsMatch(e.Text);
-    }
-
-    private static readonly Regex _regex = new("[^0-9.]+"); //regex that matches disallowed text
-
-    private static bool IsTextAllowed(string text)
-    {
-        return !_regex.IsMatch(text);
     }
 
     private void AddGoodsButton_OnClick(object sender, RoutedEventArgs e)

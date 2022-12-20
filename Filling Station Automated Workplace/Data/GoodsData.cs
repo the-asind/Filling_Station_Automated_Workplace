@@ -12,7 +12,7 @@ public class GoodsData : IGoodsDataProvider
 
     public GoodsData()
     {
-        GoodsDataTable = DataSerializer.GetDataTableFromCsvFile(
+        GoodsDataTable = Deserialize.GetDataTableFromCsvFile(
             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\Goods.csv");
 
         DataColumn[] primaryKeyColumns = { GoodsDataTable.Columns["ID"] };

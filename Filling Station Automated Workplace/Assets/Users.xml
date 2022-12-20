@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Users>
+    <User>
+        <Login>Кашаев Аскер Муратович</Login>
+        <Password>rfiftd</Password>
+        <AccessLevel>admin</AccessLevel>
+    </User>
+    <User>
+        <Login>Валентин Зарякин</Login>
+        <Password>123</Password>
+        <AccessLevel>user</AccessLevel>
+    </User>
+    <User>
+        <Login>Анна Степановна</Login>
+        <Password>123</Password>
+        <AccessLevel>user</AccessLevel>
+    </User>
+    <User>
+        <Login>1</Login>
+        <Password>1</Password>
+        <AccessLevel>admin</AccessLevel>
+    </User>
+</Users>

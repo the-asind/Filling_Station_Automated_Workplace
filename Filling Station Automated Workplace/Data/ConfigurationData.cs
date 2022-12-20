@@ -11,7 +11,7 @@ public class ConfigurationData
 
     public ConfigurationData()
     {
-        /*ConfigurationDataTable = DataSerializer.GetDataTableFromCsvFile(
+        /*ConfigurationDataTable = Deserialize.GetDataTableFromCsvFile(
             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\Configuration.xml");
 */
     }

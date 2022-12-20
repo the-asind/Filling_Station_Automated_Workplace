@@ -82,7 +82,8 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
         {
             if (_selectedNozzlePostInstance == value) return;
             _selectedNozzlePostInstance = value;
-            
+            CurrentReceipt.Receipt.RelateNozzlePost = value;
+
         }
     }
 

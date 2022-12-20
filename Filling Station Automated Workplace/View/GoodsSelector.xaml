@@ -32,10 +32,15 @@
         </Path>
         <Grid Name="GoodsSelectorGrid" MinWidth="600" Width="{Binding Path=ActualWidth, ElementName=GoodsGrid}"
               Height="600">
-            <Button Content="добавить товары" HorizontalAlignment="Center" Height="40"
-                    VerticalAlignment="Bottom" Width="260" Background="#FFA5D6A7" BorderBrush="#FF388E3C"
+            <Button Content="очистить корзину" HorizontalAlignment="Center" Height="40"
+                    VerticalAlignment="Bottom" Width="200" Background="#FFA5D6A7" BorderBrush="#FF388E3C"
                     Foreground="#FF1B5E20" FontSize="22" FontFamily="Bahnschrift" BorderThickness="0,0,0,0"
-                    Margin="0,0,0,21" Click="WindowClose" />
+                    Margin="0,0,250,21" Click="ClearShoppingCart" />
+            
+            <Button Content="добавить товары" HorizontalAlignment="Center" Height="40"
+                    VerticalAlignment="Bottom" Width="200" Background="#FFA5D6A7" BorderBrush="#FF388E3C"
+                    Foreground="#FF1B5E20" FontSize="22" FontFamily="Bahnschrift" BorderThickness="0,0,0,0"
+                    Margin="0,0,-250,21" Click="WindowClose" />
 
             <DataGrid RowHeaderWidth="0" x:Name="GoodsGrid" Margin="0,0,0,76" Background="#FFC8E6C9"
                       BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0" IsReadOnly="True"

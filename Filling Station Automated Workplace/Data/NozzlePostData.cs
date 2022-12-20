@@ -12,7 +12,7 @@ public class NozzlePostData : INozzlePostDataProvider
     
     public NozzlePostData()
     {
-        NozzlePostDataTable = DataSerializer.GetDataTableFromCsvFile(
+        NozzlePostDataTable = Deserialize.GetDataTableFromCsvFile(
             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\Tanks.csv");
 
         DataColumn[] primaryKeyColumns = { NozzlePostDataTable.Columns["ID"] ?? new DataColumn() };
