@@ -10,7 +10,7 @@
     mc:Ignorable="d"
     Title="АРМ оператора АЗС"
     FontFamily="Bahnschrift" FontSize="18"
-    SizeToContent="Manual" MinWidth="1320" Icon="/Assets/workplace.ico" MinHeight="760"
+    SizeToContent="Manual" MinWidth="1320" Icon="/Media/workplace.ico" MinHeight="760"
     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
     Width="1320" Height="760" ResizeMode="CanResizeWithGrip"
     WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow">
@@ -239,7 +239,7 @@
                                 BorderBrush="#FF388E3C" Foreground="#FF1B5E20" BorderThickness="0,0,0,0"
                                 Click="AddGoodsButton_OnClick" />
                         <DataGrid RowHeaderWidth="0" x:Name="GoodsMainMenuGrid" Margin="10,33,10,51"
-                                  Background="#FFC8E6C9"
+                                  Background="#FFC8E6C9" ItemsSource="{Binding ReceiptItems}"
                                   BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" Loaded="grid_Loaded"
                                   GridLinesVisibility="None" IsReadOnly="True" MaxColumnWidth="250">
                             <DataGrid.ColumnHeaderStyle>

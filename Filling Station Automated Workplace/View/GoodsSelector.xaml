@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:global="clr-namespace:"
         mc:Ignorable="d"
+        Deactivated="WindowClose"
         Title="Выбор товара" ResizeMode="NoResize" AllowsTransparency="True" WindowStyle="None" Background="#00000000"
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FontFamily="Bahnschrift">
     

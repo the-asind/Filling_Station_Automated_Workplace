@@ -5,8 +5,13 @@ using Filling_Station_Automated_Workplace.ViewModel;
 
 namespace Filling_Station_Automated_Workplace.Model;
 
-public static class ShoppingCartItem
+public class ShoppingCartItem
 {
+    public string? Name { get; set; }
+    public int Id { get; set; }
+    public int Count { get; set; }
+    public double TotalCost { get; set; }
+    
     public static DataTable? Update(Receipt receipt)
     {
         List<PositionInReceipt> commodityItem = receipt.CommodityItem;
@@ -26,5 +31,29 @@ public static class ShoppingCartItem
         }
 
         return table;
+    }
+    
+    public static IEnumerable<ShoppingCartItem> IUpdate(Receipt receipt)
+    {
+        List<PositionInReceipt> commodityItem = receipt.CommodityItem;
+        List<ShoppingCartItem> shoppingCartItems = new List<ShoppingCartItem>();
+
+        // Create a ShoppingCartItem object for each item in the List and add it to the collection
+        foreach (var item in commodityItem)
+        {
+            var (goodsName, goodsPrice) = GoodsModel.GetNameAndPriceById(item.Id);
+
+            var shoppingCartItem = new ShoppingCartItem
+            {
+                Name = goodsName,
+                Id = item.Id,
+                Count = item.Count,
+                TotalCost = item.TotalCost
+            };
+
+            shoppingCartItems.Add(shoppingCartItem);
+        }
+
+        return shoppingCartItems;
     }
 }

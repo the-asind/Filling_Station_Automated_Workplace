@@ -19,18 +19,15 @@ public partial class GoodsSelector
         DragMove();
     }
 
-    private void WindowClose(object sender, RoutedEventArgs e)
-    {
-        Close();
-    }
-
     private DataTable? _shoppingCartGoodsTable;
 
     private readonly GoodsSelectorViewModel _viewModel;
+    private readonly MainWindowViewModel _mainWindowViewModel;
 
-    public GoodsSelector(GoodsSelectorViewModel _viewModel)
+    public GoodsSelector(GoodsSelectorViewModel viewModel, MainWindowViewModel mainWindowViewModel)
     {
-        this._viewModel = _viewModel;
+        _viewModel = viewModel;
+        _mainWindowViewModel = mainWindowViewModel;
 
         InitializeComponent();
 
@@ -148,11 +145,26 @@ public partial class GoodsSelector
     {
         _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
         ShoppingCartGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
+        _mainWindowViewModel.UpdateReceiptItems(CurrentReceipt.Receipt);
+        _mainWindowViewModel.SetGoodsSummary(CurrentReceipt.Receipt.GetGoodsSummary());
     }
 
     private void ClearShoppingCart(object sender, RoutedEventArgs e)
     {
         CurrentReceipt.Receipt.ClearCommodityItem();
         ShowShoppingCartChanges();
+    }
+
+    private void WindowClose(object? sender, EventArgs e)
+    {
+        try
+        {
+            Close();
+        }
+        catch (InvalidOperationException)
+        {
+            // Ignored
+        }
+        
     }
 }

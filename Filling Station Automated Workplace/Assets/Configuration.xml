@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+    <NozzlePostCount>4</NozzlePostCount>
+    <PaymentTypes>
+        <PaymentType>Cash</PaymentType>
+        <PaymentType>CreditCard</PaymentType>
+        <PaymentType>DebitCard</PaymentType>
+    </PaymentTypes>
+</Configuration>

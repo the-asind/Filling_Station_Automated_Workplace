@@ -82,7 +82,7 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
 
     public string TextPrice => Price.ToString("C2");
 
-    public double Summary => Price * LiterCount;
+    public double Summary => Price * LiterCount + 0;
 
     public string TextSummary => (Price * LiterCount).ToString("C2");
 
@@ -173,9 +173,9 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
         }
     }
     
-    public static void OnUserControlActive(NozzlePostViewModel nozzlePostVM)
+    public static void OnUserControlActive(NozzlePostViewModel nozzlePostVm)
     {
-        SelectedIdChanged?.Invoke(null, nozzlePostVM);
+        SelectedIdChanged?.Invoke(null, nozzlePostVm);
     }
     
     public static event EventHandler<NozzlePostViewModel>? SelectedIdChanged;

@@ -3,8 +3,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
-using System.Windows;
+using System.Net.Mime;
+using System.Runtime.CompilerServices;
 using Filling_Station_Automated_Workplace.Data;
+using Filling_Station_Automated_Workplace.Model;
 
 namespace Filling_Station_Automated_Workplace.ViewModel;
 
@@ -61,10 +63,11 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
         var dataProvider = new ConcreteMainWindowViewModel();
         NozzlePostViewModel.SelectedIdChanged += OnNozzlePostUserControlActive;
         _ConfigurationData = dataProvider;
+        ReceiptItems = new ObservableCollection<ShoppingCartItem>();
     }
 
     public DataTable ConfigurationDataTable => _ConfigurationData.ConfigurationDataTable;
-    
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged(string propertyName)
@@ -72,10 +75,10 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
         var handler = PropertyChanged;
         handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-    
+
     private NozzlePostViewModel _selectedNozzlePostInstance;
 
-    public NozzlePostViewModel SelectedNozzlePostInstance
+    public NozzlePostViewModel? SelectedNozzlePostInstance
     {
         get => _selectedNozzlePostInstance;
         set
@@ -92,11 +95,22 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
         SelectedNozzlePostInstance = e;
         OnPropertyChanged(nameof(SelectedNozzlePostInstance));
         OnPropertyChanged(nameof(TotalCostText));
+        OnPropertyChanged(nameof(ReceiptItems));
     }
-    
-    public string TotalCostText => (SelectedNozzlePostInstance.Summary + GoodsSummary).ToString("C2");
 
-    public void SetGoodsSummary(double getGoodsSummary)
+    public string TotalCostText
+    {
+        get
+        {
+            if (SelectedNozzlePostInstance != null)
+                return (SelectedNozzlePostInstance.Summary+ GoodsSummary).ToString("C2");
+            return 0.ToString("C2");
+        }
+    }
+
+    
+
+public void SetGoodsSummary(double getGoodsSummary)
     {
         GoodsSummary = getGoodsSummary;
     }
@@ -113,8 +127,22 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
             _goodsSummary = value;
             OnPropertyChanged(nameof(TextGoodsSummary));
             OnPropertyChanged(nameof(TotalCostText));
+            OnPropertyChanged(nameof(ReceiptItems));
         }
     }
 
     public string TextGoodsSummary => _goodsSummary.ToString("C2");
+    
+    public void UpdateReceiptItems(Receipt receipt)
+    {
+        ReceiptItems = new ObservableCollection<ShoppingCartItem>(ShoppingCartItem.IUpdate(receipt));
+        OnPropertyChanged(nameof(ReceiptItems));
+        OnPropertyChanged(nameof(GoodsSummary));
+    }
+
+
+
+    public ObservableCollection<ShoppingCartItem> ReceiptItems { get; set; }
+    
+    
 }

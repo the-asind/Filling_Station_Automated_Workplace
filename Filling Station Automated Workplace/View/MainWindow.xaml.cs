@@ -26,7 +26,7 @@ public partial class MainWindow : Window
     private void grid_Loaded(object sender, RoutedEventArgs e)
     {
         _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
-        GoodsMainMenuGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
+        //GoodsMainMenuGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
     }
 
     private readonly MainWindowViewModel _viewModel;
@@ -35,11 +35,13 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         _viewModel = new MainWindowViewModel();
+        GoodsMainMenuGrid.DataContext = _viewModel;
         PickedNozzle.DataContext = _viewModel;
         PickedNozzleFuel.DataContext = _viewModel;
         PickedNozzleSummaryPrice.DataContext = _viewModel;
         GoodsSummaryTextBlock.DataContext = _viewModel;
         TotalAmountInfo.DataContext = _viewModel;
+        
         
         var blur = new BlurEffect();
         blur.Radius = 10;
@@ -104,15 +106,15 @@ public partial class MainWindow : Window
         var dataProvider = new ConcreteGoodsSelectorViewModel();
         var goodsSelectorViewModel = new GoodsSelectorViewModel(dataProvider);
 
-        var goodsSelector = new GoodsSelector(goodsSelectorViewModel);
-        goodsSelector.Topmost = true;
-        goodsSelector.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        var goodsSelector = new GoodsSelector(goodsSelectorViewModel, _viewModel)
+        {
+            Topmost = true,
+            WindowStartupLocation = WindowStartupLocation.CenterScreen
+        };
         // Show the window
-        goodsSelector.ShowDialog();
-
-        GoodsMainMenuGrid.ItemsSource = ShoppingCartItem.Update(CurrentReceipt.Receipt)?.DefaultView;
-
-        _viewModel.SetGoodsSummary(CurrentReceipt.Receipt.GetGoodsSummary());
+        goodsSelector.Show();
+        
+        
     }
 
     private void MainWindow_OnClosed(object? sender, EventArgs e)
