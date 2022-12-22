@@ -38,6 +38,8 @@ public partial class MainWindow : Window
         PickedNozzle.DataContext = _viewModel;
         PickedNozzleFuel.DataContext = _viewModel;
         PickedNozzleSummaryPrice.DataContext = _viewModel;
+        GoodsSummaryTextBlock.DataContext = _viewModel;
+        TotalAmountInfo.DataContext = _viewModel;
         
         var blur = new BlurEffect();
         blur.Radius = 10;
@@ -108,19 +110,9 @@ public partial class MainWindow : Window
         // Show the window
         goodsSelector.ShowDialog();
 
-        _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
-        GoodsMainMenuGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
+        GoodsMainMenuGrid.ItemsSource = ShoppingCartItem.Update(CurrentReceipt.Receipt)?.DefaultView;
 
-        SetGoodsSummaryTextBlockValue(CurrentReceipt.Receipt.GetGoodsSummary());
-    }
-
-    public void SetGoodsSummaryTextBlockValue(double value)
-    {
-        var rounded = Math.Round(value, 2);
-        var culture = CultureInfo.InvariantCulture;
-        var sum = rounded.ToString("#.##", culture);
-
-        GoodsSummaryTextBlock.Text = string.Concat("Сумма: ", sum);
+        _viewModel.SetGoodsSummary(CurrentReceipt.Receipt.GetGoodsSummary());
     }
 
     private void MainWindow_OnClosed(object? sender, EventArgs e)

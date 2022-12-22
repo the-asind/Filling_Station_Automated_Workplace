@@ -233,7 +233,7 @@
                                    Margin="0,0,15,-2" Foreground="#FF1B5E20"
                                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0"
-                                   FontStretch="SemiCondensed" Text="Сумма: 0.00" />
+                                   FontStretch="SemiCondensed" Text="{Binding Path=TextGoodsSummary}" />
                         <Button x:Name="AddGoodsButton" Content="добавить товар" HorizontalAlignment="Left" Height="30"
                                 Margin="10,0,0,3" VerticalAlignment="Bottom" Width="160" Background="#FFA5D6A7"
                                 BorderBrush="#FF388E3C" Foreground="#FF1B5E20" BorderThickness="0,0,0,0"
@@ -291,7 +291,7 @@
                             <Run Text="В" /><Run Language="ru-ru" Text="сего" /><Run Text=":" />
                         </TextBlock>
                         <TextBox x:Name="TotalAmountInfo" HorizontalAlignment="Left" Height="40" Margin="120,0,0,75"
-                                 Text="7 230.88" Width="270" Foreground="#FF1B5E20" Background="#FFC8E6C9"
+                                 Text="{Binding Path=TotalCostText, Mode=OneWay}" Width="270" Foreground="#FF1B5E20" Background="#FFC8E6C9"
                                  BorderBrush="#FFA5D6A7" SelectionBrush="#FF2E7D32" SelectionTextBrush="#FFC8E6C9"
                                  VerticalAlignment="Bottom" FontSize="30" TextWrapping="WrapWithOverflow"
                                  HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch"

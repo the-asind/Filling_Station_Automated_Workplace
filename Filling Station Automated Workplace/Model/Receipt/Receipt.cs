@@ -69,4 +69,6 @@ public class Receipt
         var sum = CommodityItem.Sum(x => x.TotalCost);
         return sum;
     }
+    
+    public string TextGoodsSummary => (CommodityItem.Sum(x => x.TotalCost)).ToString("C2");
 }

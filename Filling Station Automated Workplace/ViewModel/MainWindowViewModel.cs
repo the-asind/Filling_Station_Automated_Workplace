@@ -83,7 +83,7 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
             if (_selectedNozzlePostInstance == value) return;
             _selectedNozzlePostInstance = value;
             CurrentReceipt.Receipt.RelateNozzlePost = value;
-
+            OnPropertyChanged(nameof(TotalCostText));
         }
     }
 
@@ -91,5 +91,30 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
     {
         SelectedNozzlePostInstance = e;
         OnPropertyChanged(nameof(SelectedNozzlePostInstance));
+        OnPropertyChanged(nameof(TotalCostText));
     }
+    
+    public string TotalCostText => (SelectedNozzlePostInstance.Summary + GoodsSummary).ToString("C2");
+
+    public void SetGoodsSummary(double getGoodsSummary)
+    {
+        GoodsSummary = getGoodsSummary;
+    }
+    
+    private double _goodsSummary;
+
+    public double GoodsSummary
+    {
+        get => _goodsSummary;
+        
+        set
+        {
+            if (Math.Abs(_goodsSummary - value) < 0.001) return;
+            _goodsSummary = value;
+            OnPropertyChanged(nameof(TextGoodsSummary));
+            OnPropertyChanged(nameof(TotalCostText));
+        }
+    }
+
+    public string TextGoodsSummary => _goodsSummary.ToString("C2");
 }
