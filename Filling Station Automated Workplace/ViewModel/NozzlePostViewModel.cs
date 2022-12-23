@@ -20,11 +20,11 @@ public interface INozzlePostViewModel
         }
     }
 
-    ObservableCollection<string> NozzlePostNames
+    ObservableCollection<string?> NozzlePostNames
     {
         get
         {
-            var nozzlePostNames = new ObservableCollection<string>();
+            var nozzlePostNames = new ObservableCollection<string?>();
 
             foreach (DataRow row in NozzlePostDataTable.Rows) nozzlePostNames.Add(row["Name"].ToString());
 
@@ -59,13 +59,13 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
     public NozzlePostViewModel(int count, INozzlePostDataProvider nozzlePostData)
     {
         _nozzlePostData = nozzlePostData;
-        NozzlePostNames = new ObservableCollection<string>(_nozzlePostData.NozzlePostDataTable.AsEnumerable()
-            .Select(row => row.Field<string>("Name"))!);
+        NozzlePostNames = new ObservableCollection<string?>(_nozzlePostData.NozzlePostDataTable.AsEnumerable()
+            .Select(row => row.Field<string>("Name")));
         NozzlelId = count;
     }
 
     public DataTable NozzlePostDataTable => _nozzlePostData.NozzlePostDataTable;
-    public ObservableCollection<string> NozzlePostNames { get; }
+    public ObservableCollection<string?> NozzlePostNames { get; }
 
     public double Price
     {
@@ -112,7 +112,7 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
         SelectedFuelName = name;
         OnUserControlActive(this);
         
-        DataRow[] rows = NozzlePostDataTable.Select("Name = '" + name + "'");
+        var rows = NozzlePostDataTable.Select("Name = '" + name + "'");
         if (rows.Length > 0)
         {
             int id = int.Parse(rows[0]["id"].ToString() ?? throw new InvalidOperationException("invalid id in Tanks.csv!"));
@@ -141,6 +141,7 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
     {
         FillUp = value;
         Messenger.Default.Send(new FillUpChangedMessage());
+        
     }
 
     private bool _fillUp;
@@ -148,7 +149,7 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
     public bool FillUp
     {
         get => _fillUp;
-        set
+        private set
         {
             OnUserControlActive(this);
             if (_fillUp == value) return;
@@ -176,8 +177,8 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
             OnPropertyChanged(nameof(TextSummary));
         }
     }
-    
-    public static void OnUserControlActive(NozzlePostViewModel nozzlePostVm)
+
+    private static void OnUserControlActive(NozzlePostViewModel nozzlePostVm)
     {
         SelectedIdChanged?.Invoke(null, nozzlePostVm);
     }
@@ -223,21 +224,37 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
     
     private int _nozzlelId;
 
+    // ReSharper disable once MemberCanBePrivate.Global
     public int NozzlelId
     {
         get => _nozzlelId;
+        init
+        {
+            if (_nozzlelId == value) return;
+            _nozzlelId = value;
+            OnPropertyChanged(nameof(SelectedFuelId));
+            OnPropertyChanged(nameof(SelectedFuelName));
+            OnPropertyChanged(nameof(Summary));
+            OnPropertyChanged(nameof(Price));
+            OnPropertyChanged(nameof(TextSummary));
+            SelectedIdChanged?.Invoke(this, this);
+        }
+    }
+    
+    private bool _isNozzlePostBusy;
+    public bool IsNozzlePostBusy
+    {
+        get => _isNozzlePostBusy;
         set
         {
-            if (_nozzlelId != value)
-            {
-                _nozzlelId = value;
-                OnPropertyChanged(nameof(SelectedFuelId));
-                OnPropertyChanged(nameof(SelectedFuelName));
-                OnPropertyChanged(nameof(Summary));
-                OnPropertyChanged(nameof(Price));
-                OnPropertyChanged(nameof(TextSummary));
-                SelectedIdChanged?.Invoke(this, this);
-            }
+            if (_isNozzlePostBusy == value) return;
+            _isNozzlePostBusy = value;
+            OnPropertyChanged(nameof(IsNozzlePostBusy));
         }
+    }
+
+    public void StartFueling()
+    {
+        
     }
 }

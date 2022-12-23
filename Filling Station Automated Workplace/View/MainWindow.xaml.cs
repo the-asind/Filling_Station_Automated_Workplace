@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Filling_Station_Automated_Workplace.Model;
@@ -25,7 +26,7 @@ public partial class MainWindow : Window
     //Добавим информацию в таблицу
     private void grid_Loaded(object sender, RoutedEventArgs e)
     {
-        _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
+        _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentSession.CurrentReceipt);
         //GoodsMainMenuGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
     }
 
@@ -41,8 +42,8 @@ public partial class MainWindow : Window
         PickedNozzleSummaryPrice.DataContext = _viewModel;
         GoodsSummaryTextBlock.DataContext = _viewModel;
         TotalAmountInfo.DataContext = _viewModel;
-        
-        
+        FinishPaymentButton.DataContext = _viewModel;
+
         var blur = new BlurEffect
         {
             Radius = 10
@@ -118,12 +119,35 @@ public partial class MainWindow : Window
         };
         // Show the window
         goodsSelector.Show();
-        
-        
     }
 
     private void MainWindow_OnClosed(object? sender, EventArgs e)
     {
         Environment.Exit(0);
+    }
+
+    private void FinishPaymentButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        _viewModel.FinishPayment();
+    }
+}
+
+public class FinishPaymentConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is bool boolValue)
+        {
+            return boolValue ? "ОПЛАТА" : "ПУСК";
+        }
+        else
+        {
+            throw new ArgumentException();
+        }
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new ArgumentException();
     }
 }

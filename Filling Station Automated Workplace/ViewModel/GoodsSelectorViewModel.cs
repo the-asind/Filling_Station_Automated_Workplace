@@ -1,5 +1,7 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Windows;
 using Filling_Station_Automated_Workplace.Data;
 
 namespace Filling_Station_Automated_Workplace.ViewModel;
@@ -38,9 +40,28 @@ public class GoodsSelectorViewModel : IGoodsSelectorViewModel
     {
         this._goodsData = goodsData;
     }
-
+    
+    public DataTable ShoppingCartDataTable { get; set; }
+    
     public DataTable GoodsDataTable => _goodsData.GoodsDataTable;
 
+    //TODO: закончить перенос логики из GoodsSelectorView во ViewModel, чтоб по-человечески было.
+    public void UpdateShoppingCartData(int index, int count)
+    {
+        var row = ShoppingCartDataTable.Rows[index];
+        object?[] values = row.ItemArray;
+        var id = (int)(values[0] ?? 0);
+
+        try
+        {
+            CurrentSession.CurrentReceipt.ChangeCountById(id, count);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
+    }
+    
     // Define a method to filter the GoodsDataTable by a given text
     public DataTable GetFilteredGoodsDataTable(string filterText)
     {

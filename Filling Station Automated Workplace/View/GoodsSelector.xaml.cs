@@ -9,9 +9,6 @@ using Filling_Station_Automated_Workplace.ViewModel;
 
 namespace Filling_Station_Automated_Workplace.View;
 
-/// <summary>
-///     Логика взаимодействия для Window1.xaml
-/// </summary>
 public partial class GoodsSelector
 {
     private void MovingWindow(object sender, RoutedEventArgs e)
@@ -47,7 +44,7 @@ public partial class GoodsSelector
 
             var itemId = int.Parse(Convert.ToString(dr1?.ItemArray[0]) ?? throw new InvalidOperationException());
 
-            CurrentReceipt.Receipt.AddIdToCommodityItem(itemId);  
+            CurrentSession.CurrentReceipt.AddIdToCommodityItem(itemId);  
             ShowShoppingCartChanges();
         }
         catch
@@ -99,15 +96,15 @@ public partial class GoodsSelector
         Debug.Assert(dataGrid != null, nameof(dataGrid) + " != null");
         var index = dataGrid.ItemContainerGenerator.IndexFromContainer(e.Row);
 
-        _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
+        _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentSession.CurrentReceipt);
 
-        var row = _shoppingCartGoodsTable.Rows[index];
-        object?[] values = row.ItemArray;
-        var id = (int)(values[0] ?? 0);
+        var row = _shoppingCartGoodsTable?.Rows[index];
+        object?[]? values = row?.ItemArray;
+        var id = (int)(values?[0] ?? 0);
 
         try
         {
-            CurrentReceipt.Receipt.ChangeCountById(id, count);
+            CurrentSession.CurrentReceipt.ChangeCountById(id, count);
         }
         catch (Exception ex)
         {
@@ -132,7 +129,7 @@ public partial class GoodsSelector
 
                 var itemId = int.Parse(Convert.ToString(dr1?.ItemArray[0]) ?? throw new InvalidOperationException());
 
-                CurrentReceipt.Receipt.RemoveIdFromCommodityItem(itemId);
+                CurrentSession.CurrentReceipt.RemoveIdFromCommodityItem(itemId);
                 ShowShoppingCartChanges();
             }
             catch
@@ -143,15 +140,15 @@ public partial class GoodsSelector
     
     private void ShowShoppingCartChanges()
     {
-        _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentReceipt.Receipt);
-        ShoppingCartGrid.ItemsSource = _shoppingCartGoodsTable.DefaultView;
-        _mainWindowViewModel.UpdateReceiptItems(CurrentReceipt.Receipt);
-        _mainWindowViewModel.SetGoodsSummary(CurrentReceipt.Receipt.GetGoodsSummary());
+        _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentSession.CurrentReceipt);
+        ShoppingCartGrid.ItemsSource = _shoppingCartGoodsTable?.DefaultView;
+        _mainWindowViewModel.UpdateReceiptItems(CurrentSession.CurrentReceipt);
+        _mainWindowViewModel.SetGoodsSummary(CurrentSession.CurrentReceipt.GetGoodsSummary());
     }
 
     private void ClearShoppingCart(object sender, RoutedEventArgs e)
     {
-        CurrentReceipt.Receipt.ClearCommodityItem();
+        CurrentSession.CurrentReceipt.ClearCommodityItem();
         ShowShoppingCartChanges();
     }
 

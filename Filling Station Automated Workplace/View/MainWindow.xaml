@@ -4,6 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=Microsoft.Win32.Primitives"
+    xmlns:view="clr-namespace:Filling_Station_Automated_Workplace.View"
     x:Name="_MainWindow"
     x:Class="Filling_Station_Automated_Workplace.View.MainWindow"
     Closed="MainWindow_OnClosed"
@@ -20,6 +21,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="LayoutPatterns.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <view:FinishPaymentConverter x:Key="FinishPaymentConverter" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -190,13 +193,15 @@
                                Padding="0,0,0,0" Grid.IsSharedSizeScope="True" Background="{x:Null}"
                                Foreground="#FFE8F5E9" />
                         <TextBlock x:Name="PickedNozzle"
-                                   Text="{Binding Path=SelectedNozzlePostInstance.NozzlelId, 
-                 StringFormat='ПОСТ {0}'}"
                                    TextAlignment="Left" Height="38" VerticalAlignment="Bottom"
                                    Width="147" FontSize="30" HorizontalAlignment="Left" Margin="15,0,0,18"
                                    Foreground="#FF1B5E20" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0"
-                                   FontStretch="SemiCondensed" d:DataContext="{d:DesignInstance }" />
+                                   FontStretch="SemiCondensed" d:DataContext="{d:DesignInstance }">
+                            <TextBlock.Text>
+                                <Binding Path="SelectedNozzlePostInstance.NozzlelId" StringFormat="ПОСТ {0}" />
+                            </TextBlock.Text>
+                        </TextBlock>
                         <TextBlock x:Name="PickedNozzleFuel" TextAlignment="Left" Height="21"
                                    Text="{Binding Path=SelectedNozzlePostInstance.SelectedFuelName}"
                                    VerticalAlignment="Bottom" Width="187" FontSize="20" HorizontalAlignment="Left"
@@ -309,10 +314,11 @@
                                  FontSize="20" TextWrapping="WrapWithOverflow" HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Disabled"
                                  BorderThickness="3,3,3,3" MaxLength="4" Focusable="False" />
-                        <Button x:Name="FinishPaymentButton" Content="ОПЛАТА" HorizontalAlignment="Right" Height="63"
+                        <Button x:Name="FinishPaymentButton" Content="{Binding FinishPaymentType, Converter={StaticResource FinishPaymentConverter}}" HorizontalAlignment="Right" Height="63"
                                 Margin="0,0,17,7" VerticalAlignment="Bottom" Width="130" Background="#FF66BB6A"
                                 BorderBrush="#FF388E3C" Foreground="#FFE8F5E9" BorderThickness="0,0,0,0" FontSize="28"
-                                VerticalContentAlignment="Center" RenderTransformOrigin="0.5,0.5" />
+                                VerticalContentAlignment="Center" RenderTransformOrigin="0.5,0.5"
+                                d:DataContext="{d:DesignInstance }" Click="FinishPaymentButton_OnClick"/>
                     </Grid>
                 </StackPanel>
             </Grid>

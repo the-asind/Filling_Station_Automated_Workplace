@@ -11,10 +11,11 @@ namespace Filling_Station_Automated_Workplace.Model;
 
 public static class Deserialize
 {
+    public static readonly string csvFileDefault = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\";
+    
     public static DataTable GetDataTableFromCsvFile(string csvFilePath)
     {
         var csvData = new DataTable();
-        var csvFileDefault = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\";
         try
         {
             using var csvReader = new TextFieldParser(String.Concat(csvFileDefault, csvFilePath));
