@@ -36,13 +36,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         _viewModel = new MainWindowViewModel();
-        GoodsMainMenuGrid.DataContext = _viewModel;
-        PickedNozzle.DataContext = _viewModel;
-        PickedNozzleFuel.DataContext = _viewModel;
-        PickedNozzleSummaryPrice.DataContext = _viewModel;
-        GoodsSummaryTextBlock.DataContext = _viewModel;
-        TotalAmountInfo.DataContext = _viewModel;
-        FinishPaymentButton.DataContext = _viewModel;
+        DataContext = _viewModel;
 
         var blur = new BlurEffect
         {

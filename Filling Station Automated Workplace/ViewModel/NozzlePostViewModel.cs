@@ -91,15 +91,15 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
     public string TextSummary => (Price * LiterCount).ToString("C2");
 
 
-    private int _literCount;
+    private double _literCount;
 
-    public int LiterCount
+    public double LiterCount
     {
         get => _literCount;
         
         set
         {
-            if (_literCount == value) return;
+            if (Math.Abs(_literCount - value) < 0.01) return;
             _literCount = value;
             OnUserControlActive(this);
             OnPropertyChanged(nameof(SelectedFuelId));
@@ -127,7 +127,7 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
         }
     }
 
-    public void LiterCountChanged(int count)
+    public void LiterCountChanged(double count)
     {
         if (Deserialize.GetTankReserveById(SelectedFuelId) >= count) LiterCount = count;
         else throw new ArgumentException();
@@ -164,6 +164,8 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
             OnPropertyChanged(nameof(TextSummary));
         }
     }
+    
+    public bool IsAlreadyFilledOut { get; set; }
     
     private static void OnUserControlActive(NozzlePostViewModel nozzlePostVm)
     {
@@ -269,16 +271,33 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
         double increment = _random.NextDouble() * 0.01 + 0.01;
 
         Progress += increment;
-        LiterCountChanged(_random.Next(0, 1));
-        if (Progress >= 1)
+        try
         {
-            _timer.Stop();
-            IsNozzlePostBusy = false;
-            Progress = 0;
+            LiterCountChanged(LiterCount + _random.NextDouble());
+        }
+        catch (ArgumentException)
+        {
+            EndFuelingFillUp();
         }
         
+        if (Progress >= 1)
+        {
+            EndFuelingFillUp();
+        }
+    }
+
+    private void EndFuelingFillUp()
+    {
+        IsAlreadyFilledOut = true;
+        _timer.Stop();
+        IsNozzlePostBusy = false;
+        Progress = 0;
+        FillUpFullTank(false);
+        Messenger.Default.Send(new FillUpEndedMessage());
     }
     
+    
+    //TODO: Серёжа взял на слабо, что я не смогу сделать так, чтобы номер поста также относительно прогресса менял цвет на белый
     public byte ProgressInPercent => (byte)(Progress * 100);
 
     private readonly Random _random = new Random();

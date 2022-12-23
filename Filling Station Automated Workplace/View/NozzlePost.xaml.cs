@@ -53,6 +53,7 @@ public partial class NozzlePost : UserControl
                 LiterAmount.Foreground = _midColor;
                 LiterAmount.IsReadOnly = true;
                 _viewModel.FillUpFullTank(true);
+                LiterAmount.Text = "0";
                 
                 break;
             case false:

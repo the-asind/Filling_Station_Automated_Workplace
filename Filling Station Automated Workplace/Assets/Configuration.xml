@@ -4,6 +4,5 @@
     <PaymentTypes>
         <PaymentType>Cash</PaymentType>
         <PaymentType>CreditCard</PaymentType>
-        <PaymentType>DebitCard</PaymentType>
     </PaymentTypes>
 </Configuration>

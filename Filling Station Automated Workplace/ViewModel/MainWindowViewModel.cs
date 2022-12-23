@@ -65,9 +65,20 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
         NozzlePostViewModel.SelectedIdChanged += OnNozzlePostUserControlActive;
         _configurationData = dataProvider;
         ReceiptItems = new ObservableCollection<ShoppingCartItem>();
+        IsWindowFree = true;
+        IsPaymentReady = true;
         Messenger.Default.Register<FillUpChangedMessage>(this, OnFillUpChangedMessageReceived);
+        Messenger.Default.Register<FillUpEndedMessage>(this, OnFillUpEndedMessageReceived);
     }
 
+    private void OnFillUpEndedMessageReceived(FillUpEndedMessage message)
+    {
+        IsPaymentReady = true;
+        OnPropertyChanged(nameof(IsPaymentReady));
+        OnPropertyChanged(nameof(TotalCostText));
+        OnPropertyChanged(nameof(FinishPaymentType));
+    }
+    
     private void OnFillUpChangedMessageReceived(FillUpChangedMessage message)
     {
         OnPropertyChanged(nameof(TotalCostText));
@@ -95,6 +106,9 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
             if (value is { IsNozzlePostBusy: true }) return;
             _selectedNozzlePostInstance = value;
             CurrentSession.CurrentReceipt.RelateNozzlePost = value;
+            
+            IsPaymentReady = true;
+            OnPropertyChanged(nameof(IsPaymentReady));
 
             OnPropertyChanged(nameof(TotalCostText));
         }
@@ -126,6 +140,8 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
     public void SetGoodsSummary(double getGoodsSummary)
     {
         GoodsSummary = getGoodsSummary;
+        IsPaymentReady = true;
+        OnPropertyChanged(nameof(IsPaymentReady));
     }
 
     private double _goodsSummary;
@@ -149,6 +165,9 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
 
     public string TextGoodsSummary => _goodsSummary.ToString("C2");
 
+    public bool IsWindowFree { get; set; }
+    public bool IsPaymentReady { get; set; }
+    
     public void UpdateReceiptItems(Receipt receipt)
     {
         ReceiptItems = new ObservableCollection<ShoppingCartItem>(ShoppingCartItem.IUpdate(receipt));
@@ -171,26 +190,44 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
             UpdateReceiptItems(CurrentSession.CurrentReceipt);
             SetGoodsSummary(CurrentSession.CurrentReceipt.GetGoodsSummary());
 
-            if (SelectedNozzlePostInstance != null && SelectedNozzlePostInstance.LiterCount != 0)
+            if (SelectedNozzlePostInstance != null)
             {
-                Serialize.UpdateTanksFile(SelectedNozzlePostInstance);
-                SelectedNozzlePostInstance.StartFueling();
-                SelectedNozzlePostInstance.IsNozzlePostBusy = true;
-                SelectedNozzlePostInstance = null;
+                if (!SelectedNozzlePostInstance.IsAlreadyFilledOut)
+                {
+                    Serialize.UpdateTanksFile(SelectedNozzlePostInstance);
+                    SelectedNozzlePostInstance.StartFueling();
+                    SelectedNozzlePostInstance.IsNozzlePostBusy = true;
+                    SelectedNozzlePostInstance = null;
+                }
+                else
+                {
+                    Serialize.UpdateTanksFile(SelectedNozzlePostInstance);
+                    SelectedNozzlePostInstance = null;
+                }
             }
+
+            IsWindowFree = true;
+            OnPropertyChanged(nameof(IsWindowFree));
+            IsPaymentReady = false;
+            OnPropertyChanged(nameof(IsPaymentReady));
         }
         else 
         {
             Serialize.UpdateTanksFile(SelectedNozzlePostInstance);
             SelectedNozzlePostInstance.StartFueling();
             SelectedNozzlePostInstance.IsNozzlePostBusy = true;
-            SelectedNozzlePostInstance = null;
+            IsWindowFree = false;
+            OnPropertyChanged(nameof(IsWindowFree));
+            IsPaymentReady = false;
+            OnPropertyChanged(nameof(IsPaymentReady));
         }
         
         OnPropertyChanged(nameof(SelectedNozzlePostInstance));
     }
 }
 
-public class FillUpChangedMessage
-{
-}
+
+
+public class FillUpChangedMessage { }
+
+public class FillUpEndedMessage { }

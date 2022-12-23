@@ -14,6 +14,16 @@ public class GoodsData : IGoodsDataProvider
     {
         GoodsDataTable = Deserialize.GetDataTableFromCsvFile("Goods.csv");
 
+        foreach (DataRow row in GoodsDataTable.Rows)
+        {
+            if (row["Count"].ToString() == "0")
+            {
+                row.Delete();
+            }
+        }
+
+        GoodsDataTable.AcceptChanges();
+        
         DataColumn?[] primaryKeyColumns = { GoodsDataTable.Columns["ID"] };
         GoodsDataTable.PrimaryKey = primaryKeyColumns!;
     }
