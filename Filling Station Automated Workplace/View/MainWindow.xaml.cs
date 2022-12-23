@@ -148,6 +148,6 @@ public class FinishPaymentConverter : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        throw new ArgumentException();
+        throw new NotSupportedException();
     }
 }

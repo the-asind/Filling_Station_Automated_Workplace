@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
+using System.Threading;
+using System.Windows.Threading;
 using Filling_Station_Automated_Workplace.Data;
 using GalaSoft.MvvmLight.Messaging;
 
@@ -255,6 +257,40 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
 
     public void StartFueling()
     {
-        
+        // Initialize the timer
+        _timer = new DispatcherTimer();
+        _timer.Start();
+        _timer.Interval = TimeSpan.FromMilliseconds(100);
+        _timer.Tick += Timer_Tick;   
+    }
+    
+    private void Timer_Tick(object? sender, EventArgs e)
+    {
+        double increment = _random.NextDouble() * 0.03 + 0.01;
+
+        Progress += increment;
+        if (Progress >= 1)
+        {
+            _timer.Stop();
+            IsNozzlePostBusy = false;
+            Progress = 0;
+        }
+    }
+    
+    public byte ProgressInPercent => (byte)(Progress * 100);
+
+    private readonly Random _random = new Random();
+    private DispatcherTimer _timer = new DispatcherTimer();
+    
+    private double _progress;
+    public double Progress
+    {
+        get => _progress;
+        set
+        {
+            _progress = value;
+            OnPropertyChanged(nameof(ProgressInPercent));
+            OnPropertyChanged(nameof(Progress));
+        }
     }
 }

@@ -163,7 +163,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
 
     public void FinishPayment()
     {
-        if (FinishPaymentType)
+        if (FinishPaymentType || SelectedNozzlePostInstance == null)
         {
             Serialize.UpdateGoodsFile(ReceiptItems);
             

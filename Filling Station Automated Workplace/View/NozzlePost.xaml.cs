@@ -1,8 +1,10 @@
 using System;
 using System.Data;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using Filling_Station_Automated_Workplace.ViewModel;
@@ -20,6 +22,9 @@ public partial class NozzlePost : UserControl
         NozzlePostNumber.Content = title.ToString();
         TotalNozzleAmount.DataContext = viewModel;
         PriceForLiter.DataContext = viewModel;
+        NozzlePanel.DataContext = viewModel;
+        FuelGrades.DataContext = viewModel;
+        NozzleCompletionPercentage.DataContext = viewModel;
     }
 
     private void LitreAmountClicked(object sender, RoutedEventArgs e)
@@ -80,9 +85,50 @@ public partial class NozzlePost : UserControl
             var count = int.Parse(LiterAmount.Text);
             _viewModel.LiterCountChanged(count);
         }
-        catch (Exception exception)
+        catch (FormatException)
         {
             //Ignored
         }
+    }
+}
+
+[ValueConversion(typeof(bool), typeof(bool))]
+public class InverseBooleanConverter: IValueConverter
+{
+    #region IValueConverter Members
+
+    public object Convert(object value, Type targetType, object parameter,
+        System.Globalization.CultureInfo culture)
+    {
+        if (targetType != typeof(bool))
+            throw new InvalidOperationException("The target must be a boolean");
+
+        return !(bool)value;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter,
+        System.Globalization.CultureInfo culture)
+    {
+        throw new NotSupportedException();
+    }
+
+    #endregion
+}
+
+public class ProgressToEndPointConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is double progress)
+        {
+            return new Point(0.5, 1 - progress);
+        }
+
+        return new Point(0.5, 1);
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException();
     }
 }
