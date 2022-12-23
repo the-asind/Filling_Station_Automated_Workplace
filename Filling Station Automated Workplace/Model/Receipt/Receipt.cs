@@ -8,7 +8,7 @@ namespace Filling_Station_Automated_Workplace.ViewModel;
 
 public class Receipt
 {
-    public NozzlePostViewModel RelateNozzlePost;
+    public NozzlePostViewModel? RelateNozzlePost;
     public Payment PaymentType;
     public List<PositionInReceipt> CommodityItem;
 

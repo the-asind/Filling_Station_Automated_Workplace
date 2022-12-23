@@ -25,7 +25,7 @@ public partial class Login : Window
     {
         try
         {
-            _viewModel.TryToEnter(LoginBox.Text, PasswordBox.Text);
+            _viewModel.TryToEnter(LoginBox.Text, PasswordBox.Password );
             Close();
         }
         catch (ArgumentException)
@@ -35,4 +35,9 @@ public partial class Login : Window
         
     }
 
+    private void ClearPasswordBox(object sender, RoutedEventArgs e)
+    {
+        var t = (PasswordBox)sender;
+        t.Password = "";
+    }
 }

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using Filling_Station_Automated_Workplace.Data;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace Filling_Station_Automated_Workplace.ViewModel;
 
@@ -51,7 +52,7 @@ public interface INozzlePostDataProvider
 }
 
 // ViewModel class
-public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
+public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
 {
     private readonly INozzlePostDataProvider _nozzlePostData;
 
@@ -85,6 +86,7 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
     public double Summary => Price * LiterCount + 0;
 
     public string TextSummary => (Price * LiterCount).ToString("C2");
+
 
     private int _literCount;
 
@@ -129,7 +131,7 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected virtual void OnPropertyChanged(string propertyName)
+    private void OnPropertyChanged(string propertyName)
     {
         var handler = PropertyChanged;
         handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -138,6 +140,7 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
     public void FillUpFullTank(bool value)
     {
         FillUp = value;
+        Messenger.Default.Send(new FillUpChangedMessage());
     }
 
     private bool _fillUp;
@@ -170,6 +173,7 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
             OnPropertyChanged(nameof(SelectedFuelId));
             OnPropertyChanged(nameof(Summary));
             OnPropertyChanged(nameof(TextPrice));
+            OnPropertyChanged(nameof(TextSummary));
         }
     }
     
@@ -195,6 +199,7 @@ public class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostViewModel
                 OnPropertyChanged(nameof(Price));
                 OnPropertyChanged(nameof(TextPrice));
                 SelectedIdChanged?.Invoke(this, this);
+                OnPropertyChanged(nameof(TextSummary));
             }
         }
     }

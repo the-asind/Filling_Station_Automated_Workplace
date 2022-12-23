@@ -14,9 +14,10 @@ public static class Deserialize
     public static DataTable GetDataTableFromCsvFile(string csvFilePath)
     {
         var csvData = new DataTable();
+        var csvFileDefault = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\";
         try
         {
-            using var csvReader = new TextFieldParser(csvFilePath);
+            using var csvReader = new TextFieldParser(String.Concat(csvFileDefault, csvFilePath));
             csvReader.SetDelimiters(";");
             csvReader.HasFieldsEnclosedInQuotes = true;
             var colFields = csvReader.ReadFields();
@@ -60,13 +61,4 @@ public static class Deserialize
 
         return users;
     }
-
-    // public static UsersData DeserializeUsersData()
-    // {
-    //     using var stream = new FileStream("Assets/User.xml", FileMode.Open);
-    //     var serializer = new XmlSerializer(typeof(UsersData));
-    //     var usersData = (UsersData)serializer.Deserialize(stream)!;
-    //
-    //     return usersData;
-    // }
 }

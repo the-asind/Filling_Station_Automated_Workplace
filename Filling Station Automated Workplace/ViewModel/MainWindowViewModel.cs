@@ -5,6 +5,7 @@ using System.Data;
 using System.Globalization;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
+using GalaSoft.MvvmLight.Messaging;
 using Filling_Station_Automated_Workplace.Data;
 using Filling_Station_Automated_Workplace.Model;
 
@@ -17,20 +18,21 @@ public interface IMainWindowViewModel
     {
         get
         {
-            var ConfigurationData = new ConfigurationData();
-            return ConfigurationData.ConfigurationDataTable;
+            var configurationData = new ConfigurationData();
+            if (configurationData == null) throw new ArgumentNullException(nameof(configurationData));
+            return configurationData.ConfigurationDataTable;
         }
     }
 
-    ObservableCollection<string> MainWindowNames
+    ObservableCollection<string?> MainWindowNames
     {
         get
         {
-            var MainWindowNames = new ObservableCollection<string>();
+            var mainWindowNames = new ObservableCollection<string?>();
 
-            foreach (DataRow row in ConfigurationDataTable.Rows) MainWindowNames.Add(row["Name"].ToString());
+            foreach (DataRow row in ConfigurationDataTable.Rows) mainWindowNames.Add(row["Name"].ToString());
 
-            return MainWindowNames;
+            return mainWindowNames;
         }
     }
 }
@@ -64,7 +66,14 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
         NozzlePostViewModel.SelectedIdChanged += OnNozzlePostUserControlActive;
         _ConfigurationData = dataProvider;
         ReceiptItems = new ObservableCollection<ShoppingCartItem>();
+        Messenger.Default.Register<FillUpChangedMessage>(this, OnFillUpChangedMessageReceived);
     }
+    
+    private void OnFillUpChangedMessageReceived(FillUpChangedMessage message)
+    {
+        OnPropertyChanged(nameof(TotalCostText));
+    }
+    
 
     public DataTable ConfigurationDataTable => _ConfigurationData.ConfigurationDataTable;
 
@@ -76,7 +85,7 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
         handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private NozzlePostViewModel _selectedNozzlePostInstance;
+    private NozzlePostViewModel? _selectedNozzlePostInstance;
 
     public NozzlePostViewModel? SelectedNozzlePostInstance
     {
@@ -86,6 +95,7 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
             if (_selectedNozzlePostInstance == value) return;
             _selectedNozzlePostInstance = value;
             CurrentReceipt.Receipt.RelateNozzlePost = value;
+            
             OnPropertyChanged(nameof(TotalCostText));
         }
     }
@@ -94,8 +104,9 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
     {
         SelectedNozzlePostInstance = e;
         OnPropertyChanged(nameof(SelectedNozzlePostInstance));
-        OnPropertyChanged(nameof(TotalCostText));
+        
         OnPropertyChanged(nameof(ReceiptItems));
+        OnPropertyChanged(nameof(TotalCostText));
     }
 
     public string TotalCostText
@@ -103,8 +114,13 @@ public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
         get
         {
             if (SelectedNozzlePostInstance != null)
-                return (SelectedNozzlePostInstance.Summary+ GoodsSummary).ToString("C2");
-            return 0.ToString("C2");
+                if (!SelectedNozzlePostInstance.FillUp)
+                    return (SelectedNozzlePostInstance.Summary + GoodsSummary).ToString("C2");
+                else
+                {
+                    return "Н/Д";
+                }
+            return GoodsSummary.ToString("C2");
         }
     }
 
@@ -126,8 +142,8 @@ public void SetGoodsSummary(double getGoodsSummary)
             if (Math.Abs(_goodsSummary - value) < 0.001) return;
             _goodsSummary = value;
             OnPropertyChanged(nameof(TextGoodsSummary));
-            OnPropertyChanged(nameof(TotalCostText));
             OnPropertyChanged(nameof(ReceiptItems));
+            OnPropertyChanged(nameof(TotalCostText));
         }
     }
 
@@ -138,6 +154,7 @@ public void SetGoodsSummary(double getGoodsSummary)
         ReceiptItems = new ObservableCollection<ShoppingCartItem>(ShoppingCartItem.IUpdate(receipt));
         OnPropertyChanged(nameof(ReceiptItems));
         OnPropertyChanged(nameof(GoodsSummary));
+        OnPropertyChanged(nameof(TotalCostText));
     }
 
 
@@ -145,4 +162,8 @@ public void SetGoodsSummary(double getGoodsSummary)
     public ObservableCollection<ShoppingCartItem> ReceiptItems { get; set; }
     
     
+}
+
+public class FillUpChangedMessage
+{
 }

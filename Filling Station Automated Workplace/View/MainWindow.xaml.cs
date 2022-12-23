@@ -43,19 +43,24 @@ public partial class MainWindow : Window
         TotalAmountInfo.DataContext = _viewModel;
         
         
-        var blur = new BlurEffect();
-        blur.Radius = 10;
-        this.Effect = blur;
+        var blur = new BlurEffect
+        {
+            Radius = 10
+        };
+        Effect = blur;
 
         var login = new Login();
         login.Topmost = true;
         login.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         login.Show();
-        
+
+        IsHitTestVisible = false;
+
         login.Closed += (sender, args) =>
         {
             // Remove the Blur effect from the main window
-            this.Effect = null;
+            Effect = null;
+            IsHitTestVisible = true;
         };
 
 

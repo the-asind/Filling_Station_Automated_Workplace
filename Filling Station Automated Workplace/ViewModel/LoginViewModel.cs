@@ -17,6 +17,7 @@ public class LoginViewModel
 
     public void TryToEnter(string login, string password)
     {
+        //TODO: реализовать использование безопасного механизма хранения пароля, например, хэширование или шифрование.
         if (_usersData.UsersList.Any(user => user.Login == login && user.Password == password))
         {
             return;

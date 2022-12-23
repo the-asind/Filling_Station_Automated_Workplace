@@ -294,7 +294,7 @@
                                  Text="{Binding Path=TotalCostText, Mode=OneWay}" Width="270" Foreground="#FF1B5E20" Background="#FFC8E6C9"
                                  BorderBrush="#FFA5D6A7" SelectionBrush="#FF2E7D32" SelectionTextBrush="#FFC8E6C9"
                                  VerticalAlignment="Bottom" FontSize="30" TextWrapping="WrapWithOverflow"
-                                 HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch"
+                                 HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" IsReadOnly="True"
                                  VerticalScrollBarVisibility="Disabled" BorderThickness="3,3,3,3" MaxLength="4"
                                  Focusable="False" />
                         <TextBox x:Name="DepositedCash" HorizontalAlignment="Left" Height="30" Margin="121,0,0,41"
