@@ -58,7 +58,7 @@ public class GoodsSelectorViewModel : IGoodsSelectorViewModel
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            // Ignored
         }
     }
     

@@ -87,7 +87,8 @@ public partial class GoodsSelector
         }
         catch (Exception exception)
         {
-            MessageBox.Show(string.Concat("Ошибка в введённом количестве!\n", exception.Message));
+            MessageTextPopUp.Text = "Ошибка: Вы пытаетесь добавить товара больше,&#10;чем имеется в наличии";
+            MessagePopup.IsOpen = true;
             ShowShoppingCartChanges();
             return;
         }
@@ -108,7 +109,8 @@ public partial class GoodsSelector
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageTextPopUp.Text = "Ошибка при изменении количества";
+            MessagePopup.IsOpen = true;
         }
 
         ShowShoppingCartChanges();

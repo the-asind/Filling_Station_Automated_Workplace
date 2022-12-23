@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Threading;
 using System.Windows.Threading;
 using Filling_Station_Automated_Workplace.Data;
+using Filling_Station_Automated_Workplace.Model;
 using GalaSoft.MvvmLight.Messaging;
 
 namespace Filling_Station_Automated_Workplace.ViewModel;
@@ -94,7 +95,7 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
 
     public int LiterCount
     {
-        get => FillUp ? LitersFillProgress : _literCount;
+        get => _literCount;
         
         set
         {
@@ -128,7 +129,8 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
 
     public void LiterCountChanged(int count)
     {
-        LiterCount = count;
+        if (Deserialize.GetTankReserveById(SelectedFuelId) >= count) LiterCount = count;
+        else throw new ArgumentException();
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -156,30 +158,13 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
             OnUserControlActive(this);
             if (_fillUp == value) return;
             _fillUp = value;
+            if (value) LiterCountChanged(0);
             OnPropertyChanged(nameof(LiterCount));
-            OnPropertyChanged(nameof(LitersFillProgress));
             OnPropertyChanged(nameof(Summary));
             OnPropertyChanged(nameof(TextSummary));
         }
     }
     
-    private int _litersFillProgress;
-
-    public int LitersFillProgress
-    {
-        get => _litersFillProgress;
-        set
-        {
-            if (_litersFillProgress == value) return;
-            _litersFillProgress = value;
-            OnPropertyChanged(nameof(LiterCount));
-            OnPropertyChanged(nameof(SelectedFuelId));
-            OnPropertyChanged(nameof(Summary));
-            OnPropertyChanged(nameof(TextPrice));
-            OnPropertyChanged(nameof(TextSummary));
-        }
-    }
-
     private static void OnUserControlActive(NozzlePostViewModel nozzlePostVm)
     {
         SelectedIdChanged?.Invoke(null, nozzlePostVm);
@@ -261,20 +246,37 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
         _timer = new DispatcherTimer();
         _timer.Start();
         _timer.Interval = TimeSpan.FromMilliseconds(100);
-        _timer.Tick += Timer_Tick;   
+        if (FillUp) _timer.Tick += FuelingFillUpTimerTick;   
+        else _timer.Tick += FuelingTimerTick;   
     }
     
-    private void Timer_Tick(object? sender, EventArgs e)
+    private void FuelingTimerTick(object? sender, EventArgs e)
     {
-        double increment = _random.NextDouble() * 0.03 + 0.01;
+        double increment = _random.NextDouble() * (0.2/LiterCount) + 0.01;
 
         Progress += increment;
+
         if (Progress >= 1)
         {
             _timer.Stop();
             IsNozzlePostBusy = false;
             Progress = 0;
         }
+    }
+    
+    private void FuelingFillUpTimerTick(object? sender, EventArgs e)
+    {
+        double increment = _random.NextDouble() * 0.01 + 0.01;
+
+        Progress += increment;
+        LiterCountChanged(_random.Next(0, 1));
+        if (Progress >= 1)
+        {
+            _timer.Stop();
+            IsNozzlePostBusy = false;
+            Progress = 0;
+        }
+        
     }
     
     public byte ProgressInPercent => (byte)(Progress * 100);
@@ -288,6 +290,15 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
         get => _progress;
         set
         {
+            switch (value)
+            {
+                case >= 1:
+                    _progress = 1;
+                    break;
+                case < 0:
+                    return;
+            }
+
             _progress = value;
             OnPropertyChanged(nameof(ProgressInPercent));
             OnPropertyChanged(nameof(Progress));

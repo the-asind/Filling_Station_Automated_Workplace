@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
@@ -47,6 +48,30 @@ public static class Deserialize
         }
 
         return csvData;
+    }
+    
+    public static double GetTankReserveById(int id)
+    {
+        // Read the data from Tanks.csv
+        string csvData = File.ReadAllText(String.Concat(csvFileDefault,"Tanks.csv"));
+    
+        string[] lines = csvData.Split('\n');
+    
+        // Find the line with the matching id
+        foreach (string line in lines)
+        {
+            if (line == lines[0]) continue;
+            
+            string[] fields = line.Split(';');
+            int lineId = int.Parse(fields[0]);
+            if (lineId == id)
+            {
+                return double.Parse(fields[2], CultureInfo.GetCultureInfo("en-US"));
+            }
+        }
+    
+        // If no matching id was found, return 0
+        return 0;
     }
 
     public static UsersData.Users DeserializeUsersData()

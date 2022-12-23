@@ -117,15 +117,24 @@
                     </Style>
                 </Button.Resources>
             </Button>
-
+            
+            <Popup x:Name="MessagePopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade" Placement="Mouse">
+                <Grid Margin="20">
+                    <Border Background="#FF81C784" Padding="10" CornerRadius="10">
+                        <Border.Effect>
+                            <DropShadowEffect Color="black" ShadowDepth="2" BlurRadius="15" />
+                        </Border.Effect>
+                        <TextBlock x:Name="MessageTextPopUp"  Text="Ошибка: Вы пытаетесь добавить топлива больше,&#10;чем имеется в резервуарах"
+                                   FontSize="20" Foreground="#FF388E3C" />
+                    </Border>
+                </Grid>
+            </Popup>
             <DataGrid RowHeaderWidth="0" x:Name="ShoppingCartGrid" Margin="0,0,0,396" Background="#FFC8E6C9"
                       BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0"
                       AutoGenerateColumns="False" FontSize="16" FontFamily="Bahnschrift" HorizontalAlignment="Center"
                       VerticalAlignment="Bottom" Width="{Binding Path=ActualWidth}" Height="152"
                       CellEditEnding="ShoppingCartGrid_OnCellEditEnding" CanUserSortColumns="False"
-                      MouseDoubleClick="ShoppingCartGrid_OnMouseDoubleClick" CanUserAddRows="False"
-                      >
-
+                      MouseDoubleClick="ShoppingCartGrid_OnMouseDoubleClick" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header=" Артикуль " Binding="{Binding Id}" IsReadOnly="True" />
                     <DataGridTextColumn Header=" Название " Binding="{Binding Name}" IsReadOnly="True" />

@@ -171,19 +171,23 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
             UpdateReceiptItems(CurrentSession.CurrentReceipt);
             SetGoodsSummary(CurrentSession.CurrentReceipt.GetGoodsSummary());
 
-            if (SelectedNozzlePostInstance != null)
+            if (SelectedNozzlePostInstance != null && SelectedNozzlePostInstance.LiterCount != 0)
             {
                 Serialize.UpdateTanksFile(SelectedNozzlePostInstance);
                 SelectedNozzlePostInstance.StartFueling();
                 SelectedNozzlePostInstance.IsNozzlePostBusy = true;
                 SelectedNozzlePostInstance = null;
             }
-
-            OnPropertyChanged(nameof(SelectedNozzlePostInstance));
-            
-            
+        }
+        else 
+        {
+            Serialize.UpdateTanksFile(SelectedNozzlePostInstance);
+            SelectedNozzlePostInstance.StartFueling();
+            SelectedNozzlePostInstance.IsNozzlePostBusy = true;
+            SelectedNozzlePostInstance = null;
         }
         
+        OnPropertyChanged(nameof(SelectedNozzlePostInstance));
     }
 }
 

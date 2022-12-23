@@ -52,7 +52,6 @@ public partial class NozzlePost : UserControl
                 LiterAmount.Background = _midColor;
                 LiterAmount.Foreground = _midColor;
                 LiterAmount.IsReadOnly = true;
-                _viewModel.LitersFillProgress = 0;
                 _viewModel.FillUpFullTank(true);
                 
                 break;
@@ -60,7 +59,6 @@ public partial class NozzlePost : UserControl
                 LiterAmount.Background = _lightColor;
                 LiterAmount.Foreground = _darkColor;
                 LiterAmount.IsReadOnly = false;
-                _viewModel.LitersFillProgress = 0;
                 _viewModel.FillUpFullTank(false);
                 break;
         }
@@ -83,7 +81,15 @@ public partial class NozzlePost : UserControl
         try
         {
             var count = int.Parse(LiterAmount.Text);
-            _viewModel.LiterCountChanged(count);
+            try
+            {
+                _viewModel.LiterCountChanged(count);
+            }
+            catch (ArgumentException)
+            {
+                MessagePopup.IsOpen = true;
+                LiterAmount.Text = LiterAmount.Text[..^1];
+            }
         }
         catch (FormatException)
         {

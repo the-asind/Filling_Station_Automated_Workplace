@@ -12,7 +12,14 @@
         <view:ProgressToEndPointConverter x:Key="ProgressToEndPointConverter" />
         <view:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </UserControl.Resources>
-    <Grid x:Name="NozzlePanel" Height="230" Width="240" Margin="10,10,10,10" IsHitTestVisible="{Binding IsNozzlePostBusy, Converter={StaticResource InverseBooleanConverter}}">
+    <Grid x:Name="NozzlePanel" Height="230" Width="240" Margin="10,10,10,10"
+          IsHitTestVisible="{Binding IsNozzlePostBusy, Converter={StaticResource InverseBooleanConverter}}">
+        <Popup x:Name="MessagePopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
+            <Border Background="#FF81C784" Padding="10" CornerRadius="10">
+                <TextBlock Text="Ошибка: Вы пытаетесь добавить топлива больше,&#10;чем имеется в резервуарах"
+                           Foreground="#FF388E3C" />
+            </Border>
+        </Popup>
         <Rectangle Fill="#FF66BB6A" RadiusX="8" RadiusY="8" StrokeThickness="3" />
         <Image Source="/Media/gas_station.png" Stretch="Fill" HorizontalAlignment="Right"
                VerticalAlignment="Top" Margin="0,10,10,0" Width="50" Height="50" />
@@ -20,9 +27,10 @@
                   VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="160"
                   Margin="70,0,0,120" Foreground="#FF1B5E20"
                   ItemsSource="{Binding NozzlePostDataTable}"
-                  DisplayMemberPath="Name" SelectionChanged="SelectionChanged"/>
+                  DisplayMemberPath="Name" SelectionChanged="SelectionChanged" />
 
-        <Label x:Name="PriceForLiter" Content="{Binding Path=TextPrice}" ContentStringFormat="Литр за&#10;{0}" Height="75"
+        <Label x:Name="PriceForLiter" Content="{Binding Path=TextPrice}" ContentStringFormat="Литр за&#10;{0}"
+               Height="75"
                VerticalAlignment="Top" Width="117" FontSize="22" HorizontalAlignment="Left"
                Foreground="#FF1B5E20" VerticalContentAlignment="Center"
                ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -35,7 +43,8 @@
                  SelectionBrush="#FF2E7D32" SelectionTextBrush="#FFC8E6C9" VerticalAlignment="Top"
                  FontSize="22" TextWrapping="WrapWithOverflow" HorizontalContentAlignment="Center"
                  VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Disabled"
-                 GotFocus="LitreAmountClicked" PreviewTextInput="LiterAmountTextInput" TextChanged="LiterAmount_OnTextChanged"
+                 GotFocus="LitreAmountClicked" PreviewTextInput="LiterAmountTextInput"
+                 TextChanged="LiterAmount_OnTextChanged"
                  BorderThickness="3,3,3,3" MaxLength="4" />
 
         <Label Content="Литры:" Height="34" VerticalAlignment="Top" Width="77"
@@ -48,7 +57,8 @@
               Height="1" Margin="70,0,0,34" Stroke="#FF1B5E20" Stretch="Fill"
               VerticalAlignment="Bottom" Width="160" />
 
-        <Label x:Name="TotalNozzleAmount" Content="{Binding Path=TextSummary}" ContentStringFormat="Сумма: {0}" Height="34"
+        <Label x:Name="TotalNozzleAmount" Content="{Binding Path=TextSummary}" ContentStringFormat="Сумма: {0}"
+               Height="34"
                VerticalAlignment="Bottom"
                Width="167" FontSize="18" HorizontalAlignment="Left" Margin="70,0,0,0"
                Foreground="#FF1B5E20" ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -58,13 +68,16 @@
         <Grid x:Name="FuelGrades" Width="60" HorizontalAlignment="Left">
             <Rectangle RadiusX="8" RadiusY="8" StrokeThickness="3">
                 <Rectangle.Fill>
-                    <LinearGradientBrush EndPoint="{Binding Progress, Converter={StaticResource ProgressToEndPointConverter}}" StartPoint="0.5, 0">
+                    <LinearGradientBrush
+                        EndPoint="{Binding Progress, Converter={StaticResource ProgressToEndPointConverter}}"
+                        StartPoint="0.5, 0">
                         <GradientStop Color="#FF4CAF50" Offset="1" />
                         <GradientStop Color="#FF1B5E20" Offset="1" />
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <Label x:Name="NozzleCompletionPercentage" Height="48" Content="{Binding Path=ProgressInPercent}" ContentStringFormat=" {0}%"
+            <Label x:Name="NozzleCompletionPercentage" Height="48" Content="{Binding Path=ProgressInPercent}"
+                   ContentStringFormat=" {0}%"
                    VerticalAlignment="Bottom" Width="50" FontSize="24" HorizontalAlignment="Center"
                    Foreground="#FF2E7D32" HorizontalContentAlignment="Center"
                    VerticalContentAlignment="Center" Padding="0"
@@ -83,11 +96,12 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ToggleButton">
-                                <Border x:Name="border" >
+                                <Border x:Name="border">
                                     <ContentPresenter x:Name="contentPresenter" Content="{TemplateBinding Content}">
                                         <ContentPresenter.ContentTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="{Binding}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}" />
+                                                <TextBlock Text="{Binding}"
+                                                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}" />
                                             </DataTemplate>
                                         </ContentPresenter.ContentTemplate>
                                     </ContentPresenter>
@@ -96,16 +110,20 @@
                                     <Trigger Property="IsChecked" Value="True">
                                         <Setter TargetName="border" Property="Background" Value="#FF388E3C" />
                                         <Setter Property="Foreground" Value="#FF81C784" />
-                                        <Setter TargetName="border" Property="CornerRadius" Value="5"/>
-                                        <Setter TargetName="contentPresenter" Property="VerticalAlignment" Value="Center"/>
-                                        <Setter TargetName="contentPresenter" Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter TargetName="border" Property="CornerRadius" Value="5" />
+                                        <Setter TargetName="contentPresenter" Property="VerticalAlignment"
+                                                Value="Center" />
+                                        <Setter TargetName="contentPresenter" Property="HorizontalAlignment"
+                                                Value="Center" />
                                     </Trigger>
                                     <Trigger Property="IsChecked" Value="False">
-                                        <Setter TargetName="border" Property="CornerRadius" Value="5"/>
+                                        <Setter TargetName="border" Property="CornerRadius" Value="5" />
                                         <Setter TargetName="border" Property="Background" Value="#FF81C784" />
                                         <Setter Property="Foreground" Value="#FF388E3C" />
-                                        <Setter TargetName="contentPresenter" Property="VerticalAlignment" Value="Center"/>
-                                        <Setter TargetName="contentPresenter" Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter TargetName="contentPresenter" Property="VerticalAlignment"
+                                                Value="Center" />
+                                        <Setter TargetName="contentPresenter" Property="HorizontalAlignment"
+                                                Value="Center" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
