@@ -70,6 +70,13 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
         IsPaymentReady = true;
         Messenger.Default.Register<FillUpChangedMessage>(this, OnFillUpChangedMessageReceived);
         Messenger.Default.Register<FillUpEndedMessage>(this, OnFillUpEndedMessageReceived);
+        Messenger.Default.Register<UpdateUserMessage>(this, UpdateUserReceived);
+    }
+
+    private void UpdateUserReceived(UpdateUserMessage obj)
+    {
+        OnPropertyChanged(nameof(UserLoginName));
+        OnPropertyChanged(nameof(UserAccessLevel));
     }
 
     private void OnFillUpEndedMessageReceived(FillUpEndedMessage message)
@@ -234,13 +241,30 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
         
         OnPropertyChanged(nameof(SelectedNozzlePostInstance));
     }
-
-    public void UpdatePostNames()
+    
+    public string? UserLoginName
     {
-        Messenger.Default.Send(new UpdatePostNamesMessage());
+        get => User.LoginName;
+        set
+        {
+            if (User.LoginName == value) return;
+            User.LoginName = value;
+            OnPropertyChanged(nameof(UserLoginName));
+        }
+    }
+    
+    public bool UserAccessLevel
+    {
+        get => User.IsAdmin;
+        set
+        {
+            if (User.IsAdmin == value) return;
+            User.IsAdmin = value;
+            OnPropertyChanged(nameof(UserAccessLevel));
+        }
     }
 }
 
 public class FillUpChangedMessage { }
-
 public class FillUpEndedMessage { }
+public class UpdateUserMessage { }

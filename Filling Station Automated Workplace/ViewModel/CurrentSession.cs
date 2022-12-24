@@ -1,3 +1,4 @@
+using Filling_Station_Automated_Workplace.Data;
 using Filling_Station_Automated_Workplace.Model;
 
 namespace Filling_Station_Automated_Workplace.ViewModel;
@@ -14,5 +15,10 @@ public static class CurrentSession
     {
         CurrentReceipt = new Receipt();
     }
-    
+
+    public static void LoginUser(UsersData userData)
+    {
+        
+    }
+
 }

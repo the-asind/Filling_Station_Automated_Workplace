@@ -18,7 +18,7 @@ public class Receipt
         CommodityItem = new List<PositionInReceipt>();
     }
 
-    public void AddIdToCommodityItem(int id)
+    public void AddIdToCommodityItem(int id, double quantity)
     {
         // Check if the id exists in the CommodityItem list
         var position = CommodityItem.FirstOrDefault(x => x.Id == id);
@@ -26,6 +26,7 @@ public class Receipt
             CommodityItem.Add(new PositionInReceipt { Id = id, Count = 1 });
         else
             // Increase the count of the existing position
+            if (position.Count < quantity)
             position.Count++;
     }
 

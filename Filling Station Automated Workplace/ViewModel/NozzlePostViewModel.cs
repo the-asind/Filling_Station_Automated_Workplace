@@ -323,5 +323,3 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
         }
     }
 }
-
-public class UpdatePostNamesMessage { }

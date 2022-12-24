@@ -132,41 +132,49 @@ public partial class MainWindow : Window
 
     private void FuelInfoButton_OnClick(object sender, RoutedEventArgs e)
     {
-        var tanksConfigurator = new TanksConfigurator()
+        if (User.IsAdmin)
         {
-            Topmost = true,
-            WindowStartupLocation = WindowStartupLocation.CenterScreen
-        };
-        // Show the window
-        Effect = _blur;
-        tanksConfigurator.ShowDialog();
-        
-        Effect = null;
-        // Clear the parent container that holds the NozzlePost controls
-        NozzleList.Children.Clear();
+            var tanksConfigurator = new TanksConfigurator()
+            {
+                Topmost = true,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            // Show the window
+            Effect = _blur;
+            tanksConfigurator.ShowDialog();
 
-        // Set the DataContext of the NozzleList to null to release the references to the NozzlePostViewModel instances
-        NozzleList.DataContext = null;
-        
-        CreateNozzlePosts(NozzlePostCount);
-        CurrentSession.CreateNewReceipt();
-        _viewModel.UpdateReceiptItems(CurrentSession.CurrentReceipt);
+            Effect = null;
+            // Clear the parent container that holds the NozzlePost controls
+            NozzleList.Children.Clear();
+
+            // Set the DataContext of the NozzleList to null to release the references to the NozzlePostViewModel instances
+            NozzleList.DataContext = null;
+
+            CreateNozzlePosts(NozzlePostCount);
+            CurrentSession.CreateNewReceipt();
+            _viewModel.UpdateReceiptItems(CurrentSession.CurrentReceipt);
+        }
+        //TODO: implement else
     }
 
     private void HistoryInfoButton_OnClick(object sender, RoutedEventArgs e)
     {
-        var goodsConfigurator = new GoodsConfigurator()
+        if (User.IsAdmin)
         {
-            Topmost = true,
-            WindowStartupLocation = WindowStartupLocation.CenterScreen
-        };
-        // Show the window
-        Effect = _blur;
-        goodsConfigurator.ShowDialog();
-        
-        Effect = null;
-        CurrentSession.CreateNewReceipt();
-        _viewModel.UpdateReceiptItems(CurrentSession.CurrentReceipt);
+            var goodsConfigurator = new GoodsConfigurator()
+            {
+                Topmost = true,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            // Show the window
+            Effect = _blur;
+            goodsConfigurator.ShowDialog();
+
+            Effect = null;
+            CurrentSession.CreateNewReceipt();
+            _viewModel.UpdateReceiptItems(CurrentSession.CurrentReceipt);
+        }
+        //TODO: implement else
     }
 }
 
@@ -177,6 +185,26 @@ public class FinishPaymentConverter : IValueConverter
         if (value is bool boolValue)
         {
             return boolValue ? "ОПЛАТА" : "ПУСК";
+        }
+        else
+        {
+            throw new ArgumentException();
+        }
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException();
+    }
+}
+
+public class UserAccessLevelConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is bool boolValue)
+        {
+            return boolValue ? "Администратор" : "Оператор";
         }
         else
         {

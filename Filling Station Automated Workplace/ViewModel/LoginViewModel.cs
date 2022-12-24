@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Filling_Station_Automated_Workplace.Data;
 using Filling_Station_Automated_Workplace.Domain;
 using Filling_Station_Automated_Workplace.Model;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace Filling_Station_Automated_Workplace.ViewModel;
 
@@ -21,6 +21,9 @@ public class LoginViewModel
         //TODO: реализовать использование безопасного механизма хранения пароля, например, хэширование или шифрование.
         if (_usersData.UsersList.Any(user => user.Login == login && user.Password == password))
         {
+            User.LoginName = login;
+            User.IsAdmin = (_usersData.UsersList.Single(user => user.Login == login && user.Password == password).AccessLevel == "admin");
+            Messenger.Default.Send(new UpdateUserMessage());
             return;
         }
 

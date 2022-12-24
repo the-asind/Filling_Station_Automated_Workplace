@@ -23,6 +23,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <view:FinishPaymentConverter x:Key="FinishPaymentConverter" />
+            <view:UserAccessLevelConverter x:Key="UserAccessLevelConverter" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -52,8 +53,7 @@
                     </Rectangle.DataContext>
 
                 </Rectangle>
-                <Label Content="Администратор" Foreground="#FFE8F5E9" HorizontalAlignment="Center"
-                       Background="{x:Null}" />
+                <Label Content="{Binding UserAccessLevel, Converter={StaticResource UserAccessLevelConverter}}" Foreground="#FFE8F5E9" HorizontalAlignment="Center"/>
             </Grid>
             <Grid x:Name="NameFoot" Height="30" Width="400" Margin="10,10,0,0" HorizontalAlignment="Left"
                   VerticalAlignment="Top">
@@ -63,7 +63,7 @@
                     </Rectangle.DataContext>
 
                 </Rectangle>
-                <Label Content="Кашаев Аскер Муратович" Foreground="#FFE8F5E9" HorizontalAlignment="Center"
+                <Label Content="{Binding UserLoginName}" Foreground="#FFE8F5E9" HorizontalAlignment="Center"
                        Margin="10,0,0,0" />
             </Grid>
             <Grid x:Name="ShiftPersonFoot" Height="30" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top"

@@ -43,8 +43,9 @@ public partial class GoodsSelector
             var dr1 = dr?.Row;
 
             var itemId = int.Parse(Convert.ToString(dr1?.ItemArray[0]) ?? throw new InvalidOperationException());
+            var quantity = double.Parse(Convert.ToString(dr1?.ItemArray[2]) ?? throw new InvalidOperationException());
 
-            CurrentSession.CurrentReceipt.AddIdToCommodityItem(itemId);  
+            CurrentSession.CurrentReceipt.AddIdToCommodityItem(itemId, quantity);  
             ShowShoppingCartChanges();
         }
         catch
