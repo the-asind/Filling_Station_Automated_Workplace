@@ -124,7 +124,7 @@
                         <Border.Effect>
                             <DropShadowEffect Color="black" ShadowDepth="2" BlurRadius="15" />
                         </Border.Effect>
-                        <TextBlock x:Name="MessageTextPopUp"  Text="Ошибка: Вы пытаетесь добавить топлива больше,&#10;чем имеется в резервуарах"
+                        <TextBlock x:Name="MessageTextPopUp"
                                    FontSize="20" Foreground="#FF388E3C" />
                     </Border>
                 </Grid>

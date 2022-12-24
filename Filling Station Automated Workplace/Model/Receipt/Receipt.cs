@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Filling_Station_Automated_Workplace.Data;
+using Filling_Station_Automated_Workplace.Domain;
 using Filling_Station_Automated_Workplace.Model;
 
 namespace Filling_Station_Automated_Workplace.ViewModel;

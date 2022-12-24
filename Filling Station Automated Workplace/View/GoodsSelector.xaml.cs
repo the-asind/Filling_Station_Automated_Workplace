@@ -85,9 +85,16 @@ public partial class GoodsSelector
             Debug.Assert(value != null, nameof(value) + " != null");
             count = int.Parse(value);
         }
-        catch (Exception exception)
+        catch (FormatException)
         {
-            MessageTextPopUp.Text = "Ошибка: Вы пытаетесь добавить товара больше,&#10;чем имеется в наличии";
+            MessageTextPopUp.Text = "Ошибка: неверное значение";
+            MessagePopup.IsOpen = true;
+            ShowShoppingCartChanges();
+            return;
+        }
+        catch (OverflowException)
+        {
+            MessageTextPopUp.Text = "Ошибка: Вы пытаетесь добавить товара гораздо больше,\n чем имеется в наличии";
             MessagePopup.IsOpen = true;
             ShowShoppingCartChanges();
             return;
@@ -109,7 +116,7 @@ public partial class GoodsSelector
         }
         catch (Exception ex)
         {
-            MessageTextPopUp.Text = "Ошибка при изменении количества";
+            MessageTextPopUp.Text = "Ошибка: вы пытаетесь добавить товара больше,\n чем имеется в наличии";
             MessagePopup.IsOpen = true;
         }
 

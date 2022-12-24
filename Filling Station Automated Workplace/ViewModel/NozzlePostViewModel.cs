@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Threading;
 using System.Windows.Threading;
 using Filling_Station_Automated_Workplace.Data;
+using Filling_Station_Automated_Workplace.Domain;
 using Filling_Station_Automated_Workplace.Model;
 using GalaSoft.MvvmLight.Messaging;
 

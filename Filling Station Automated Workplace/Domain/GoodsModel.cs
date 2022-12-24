@@ -1,9 +1,8 @@
-using System.Dynamic;
 using System.Globalization;
 using System.Windows.Data;
 using Filling_Station_Automated_Workplace.Data;
 
-namespace Filling_Station_Automated_Workplace.Model;
+namespace Filling_Station_Automated_Workplace.Domain;
 
 public class GoodsModel
 {

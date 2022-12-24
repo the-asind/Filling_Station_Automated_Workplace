@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -8,7 +7,7 @@ using System.Xml.Serialization;
 using Filling_Station_Automated_Workplace.Data;
 using Microsoft.VisualBasic.FileIO;
 
-namespace Filling_Station_Automated_Workplace.Model;
+namespace Filling_Station_Automated_Workplace.Domain;
 
 public static class Deserialize
 {

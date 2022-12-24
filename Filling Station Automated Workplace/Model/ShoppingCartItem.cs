@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Data;
+using Filling_Station_Automated_Workplace.Domain;
 using Filling_Station_Automated_Workplace.Model;
 using Filling_Station_Automated_Workplace.ViewModel;
 

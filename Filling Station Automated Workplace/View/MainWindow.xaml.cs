@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using Filling_Station_Automated_Workplace.Model;
 using Filling_Station_Automated_Workplace.ViewModel;
 using System.Windows.Media.Effects;
+using Filling_Station_Automated_Workplace.Data;
 
 namespace Filling_Station_Automated_Workplace.View;
 
@@ -31,6 +32,7 @@ public partial class MainWindow : Window
     }
 
     private readonly MainWindowViewModel _viewModel;
+    private readonly BlurEffect _blur;
     
     public MainWindow()
     {
@@ -38,11 +40,11 @@ public partial class MainWindow : Window
         _viewModel = new MainWindowViewModel();
         DataContext = _viewModel;
 
-        var blur = new BlurEffect
+        _blur = new BlurEffect
         {
             Radius = 10
         };
-        Effect = blur;
+        Effect = _blur;
 
         var login = new Login();
         login.Topmost = true;
@@ -123,6 +125,21 @@ public partial class MainWindow : Window
     private void FinishPaymentButton_OnClick(object sender, RoutedEventArgs e)
     {
         _viewModel.FinishPayment();
+    }
+
+    private void FuelInfoButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var tanksConfigurator = new TanksConfigurator()
+        {
+            Topmost = true,
+            WindowStartupLocation = WindowStartupLocation.CenterScreen
+        };
+        // Show the window
+        Effect = _blur;
+        tanksConfigurator.ShowDialog();
+        
+        Effect = null;
+
     }
 }
 

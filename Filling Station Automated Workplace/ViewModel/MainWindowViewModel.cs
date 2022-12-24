@@ -5,6 +5,7 @@ using System.Data;
 using System.Globalization;
 using System.Windows.Data;
 using Filling_Station_Automated_Workplace.Data;
+using Filling_Station_Automated_Workplace.Domain;
 using Filling_Station_Automated_Workplace.Model;
 using GalaSoft.MvvmLight.Messaging;
 
@@ -161,7 +162,15 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
         }
     }
     
-    public bool FinishPaymentType => SelectedNozzlePostInstance is { FillUp: false }; // 1 - ОПЛАТА ; 0 - ПУСК
+    public bool FinishPaymentType
+    {
+        get
+        {
+            if (SelectedNozzlePostInstance == null) return true;
+            return !SelectedNozzlePostInstance.FillUp;
+            // 1 - ОПЛАТА ; 0 - ПУСК
+        }
+    }
 
     public string TextGoodsSummary => _goodsSummary.ToString("C2");
 
@@ -201,6 +210,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
                 }
                 else
                 {
+                    SelectedNozzlePostInstance.IsAlreadyFilledOut = false;
                     Serialize.UpdateTanksFile(SelectedNozzlePostInstance);
                     SelectedNozzlePostInstance = null;
                 }
@@ -225,8 +235,6 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
         OnPropertyChanged(nameof(SelectedNozzlePostInstance));
     }
 }
-
-
 
 public class FillUpChangedMessage { }
 
