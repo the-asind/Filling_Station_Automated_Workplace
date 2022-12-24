@@ -10,7 +10,7 @@ namespace Filling_Station_Automated_Workplace.Data;
 public class NozzlePostData : INozzlePostDataProvider
 {
     public DataTable NozzlePostDataTable { get; }
-    
+
     public NozzlePostData()
     {
         NozzlePostDataTable = Deserialize.GetDataTableFromCsvFile("Tanks.csv");

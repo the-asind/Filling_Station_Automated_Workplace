@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Filling_Station_Automated_Workplace.Domain;
 using Filling_Station_Automated_Workplace.Model;
@@ -15,12 +17,11 @@ public class GoodsData : IGoodsDataProvider
     {
         GoodsDataTable = Deserialize.GetDataTableFromCsvFile("Goods.csv");
 
-        foreach (DataRow row in GoodsDataTable.Rows)
+        var rowsToDelete = GoodsDataTable.Rows.Cast<DataRow>().Where(row => row["Count"].ToString() == "0").ToList();
+
+        foreach (var row in rowsToDelete)
         {
-            if (row["Count"].ToString() == "0")
-            {
-                row.Delete();
-            }
+            row.Delete();
         }
 
         GoodsDataTable.AcceptChanges();

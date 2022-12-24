@@ -77,12 +77,9 @@ public static class Deserialize
     {
         var fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\Users.xml";
         XmlSerializer serializer = new XmlSerializer(typeof(UsersData.Users));
-        UsersData.Users users;
 
-        using (FileStream fs = new FileStream(fileName, FileMode.Open))
-        {
-            users = (UsersData.Users)serializer.Deserialize(fs)!;
-        }
+        using FileStream fs = new FileStream(fileName, FileMode.Open);
+        var users = (UsersData.Users)serializer.Deserialize(fs)!;
 
         return users;
     }

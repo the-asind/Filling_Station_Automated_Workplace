@@ -3,11 +3,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
-using System.Threading;
 using System.Windows.Threading;
 using Filling_Station_Automated_Workplace.Data;
 using Filling_Station_Automated_Workplace.Domain;
-using Filling_Station_Automated_Workplace.Model;
 using GalaSoft.MvvmLight.Messaging;
 
 namespace Filling_Station_Automated_Workplace.ViewModel;
@@ -39,7 +37,7 @@ public interface INozzlePostViewModel
 
 public class ConcreteNozzlePostViewModel : INozzlePostDataProvider
 {
-    private readonly NozzlePostData _nozzlePostData;
+    private NozzlePostData _nozzlePostData;
 
     public DataTable NozzlePostDataTable => _nozzlePostData.NozzlePostDataTable;
 
@@ -67,6 +65,8 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
             .Select(row => row.Field<string>("Name")));
         NozzlelId = count;
     }
+
+    
 
     public DataTable NozzlePostDataTable => _nozzlePostData.NozzlePostDataTable;
     public ObservableCollection<string?> NozzlePostNames { get; }
@@ -97,7 +97,7 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
     public double LiterCount
     {
         get => _literCount;
-        
+
         set
         {
             if (Math.Abs(_literCount - value) < 0.01) return;
@@ -115,11 +115,12 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
     {
         SelectedFuelName = name;
         OnUserControlActive(this);
-        
+
         var rows = NozzlePostDataTable.Select("Name = '" + name + "'");
         if (rows.Length > 0)
         {
-            int id = int.Parse(rows[0]["id"].ToString() ?? throw new InvalidOperationException("invalid id in Tanks.csv!"));
+            var id = int.Parse(rows[0]["id"].ToString() ??
+                               throw new InvalidOperationException("invalid id in Tanks.csv"));
             SelectedFuelId = id;
         }
         else
@@ -146,7 +147,6 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
     {
         FillUp = value;
         Messenger.Default.Send(new FillUpChangedMessage());
-        
     }
 
     private bool _fillUp;
@@ -165,14 +165,14 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
             OnPropertyChanged(nameof(TextSummary));
         }
     }
-    
+
     public bool IsAlreadyFilledOut { get; set; }
-    
+
     private static void OnUserControlActive(NozzlePostViewModel nozzlePostVm)
     {
         SelectedIdChanged?.Invoke(null, nozzlePostVm);
     }
-    
+
     public static event EventHandler<NozzlePostViewModel>? SelectedIdChanged;
 
     private int _selectedFuelId;
@@ -185,7 +185,7 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
             if (_selectedFuelId != value)
             {
                 _selectedFuelId = value;
-                
+
                 OnPropertyChanged(nameof(SelectedFuelName));
                 OnPropertyChanged(nameof(Price));
                 OnPropertyChanged(nameof(TextPrice));
@@ -194,7 +194,7 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
             }
         }
     }
-    
+
     private string? _selectedFuelName;
 
     public string? SelectedFuelName
@@ -211,8 +211,8 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
             }
         }
     }
-    
-    private int _nozzlelId;
+
+    private readonly int _nozzlelId;
 
     // ReSharper disable once MemberCanBePrivate.Global
     public int NozzlelId
@@ -230,8 +230,9 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
             SelectedIdChanged?.Invoke(this, this);
         }
     }
-    
+
     private bool _isNozzlePostBusy;
+
     public bool IsNozzlePostBusy
     {
         get => _isNozzlePostBusy;
@@ -249,13 +250,13 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
         _timer = new DispatcherTimer();
         _timer.Start();
         _timer.Interval = TimeSpan.FromMilliseconds(100);
-        if (FillUp) _timer.Tick += FuelingFillUpTimerTick;   
-        else _timer.Tick += FuelingTimerTick;   
+        if (FillUp) _timer.Tick += FuelingFillUpTimerTick;
+        else _timer.Tick += FuelingTimerTick;
     }
-    
+
     private void FuelingTimerTick(object? sender, EventArgs e)
     {
-        double increment = _random.NextDouble() * (0.2/LiterCount) + 0.01;
+        var increment = _random.NextDouble() * (0.2 / LiterCount) + 0.01;
 
         Progress += increment;
 
@@ -266,10 +267,10 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
             Progress = 0;
         }
     }
-    
+
     private void FuelingFillUpTimerTick(object? sender, EventArgs e)
     {
-        double increment = _random.NextDouble() * 0.01 + 0.01;
+        var increment = _random.NextDouble() * 0.01 + 0.01;
 
         Progress += increment;
         try
@@ -280,11 +281,8 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
         {
             EndFuelingFillUp();
         }
-        
-        if (Progress >= 1)
-        {
-            EndFuelingFillUp();
-        }
+
+        if (Progress >= 1) EndFuelingFillUp();
     }
 
     private void EndFuelingFillUp()
@@ -296,15 +294,15 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
         FillUpFullTank(false);
         Messenger.Default.Send(new FillUpEndedMessage());
     }
-    
-    
+
     //TODO: Серёжа взял на слабо, что я не смогу сделать так, чтобы номер поста также относительно прогресса менял цвет на белый
     public byte ProgressInPercent => (byte)(Progress * 100);
 
-    private readonly Random _random = new Random();
-    private DispatcherTimer _timer = new DispatcherTimer();
-    
+    private readonly Random _random = new();
+    private DispatcherTimer _timer = new();
+
     private double _progress;
+
     public double Progress
     {
         get => _progress;
@@ -325,3 +323,5 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
         }
     }
 }
+
+public class UpdatePostNamesMessage { }

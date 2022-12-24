@@ -234,6 +234,11 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
         
         OnPropertyChanged(nameof(SelectedNozzlePostInstance));
     }
+
+    public void UpdatePostNames()
+    {
+        Messenger.Default.Send(new UpdatePostNamesMessage());
+    }
 }
 
 public class FillUpChangedMessage { }

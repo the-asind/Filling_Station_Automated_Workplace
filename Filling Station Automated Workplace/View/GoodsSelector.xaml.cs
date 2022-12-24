@@ -114,7 +114,7 @@ public partial class GoodsSelector
         {
             CurrentSession.CurrentReceipt.ChangeCountById(id, count);
         }
-        catch (Exception ex)
+        catch (ArgumentException)
         {
             MessageTextPopUp.Text = "Ошибка: вы пытаетесь добавить товара больше,\n чем имеется в наличии";
             MessagePopup.IsOpen = true;

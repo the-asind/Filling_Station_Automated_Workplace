@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:view="clr-namespace:Filling_Station_Automated_Workplace.View"
         mc:Ignorable="d"
-        Title="Конфигурация резервуаров" Height="500" Width="500" ResizeMode="NoResize" AllowsTransparency="True" WindowStyle="None" Background="#00000000"
+        Title="Конфигурация резервуаров" Height="540" Width="540" ResizeMode="NoResize" AllowsTransparency="True" WindowStyle="None" Background="#00000000"
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FontFamily="Bahnschrift">
     <Window.Resources>
         <ContextMenu x:Key="RowContextMenu"
@@ -16,7 +16,7 @@
         </ContextMenu>
     </Window.Resources>
     
-    <Grid>
+    <Grid Margin="20">
         <Grid.Effect>
         <DropShadowEffect BlurRadius="25" Direction="-90"
                           RenderingBias="Quality" ShadowDepth="2" />

@@ -56,7 +56,7 @@ public class GoodsSelectorViewModel : IGoodsSelectorViewModel
         {
             CurrentSession.CurrentReceipt.ChangeCountById(id, count);
         }
-        catch (Exception ex)
+        catch (ArgumentException)
         {
             // Ignored
         }

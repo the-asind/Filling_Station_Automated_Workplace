@@ -37,18 +37,13 @@ public static class Serialize
 
     public static void UpdateTanksFile(NozzlePostViewModel selectedNozzlePostInstance)
     {
-        // Read the contents of the "Tanks.csv" file into a string array
         string[] lines = File.ReadAllLines(Deserialize.csvFileDefault+"Tanks.csv");
-
-        // Find the row with the corresponding "Id" (SelectedFuelId)
         string[]? fields = lines.FirstOrDefault(line => line.Split(';')[0] == selectedNozzlePostInstance.SelectedFuelId.ToString())?.Split(';');
 
         // If the row was found, update the "Reserve" field with the new value
         if (fields != null)
         {
             fields[2] = (double.Parse(fields[2], CultureInfo.InvariantCulture) - selectedNozzlePostInstance.LiterCount).ToString(CultureInfo.InvariantCulture);
-
-            // Replace the old row with the updated row
             lines[Array.IndexOf(lines, lines.FirstOrDefault(line => line.Split(';')[0] == fields[0]))] = string.Join(";", fields);
 
             // Write the updated contents back to the "Tanks.csv" file
@@ -60,8 +55,6 @@ public static class Serialize
     {
         // Create a string builder to store the CSV data
         StringBuilder csvBuilder = new StringBuilder();
-
-        // Add the column names as the first line of the CSV
         csvBuilder.AppendLine(string.Join(";", dataTable.Columns.Cast<DataColumn>().Select(column => column.ColumnName)));
 
         // Add the rows to the CSV

@@ -1,7 +1,6 @@
 ﻿<Application x:Class="Filling_Station_Automated_Workplace.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:viewModel="clr-namespace:Filling_Station_Automated_Workplace.ViewModel"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 

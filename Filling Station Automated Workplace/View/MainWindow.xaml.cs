@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
@@ -33,10 +34,12 @@ public partial class MainWindow : Window
 
     private readonly MainWindowViewModel _viewModel;
     private readonly BlurEffect _blur;
+    private int NozzlePostCount;
     
     public MainWindow()
     {
         InitializeComponent();
+        NozzlePostCount = 12;
         _viewModel = new MainWindowViewModel();
         DataContext = _viewModel;
 
@@ -61,7 +64,7 @@ public partial class MainWindow : Window
         };
 
 
-        CreateNozzlePosts(12);
+        CreateNozzlePosts(NozzlePostCount);
 
         //  DispatcherTimer setup
         _timer = new DispatcherTimer();
@@ -139,7 +142,13 @@ public partial class MainWindow : Window
         tanksConfigurator.ShowDialog();
         
         Effect = null;
+        // Clear the parent container that holds the NozzlePost controls
+        NozzleList.Children.Clear();
 
+        // Set the DataContext of the NozzleList to null to release the references to the NozzlePostViewModel instances
+        NozzleList.DataContext = null;
+        
+        CreateNozzlePosts(NozzlePostCount);
     }
 }
 

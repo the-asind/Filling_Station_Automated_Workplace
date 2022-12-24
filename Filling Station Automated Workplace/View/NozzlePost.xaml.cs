@@ -11,7 +11,7 @@ using Filling_Station_Automated_Workplace.ViewModel;
 
 namespace Filling_Station_Automated_Workplace.View;
 
-public partial class NozzlePost : UserControl
+public partial class NozzlePost
 {
     private readonly NozzlePostViewModel _viewModel;
 
@@ -20,11 +20,7 @@ public partial class NozzlePost : UserControl
         _viewModel = viewModel;
         InitializeComponent();
         NozzlePostNumber.Content = title.ToString();
-        TotalNozzleAmount.DataContext = viewModel;
-        PriceForLiter.DataContext = viewModel;
-        NozzlePanel.DataContext = viewModel;
-        FuelGrades.DataContext = viewModel;
-        NozzleCompletionPercentage.DataContext = viewModel;
+        DataContext = viewModel;
     }
 
     private void LitreAmountClicked(object sender, RoutedEventArgs e)
@@ -54,7 +50,7 @@ public partial class NozzlePost : UserControl
                 LiterAmount.IsReadOnly = true;
                 _viewModel.FillUpFullTank(true);
                 LiterAmount.Text = "0";
-                
+
                 break;
             case false:
                 LiterAmount.Background = _lightColor;
@@ -67,10 +63,7 @@ public partial class NozzlePost : UserControl
 
     private void SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is not ComboBox comboBox) return;
-
-        var rowView = comboBox.SelectedItem as DataRowView;
-        if (rowView == null) return;
+        if (sender is not ComboBox { SelectedItem: DataRowView rowView }) return;
 
         var selectedString = rowView["Name"].ToString();
 
@@ -100,12 +93,12 @@ public partial class NozzlePost : UserControl
 }
 
 [ValueConversion(typeof(bool), typeof(bool))]
-public class InverseBooleanConverter: IValueConverter
+public class InverseBooleanConverter : IValueConverter
 {
     #region IValueConverter Members
 
     public object Convert(object value, Type targetType, object parameter,
-        System.Globalization.CultureInfo culture)
+        CultureInfo culture)
     {
         if (targetType != typeof(bool))
             throw new InvalidOperationException("The target must be a boolean");
@@ -114,7 +107,7 @@ public class InverseBooleanConverter: IValueConverter
     }
 
     public object ConvertBack(object value, Type targetType, object parameter,
-        System.Globalization.CultureInfo culture)
+        CultureInfo culture)
     {
         throw new NotSupportedException();
     }
@@ -126,10 +119,7 @@ public class ProgressToEndPointConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is double progress)
-        {
-            return new Point(0.5, 1 - progress);
-        }
+        if (value is double progress) return new Point(0.5, 1 - progress);
 
         return new Point(0.5, 1);
     }

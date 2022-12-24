@@ -1,10 +1,11 @@
+using System;
 using System.Globalization;
 using System.Windows.Data;
 using Filling_Station_Automated_Workplace.Data;
 
 namespace Filling_Station_Automated_Workplace.Domain;
 
-public class GoodsModel
+public static class GoodsModel
 {
     public static (string?, double?) GetNameAndPriceById(int id)
     {
@@ -17,7 +18,7 @@ public class GoodsModel
         // Return the goods data from the row, or null if no matching row was found
         return row != null
             ? (row["Name"].ToString(),
-                double.Parse(row["Price"].ToString(), 
+                double.Parse(row["Price"].ToString() ?? throw new InvalidOperationException(), 
                     NumberStyles.AllowDecimalPoint, 
                     CultureInfo.InvariantCulture))
             : throw new ValueUnavailableException($"Не удалось найти {id}");
@@ -33,7 +34,7 @@ public class GoodsModel
 
         // Return the goods goodsData from the row, or null if no matching row was found
         return row != null
-            ? (double.Parse(row["Price"].ToString(), 
+            ? (double.Parse(row["Price"].ToString() ?? throw new InvalidOperationException(), 
                 NumberStyles.AllowDecimalPoint, 
                 CultureInfo.InvariantCulture))
             : throw new ValueUnavailableException($"Не удалось найти {id}");
@@ -49,7 +50,7 @@ public class GoodsModel
 
         // Return the goods goodsData from the row, or null if no matching row was found
         return row != null
-            ? int.Parse(row["Count"].ToString())
+            ? int.Parse(row["Count"].ToString() ?? throw new InvalidOperationException())
             : throw new ValueUnavailableException($"Не удалось найти {id}");
     }
 }
