@@ -127,7 +127,7 @@
                                 BorderThickness="3,3,3,3" Margin="5,10,5,10" Click="FuelInfoButton_OnClick"/>
                         <Button x:Name="HistoryInfoButton" Content="Товары" Height="40" Width="177.5"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                                BorderThickness="3,3,3,3" Margin="5,10,5,10" />
+                                BorderThickness="3,3,3,3" Margin="5,10,5,10" Click="HistoryInfoButton_OnClick"/>
                         <Button x:Name="EndShiftButton" Content="Закрыть смену" Height="40" Width="177.5"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
                                 BorderThickness="3,3,3,3" Margin="5,10,5,10" />

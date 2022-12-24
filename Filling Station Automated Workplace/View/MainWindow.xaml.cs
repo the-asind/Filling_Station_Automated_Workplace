@@ -149,6 +149,24 @@ public partial class MainWindow : Window
         NozzleList.DataContext = null;
         
         CreateNozzlePosts(NozzlePostCount);
+        CurrentSession.CreateNewReceipt();
+        _viewModel.UpdateReceiptItems(CurrentSession.CurrentReceipt);
+    }
+
+    private void HistoryInfoButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var goodsConfigurator = new GoodsConfigurator()
+        {
+            Topmost = true,
+            WindowStartupLocation = WindowStartupLocation.CenterScreen
+        };
+        // Show the window
+        Effect = _blur;
+        goodsConfigurator.ShowDialog();
+        
+        Effect = null;
+        CurrentSession.CreateNewReceipt();
+        _viewModel.UpdateReceiptItems(CurrentSession.CurrentReceipt);
     }
 }
 

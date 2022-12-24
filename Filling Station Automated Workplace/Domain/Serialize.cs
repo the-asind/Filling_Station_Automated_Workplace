@@ -71,7 +71,18 @@ public static class Serialize
     }
 
 
+    public static void WriteDataTableToCsv(DataTable dataTable, string filePath)
+    {
+        // Create a string builder to store the CSV data
+        StringBuilder csvBuilder = new StringBuilder();
+        csvBuilder.AppendLine(string.Join(";", dataTable.Columns.Cast<DataColumn>().Select(column => column.ColumnName)));
 
+        foreach (DataRow row in dataTable.Rows)
+        {
+            csvBuilder.AppendLine(string.Join(";", row.ItemArray));
+        }
 
-
+        // Write the CSV to the file
+        File.WriteAllText(Deserialize.csvFileDefault + filePath, csvBuilder.ToString());
+    }
 }
