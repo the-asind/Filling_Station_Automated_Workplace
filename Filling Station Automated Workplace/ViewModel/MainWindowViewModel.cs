@@ -1,9 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Data;
-using System.Globalization;
-using System.Windows.Data;
+using System.Linq;
 using Filling_Station_Automated_Workplace.Data;
 using Filling_Station_Automated_Workplace.Domain;
 using Filling_Station_Automated_Workplace.Model;
@@ -27,7 +26,7 @@ public interface IMainWindowViewModel
 
 public class ConcreteMainWindowViewModel : IConfigurationDataProvider
 {
-    private ConfigurationData _configurationData;
+    private readonly ConfigurationData _configurationData;
 
     public int NozzlePostCount => _configurationData.NozzlePostCount;
 
@@ -41,7 +40,6 @@ public class ConcreteMainWindowViewModel : IConfigurationDataProvider
 public interface IConfigurationDataProvider
 {
     int NozzlePostCount { get; }
-    
 }
 
 // ViewModel class
@@ -51,7 +49,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
 
     public MainWindowViewModel()
     {
-        var dataProvider = new ConfigurationData();
+        var dataProvider = Deserialize.DeserializeConfiguration();
         NozzlePostViewModel.SelectedIdChanged += OnNozzlePostUserControlActive;
         _configurationData = dataProvider;
         ReceiptItems = new ObservableCollection<ShoppingCartItem>();
@@ -75,14 +73,17 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
         OnPropertyChanged(nameof(TotalCostText));
         OnPropertyChanged(nameof(FinishPaymentType));
     }
-    
+
     private void OnFillUpChangedMessageReceived(FillUpChangedMessage message)
     {
         OnPropertyChanged(nameof(TotalCostText));
         OnPropertyChanged(nameof(FinishPaymentType));
     }
-    
+
     public int NozzlePostCount => _configurationData.NozzlePostCount;
+
+    public List<string?>? PaymentTypeNames =>
+        _configurationData.PaymentTypes?.Where(pt => pt.IsActive).Select(pt => pt.Name).ToList();
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -94,8 +95,10 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
 
     public void UpdateNozzlePostCount()
     {
-        _configurationData = new ConfigurationData();
+        _configurationData = Deserialize.DeserializeConfiguration();
+
         OnPropertyChanged(nameof(NozzlePostCount));
+        OnPropertyChanged(nameof(PaymentTypeNames));
     }
 
 
@@ -110,7 +113,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
             if (value is { IsNozzlePostBusy: true }) return;
             _selectedNozzlePostInstance = value;
             CurrentSession.CurrentReceipt.RelateNozzlePost = value;
-            
+
             IsPaymentReady = true;
             OnPropertyChanged(nameof(IsPaymentReady));
 
@@ -140,7 +143,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
             return GoodsSummary.ToString("C2");
         }
     }
-    
+
     public void SetGoodsSummary(double getGoodsSummary)
     {
         GoodsSummary = getGoodsSummary;
@@ -164,7 +167,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
             OnPropertyChanged(nameof(FinishPaymentType));
         }
     }
-    
+
     public bool FinishPaymentType
     {
         get
@@ -179,7 +182,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
 
     public bool IsWindowFree { get; set; }
     public bool IsPaymentReady { get; set; }
-    
+
     public void UpdateReceiptItems(Receipt receipt)
     {
         ReceiptItems = new ObservableCollection<ShoppingCartItem>(ShoppingCartItem.IUpdate(receipt));
@@ -189,7 +192,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
         OnPropertyChanged(nameof(TotalCostText));
         OnPropertyChanged(nameof(FinishPaymentType));
     }
-    
+
     public ObservableCollection<ShoppingCartItem> ReceiptItems { get; set; }
 
     public void FinishPayment()
@@ -197,7 +200,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
         if (FinishPaymentType || SelectedNozzlePostInstance == null)
         {
             Serialize.UpdateGoodsFile(ReceiptItems);
-            
+
             CurrentSession.CreateNewReceipt();
             UpdateReceiptItems(CurrentSession.CurrentReceipt);
             SetGoodsSummary(CurrentSession.CurrentReceipt.GetGoodsSummary());
@@ -224,7 +227,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
             IsPaymentReady = false;
             OnPropertyChanged(nameof(IsPaymentReady));
         }
-        else 
+        else
         {
             Serialize.UpdateTanksFile(SelectedNozzlePostInstance);
             SelectedNozzlePostInstance.StartFueling();
@@ -234,10 +237,10 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
             IsPaymentReady = false;
             OnPropertyChanged(nameof(IsPaymentReady));
         }
-        
+
         OnPropertyChanged(nameof(SelectedNozzlePostInstance));
     }
-    
+
     public string? UserLoginName
     {
         get => User.FullName;
@@ -248,7 +251,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
             OnPropertyChanged(nameof(UserLoginName));
         }
     }
-    
+
     public bool UserAccessLevel
     {
         get => User.IsAdmin;
@@ -261,6 +264,14 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
     }
 }
 
-public class FillUpChangedMessage { }
-public class FillUpEndedMessage { }
-public class UpdateUserMessage { }
+public class FillUpChangedMessage
+{
+}
+
+public class FillUpEndedMessage
+{
+}
+
+public class UpdateUserMessage
+{
+}

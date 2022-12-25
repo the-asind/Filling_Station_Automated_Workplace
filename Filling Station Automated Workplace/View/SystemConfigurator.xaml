@@ -10,7 +10,6 @@
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FontFamily="Bahnschrift">
     <Window.Resources>
         <view:AccessLevelConverter x:Key="accessLevelConverter"/>
-        <view:BoolConverter x:Key="boolConverter"/>
         <ContextMenu x:Key="RowContextMenu"
                      StaysOpen="True">
             <MenuItem x:Name="DeleteRowMenuItem"
@@ -39,13 +38,14 @@
                                  FontSize="22" TextWrapping="WrapWithOverflow" HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Disabled"
                                  GotFocus="NewPostCountClicked" PreviewTextInput="NewPostCountInput" CommandManager.PreviewCanExecute="HandleCanExecute"
-                                 BorderThickness="3,3,3,3" MaxLength="3" />
+                                 BorderThickness="3,3,3,3" MaxLength="2" />
                         <Button Content="Принять" Click="SetNewPostCountButton_Clicked" Padding="5" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
                                 BorderThickness="2,2,2,2" FontSize="16"/>
                     </StackPanel>
                 </Border>
             </Grid>
         </Popup>
+        
         <Popup x:Name="UserChangePopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade" Placement="Mouse">
             <Grid Margin="20">
                 <Border Background="#FF81C784" Padding="10" CornerRadius="10">
@@ -57,7 +57,7 @@
                                    FontSize="20" Foreground="#FF388E3C" />
                         <DataGrid RowHeaderWidth="0" x:Name="UserChangeGrid" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"
                           CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
-                          CanUserSortColumns="False" Margin="20,20,20,60" Background="#FFC8E6C9"
+                          CanUserSortColumns="False" Margin="20,20,20,40" Background="#FFC8E6C9"
                           BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0" ItemsSource="{Binding UsersCollection}" 
                           FontSize="16" FontFamily="Bahnschrift" HorizontalAlignment="Center"  PreviewMouseRightButtonDown="ChangeGrid_PreviewMouseRightButtonDown"
                           VerticalAlignment="Bottom" Width="{Binding Path=ActualWidth}" Height="300">
@@ -121,14 +121,14 @@
                                    FontSize="20" Foreground="#FF388E3C" />
                         <DataGrid RowHeaderWidth="0" x:Name="PaymentChangeGrid" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"
                           CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
-                          CanUserSortColumns="False" Margin="20,20,20,60" Background="#FFC8E6C9"
-                          BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0" ItemsSource="{Binding PaymentTypesCollection}" 
+                          CanUserSortColumns="False" Margin="20,20,20,40" Background="#FFC8E6C9"
+                          BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0" ItemsSource="{Binding Configuration.PaymentTypes}" 
                           FontSize="16" FontFamily="Bahnschrift" HorizontalAlignment="Center"  PreviewMouseRightButtonDown="ChangeGrid_PreviewMouseRightButtonDown"
                           VerticalAlignment="Bottom" Width="{Binding Path=ActualWidth}" Height="300">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header=" Название " Binding="{Binding Name}" MaxWidth="220"/>
-                                <DataGridCheckBoxColumn Header=" Активен " Binding="{Binding IsActive, Converter={StaticResource boolConverter}}" MaxWidth="100" />
-                                <DataGridCheckBoxColumn Header=" Предполагает сдачу " Binding="{Binding IsCash, Converter={StaticResource boolConverter}}" MaxWidth="220" />
+                                <DataGridCheckBoxColumn Header=" Активен " Binding="{Binding IsActive}" MaxWidth="100" />
+                                <DataGridCheckBoxColumn Header=" Предполагает сдачу " Binding="{Binding IsCash}" MaxWidth="220" />
                             </DataGrid.Columns>
 
                         <DataGrid.Resources>

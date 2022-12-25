@@ -13,14 +13,15 @@ namespace Filling_Station_Automated_Workplace.Domain;
 
 public static class Deserialize
 {
-    
+    public static readonly string CsvFileDefault =
+        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\";
     
     public static DataTable GetDataTableFromCsvFile(string csvFilePath)
     {
         var csvData = new DataTable();
         try
         {
-            using var csvReader = new TextFieldParser(String.Concat(ConfigurationData.CsvFileDefault, csvFilePath));
+            using var csvReader = new TextFieldParser(String.Concat(CsvFileDefault, csvFilePath));
             csvReader.SetDelimiters(";");
             csvReader.HasFieldsEnclosedInQuotes = true;
             var colFields = csvReader.ReadFields();
@@ -54,7 +55,7 @@ public static class Deserialize
     public static double GetTankReserveById(int id)
     {
         // Read the data from Tanks.csv
-        string csvData = File.ReadAllText(String.Concat(ConfigurationData.CsvFileDefault,"Tanks.csv"));
+        string csvData = File.ReadAllText(String.Concat(CsvFileDefault,"Tanks.csv"));
     
         string[] lines = csvData.Split('\n');
     
@@ -88,19 +89,20 @@ public static class Deserialize
     
     public static int GetNozzlePostCountFromXml()
     {
-        XDocument document = XDocument.Load(String.Concat(ConfigurationData.CsvFileDefault,"Configuration.xml"));
+        XDocument document = XDocument.Load(String.Concat(CsvFileDefault,"Configuration.xml"));
         XElement nozzlePostCountElement = document.Root?.Element("NozzlePostCount") ?? throw new InvalidOperationException();
         return int.Parse(nozzlePostCountElement.Value);
     }
     
-    public static PaymentTypeData.PaymentTypes DeserializePaymentType()
+    public static ConfigurationData DeserializeConfiguration()
     {
-        var fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\PaymentTypes.xml";
-        var xmlSerializer = new XmlSerializer(typeof(PaymentTypeData.PaymentTypes));
+        var fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\Configuration.xml";
+        var xmlSerializer = new XmlSerializer(typeof(ConfigurationData));
 
-
-
-        using var stream = new StreamReader(fileName);
-        return (PaymentTypeData.PaymentTypes) xmlSerializer.Deserialize(stream)! ?? throw new InvalidOperationException();
+        using (var stream = new StreamReader(fileName))
+        {
+            return (ConfigurationData)xmlSerializer.Deserialize(stream)! ?? throw new InvalidOperationException();
+        }
     }
 }
+

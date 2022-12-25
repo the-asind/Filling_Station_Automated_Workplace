@@ -168,14 +168,17 @@
                             Data="M4.9999986,0 L402,0 C404.76141,1.5199184E-06 407,2.2385777 407,4.9999987 L407,22 0,22 0,4.9999987 C0,2.2385777 2.2385762,1.5199184E-06 4.9999986,0 z"
                             Fill="#FF66BB6A" HorizontalAlignment="Center" Height="22" Stretch="Fill"
                             VerticalAlignment="Top" Width="407" />
-                        <Label Content="вид оплаты" VerticalAlignment="Top" HorizontalContentAlignment="Center"
+                        <Label Content="способ оплаты" VerticalAlignment="Top" HorizontalContentAlignment="Center"
                                Padding="0,0,0,0" Grid.IsSharedSizeScope="True" Background="{x:Null}"
                                Foreground="#FFE8F5E9" />
                         <ComboBox x:Name="PaymentTypeComboBox" Height="39" Margin="10,30,10,0" SelectedIndex="0"
-                                  FontSize="30"
+                                  FontSize="30" ItemsSource="{Binding PaymentTypeNames}"
                                   VerticalAlignment="Top" Foreground="#FF1B5E20" FontStretch="SemiCondensed">
-                            <ComboBoxItem Content="Пластиковая карта" />
-                            <ComboBoxItem Content="Наличные" />
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
                         </ComboBox>
                     </Grid>
                     <Grid x:Name="FuelInfoMainMenu" Height="80" Margin="10,10,10,0">

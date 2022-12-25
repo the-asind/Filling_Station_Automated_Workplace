@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -17,46 +18,36 @@ namespace Filling_Station_Automated_Workplace.View;
 
 public partial class SystemConfigurator
 {
-    private ObservableCollection<UsersData.User> UsersCollection { get; set; }
-    private ObservableCollection<PaymentTypeData.PaymentType> PaymentTypesCollection { get; set; }
+    private ConfigurationData Configuration { get; set; }
     
     public SystemConfigurator()
     {
         InitializeComponent();
         
-        UsersCollection = new ObservableCollection<UsersData.User>(Deserialize.DeserializeUsersData().UsersList);
+        new ObservableCollection<UsersData.User>(Deserialize.DeserializeUsersData().UsersList);
         var users = Deserialize.DeserializeUsersData();
         UserChangeGrid.ItemsSource = users.UsersList;
         
-        PaymentTypesCollection = new ObservableCollection<PaymentTypeData.PaymentType>(Deserialize.DeserializePaymentType().PaymentTypeList);
-        var paymentTypes = Deserialize.DeserializePaymentType();
-        PaymentChangeGrid.ItemsSource = paymentTypes.PaymentTypeList;
+        Configuration = Deserialize.DeserializeConfiguration();
+        PaymentChangeGrid.DataContext = Configuration;
+        PaymentChangeGrid.ItemsSource = Configuration.PaymentTypes;
     }
     
-    private void AcceptChangesButton_Click(object sender, RoutedEventArgs e)
-    {
-        Close();
-    }
-    
-    private void ChangeUsersButton_Clicked(object sender, RoutedEventArgs e)
-    {
-        UserChangePopup.IsOpen = true;
-    }
+    private void AcceptChangesButton_Click(object sender, RoutedEventArgs e) => Close();
 
-    private void ChangePostButton_Clicked(object sender, RoutedEventArgs e)
-    {
-        NozzleCountPopup.IsOpen = true;
-    }
+    private void ChangeUsersButton_Clicked(object sender, RoutedEventArgs e) => UserChangePopup.IsOpen = true;
 
-    private void ChangePaymentButton_Clicked(object sender, RoutedEventArgs e)
-    {
-        PaymentChangePopup.IsOpen = true;
-    }
+    private void ChangePostButton_Clicked(object sender, RoutedEventArgs e) => NozzleCountPopup.IsOpen = true;
+
+    private void ChangePaymentButton_Clicked(object sender, RoutedEventArgs e) => PaymentChangePopup.IsOpen = true;
+
     private void SetNewPostCountButton_Clicked(object sender, RoutedEventArgs e)
     {
         try
         {
-            Serialize.SerializeNozzlePostCount(int.Parse(NewPostCountTextBox.Text));
+            Configuration.NozzlePostCount = int.Parse(NewPostCountTextBox.Text);
+            Serialize.SerializeConfiguration(Configuration);
+            //Serialize.SerializeNozzlePostCount(int.Parse(NewPostCountTextBox.Text));
             NozzleCountPopup.IsOpen = false;
         }
         catch (InvalidOperationException)
@@ -129,7 +120,7 @@ public partial class SystemConfigurator
     private void UserChangeDisagreeButton_Clicked(object sender, RoutedEventArgs e)
     {
         UserChangePopup.IsOpen = false;
-        UsersCollection = new ObservableCollection<UsersData.User>(Deserialize.DeserializeUsersData().UsersList);
+        new ObservableCollection<UsersData.User>(Deserialize.DeserializeUsersData().UsersList);
         var users = Deserialize.DeserializeUsersData();
         UserChangeGrid.ItemsSource = users.UsersList;
     }
@@ -179,14 +170,40 @@ public partial class SystemConfigurator
 
     private void PaymentChangeAcceptButton_Clicked(object sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        // 1. Remove rows where Name is not set or is filled with spaces
+        Configuration.PaymentTypes.RemoveAll(pt => string.IsNullOrWhiteSpace(pt.Name));
+
+        // 2. Check if there's at least one payment type left
+        if (Configuration.PaymentTypes.Count == 0)
+        {
+            MessageBox.Show(
+                "Должен быть хотя бы один способ оплаты. Пожалуйста, добавьте тип оплаты перед сохранением",
+                "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+            
+        }
+
+        if (Configuration.PaymentTypes.Any(payment => payment.IsActive))
+        {
+            Serialize.SerializeConfiguration(Configuration);
+            PaymentChangePopup.IsOpen = false;
+            return;
+        }
+        
+        MessageBox.Show(
+            "Хотя бы один способ оплаты должен быть активен. Пожалуйста, добавьте активный тип оплаты перед сохранением",
+            "Непродающий продажник", MessageBoxButton.OK, MessageBoxImage.Error);
+        return;
+
+        
     }
 
     private void PaymentChangeDisagreeButton_Clicked(object sender, RoutedEventArgs e)
     {
-        PaymentTypesCollection = new ObservableCollection<PaymentTypeData.PaymentType>(Deserialize.DeserializePaymentType().PaymentTypeList);
-        var Payments = Deserialize.DeserializePaymentType();
-        PaymentChangeGrid.ItemsSource = Payments.PaymentTypeList;
+        Configuration = Deserialize.DeserializeConfiguration();
+        PaymentChangeGrid.DataContext = Configuration;
+        PaymentChangeGrid.ItemsSource = Configuration.PaymentTypes;
+        PaymentChangePopup.IsOpen = false;
     }
 }
 
@@ -210,28 +227,5 @@ public class AccessLevelConverter : IValueConverter
         }
 
         return "user";
-    }
-}
-
-public class BoolConverter : IValueConverter
-{
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        if (value is string isActive)
-        {
-            return isActive == "true";
-        }
-
-        return false;
-    }
-
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        if (value is bool isActive)
-        {
-            return isActive ? "true" : "false";
-        }
-
-        return "false";
     }
 }

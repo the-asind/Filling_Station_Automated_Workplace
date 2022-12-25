@@ -19,7 +19,7 @@ public static class Serialize
 {
     public static void UpdateGoodsFile(ObservableCollection<ShoppingCartItem> receiptItems)
     {
-        var goodsLines = File.ReadAllLines(ConfigurationData.CsvFileDefault + "Goods.csv").ToList();
+        var goodsLines = File.ReadAllLines(Deserialize.CsvFileDefault + "Goods.csv").ToList();
 
         // Loop through each item in the ReceiptItems collection
         foreach (var item in receiptItems)
@@ -37,12 +37,12 @@ public static class Serialize
         }
 
         // Save the updated list of lines back to the Goods.csv file
-        File.WriteAllLines(ConfigurationData.CsvFileDefault + "Goods.csv", goodsLines);
+        File.WriteAllLines(Deserialize.CsvFileDefault + "Goods.csv", goodsLines);
     }
 
     public static void UpdateTanksFile(NozzlePostViewModel selectedNozzlePostInstance)
     {
-        string[] lines = File.ReadAllLines(ConfigurationData.CsvFileDefault + "Tanks.csv");
+        string[] lines = File.ReadAllLines(Deserialize.CsvFileDefault + "Tanks.csv");
         string[]? fields = lines
             .FirstOrDefault(line => line.Split(';')[0] == selectedNozzlePostInstance.SelectedFuelId.ToString())
             ?.Split(';');
@@ -56,7 +56,7 @@ public static class Serialize
                 string.Join(";", fields);
 
             // Write the updated contents back to the "Tanks.csv" file
-            File.WriteAllLines(ConfigurationData.CsvFileDefault + "Tanks.csv", lines);
+            File.WriteAllLines(Deserialize.CsvFileDefault + "Tanks.csv", lines);
         }
     }
 
@@ -77,7 +77,7 @@ public static class Serialize
         }
 
         // Write the CSV to the file
-        File.WriteAllText(ConfigurationData.CsvFileDefault + filePath, csvBuilder.ToString());
+        File.WriteAllText(Deserialize.CsvFileDefault + filePath, csvBuilder.ToString());
     }
 
 
@@ -94,12 +94,12 @@ public static class Serialize
         }
 
         // Write the CSV to the file
-        File.WriteAllText(ConfigurationData.CsvFileDefault + filePath, csvBuilder.ToString());
+        File.WriteAllText(Deserialize.CsvFileDefault + filePath, csvBuilder.ToString());
     }
 
     public static void SerializeNozzlePostCount(int nozzlePostCount)
     {
-        XDocument doc = XDocument.Load(ConfigurationData.CsvFileDefault + "Configuration.xml");
+        XDocument doc = XDocument.Load(Deserialize.CsvFileDefault + "Configuration.xml");
         if (doc.Root != null)
         {
             XElement nozzlePostCountElement =
@@ -111,7 +111,7 @@ public static class Serialize
             throw new InvalidOperationException();
         }
 
-        doc.Save(ConfigurationData.CsvFileDefault + "Configuration.xml");
+        doc.Save(Deserialize.CsvFileDefault + "Configuration.xml");
     }
 
 
@@ -120,13 +120,20 @@ public static class Serialize
         var fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\Users.xml";
         var xmlSerializer = new XmlSerializer(typeof(List<UsersData.User>), new XmlRootAttribute("Users"));
 
-        using (var stream = new StreamWriter(fileName))
-        {
-            var xmlNamespace = new XmlSerializerNamespaces();
-            xmlNamespace.Add("", "");
-            xmlSerializer.Serialize(stream, users, xmlNamespace);
-        }
+        using var stream = new StreamWriter(fileName);
+        var xmlNamespace = new XmlSerializerNamespaces();
+        xmlNamespace.Add("", "");
+        xmlSerializer.Serialize(stream, users, xmlNamespace);
     }
 
+    public static void SerializeConfiguration(ConfigurationData configuration)
+    {
+        var fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\Configuration.xml";
+        var xmlSerializer = new XmlSerializer(typeof(ConfigurationData), new XmlRootAttribute("Configuration"));
 
+        using var stream = new StreamWriter(fileName);
+        var xmlNamespace = new XmlSerializerNamespaces();
+        xmlNamespace.Add("", "");
+        xmlSerializer.Serialize(stream, configuration, xmlNamespace);
+    }
 }

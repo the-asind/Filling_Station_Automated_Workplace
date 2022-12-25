@@ -1,27 +1,28 @@
 using System;
-using System.Data;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Xml.Linq;
+using System.Xml.Serialization;
 using Filling_Station_Automated_Workplace.Domain;
-using Filling_Station_Automated_Workplace.Model;
 
 namespace Filling_Station_Automated_Workplace.Data;
 
+[XmlRoot("Configuration")]
 public class ConfigurationData
 {
-    public static readonly string CsvFileDefault = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\";
 
-    public ConfigurationData()
-    {
-        NozzlePostCount = Deserialize.GetNozzlePostCountFromXml();
-    }
-    
-    public void UpdateConfigurationData()
-    {
-        NozzlePostCount = Deserialize.GetNozzlePostCountFromXml();
-    }
+    [XmlElement("NozzlePostCount")] public int NozzlePostCount { get; set; }
 
-    public int NozzlePostCount { get; set; }
+    [XmlArray("PaymentTypes")]
+    [XmlArrayItem("PaymentType")]
+    public List<PaymentTypeData>? PaymentTypes { get; set; }
+}
 
+public class PaymentTypeData
+{
+    [XmlElement("Name")] public string? Name { get; set; }
+
+    [XmlElement("IsActive")] public bool IsActive { get; set; }
+
+    [XmlElement("IsCash")] public bool IsCash { get; set; }
 }

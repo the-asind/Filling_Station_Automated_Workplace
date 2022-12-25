@@ -89,7 +89,7 @@ public partial class MainWindow : Window
         }
     }
     
-    private void _timer_Tick(object sender, EventArgs e)
+    private void _timer_Tick(object? sender, EventArgs e)
     {
         // Updating the Label which displays the current second
         DateTimeFoot.Text = DateTime.Now.ToString("D");
@@ -197,7 +197,6 @@ public partial class MainWindow : Window
             
             CurrentSession.CreateNewReceipt();
             _viewModel.UpdateReceiptItems(CurrentSession.CurrentReceipt);
-            
         }
         //TODO: implement else
     }
