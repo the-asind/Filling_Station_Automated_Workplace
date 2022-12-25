@@ -20,6 +20,9 @@ public class UsersData
 
         [XmlElement("Password")]
         public string Password { get; set; }
+        
+        [XmlElement("FullName")]
+        public string FullName { get; set; }
 
         [XmlElement("AccessLevel")]
         public string AccessLevel { get; set; }

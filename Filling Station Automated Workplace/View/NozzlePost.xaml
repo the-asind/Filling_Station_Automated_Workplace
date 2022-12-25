@@ -48,7 +48,7 @@
                  SelectionBrush="#FF2E7D32" SelectionTextBrush="#FFC8E6C9" VerticalAlignment="Top"
                  FontSize="22" TextWrapping="WrapWithOverflow" HorizontalContentAlignment="Center"
                  VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Disabled"
-                 GotFocus="LitreAmountClicked" PreviewTextInput="LiterAmountTextInput"
+                 GotFocus="LiterAmountClicked" PreviewTextInput="LiterAmountTextInput"
                  TextChanged="LiterAmount_OnTextChanged"
                  BorderThickness="3,3,3,3" MaxLength="4" />
 

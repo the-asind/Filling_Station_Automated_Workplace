@@ -21,8 +21,9 @@ public class LoginViewModel
         //TODO: реализовать использование безопасного механизма хранения пароля, например, хэширование или шифрование.
         if (_usersData.UsersList.Any(user => user.Login == login && user.Password == password))
         {
-            User.LoginName = login;
-            User.IsAdmin = (_usersData.UsersList.Single(user => user.Login == login && user.Password == password).AccessLevel == "admin");
+            var user = _usersData.UsersList.Single(user => user.Login == login && user.Password == password);
+            User.FullName = user.FullName;
+            User.IsAdmin = user.AccessLevel == "admin";
             Messenger.Default.Send(new UpdateUserMessage());
             return;
         }

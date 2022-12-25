@@ -14,34 +14,22 @@ namespace Filling_Station_Automated_Workplace.ViewModel;
 // ViewModel interface
 public interface IMainWindowViewModel
 {
-    DataTable ConfigurationDataTable
+    int NozzlePostCount
     {
         get
         {
             var configurationData = new ConfigurationData();
             if (configurationData == null) throw new ArgumentNullException(nameof(configurationData));
-            return configurationData.ConfigurationDataTable;
-        }
-    }
-
-    ObservableCollection<string?> MainWindowNames
-    {
-        get
-        {
-            var mainWindowNames = new ObservableCollection<string?>();
-
-            foreach (DataRow row in ConfigurationDataTable.Rows) mainWindowNames.Add(row["Name"].ToString());
-
-            return mainWindowNames;
+            return configurationData.NozzlePostCount;
         }
     }
 }
 
 public class ConcreteMainWindowViewModel : IConfigurationDataProvider
 {
-    private readonly ConfigurationData _configurationData;
+    private ConfigurationData _configurationData;
 
-    public DataTable ConfigurationDataTable => _configurationData.ConfigurationDataTable;
+    public int NozzlePostCount => _configurationData.NozzlePostCount;
 
     public ConcreteMainWindowViewModel()
     {
@@ -52,17 +40,18 @@ public class ConcreteMainWindowViewModel : IConfigurationDataProvider
 // Data interface
 public interface IConfigurationDataProvider
 {
-    DataTable ConfigurationDataTable { get; }
+    int NozzlePostCount { get; }
+    
 }
 
 // ViewModel class
 public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
 {
-    private readonly IConfigurationDataProvider _configurationData;
+    private ConfigurationData _configurationData;
 
     public MainWindowViewModel()
     {
-        var dataProvider = new ConcreteMainWindowViewModel();
+        var dataProvider = new ConfigurationData();
         NozzlePostViewModel.SelectedIdChanged += OnNozzlePostUserControlActive;
         _configurationData = dataProvider;
         ReceiptItems = new ObservableCollection<ShoppingCartItem>();
@@ -93,7 +82,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
         OnPropertyChanged(nameof(FinishPaymentType));
     }
     
-    public DataTable ConfigurationDataTable => _configurationData.ConfigurationDataTable;
+    public int NozzlePostCount => _configurationData.NozzlePostCount;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -102,6 +91,13 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
         var handler = PropertyChanged;
         handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+
+    public void UpdateNozzlePostCount()
+    {
+        _configurationData = new ConfigurationData();
+        OnPropertyChanged(nameof(NozzlePostCount));
+    }
+
 
     private NozzlePostViewModel? _selectedNozzlePostInstance;
 
@@ -244,11 +240,11 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
     
     public string? UserLoginName
     {
-        get => User.LoginName;
+        get => User.FullName;
         set
         {
-            if (User.LoginName == value) return;
-            User.LoginName = value;
+            if (User.FullName == value) return;
+            User.FullName = value;
             OnPropertyChanged(nameof(UserLoginName));
         }
     }

@@ -34,12 +34,10 @@ public partial class MainWindow : Window
 
     private readonly MainWindowViewModel _viewModel;
     private readonly BlurEffect _blur;
-    private int NozzlePostCount;
     
     public MainWindow()
     {
         InitializeComponent();
-        NozzlePostCount = 12;
         _viewModel = new MainWindowViewModel();
         DataContext = _viewModel;
 
@@ -64,7 +62,7 @@ public partial class MainWindow : Window
         };
 
 
-        CreateNozzlePosts(NozzlePostCount);
+        CreateNozzlePosts(_viewModel.NozzlePostCount);
 
         //  DispatcherTimer setup
         _timer = new DispatcherTimer();
@@ -150,14 +148,14 @@ public partial class MainWindow : Window
             // Set the DataContext of the NozzleList to null to release the references to the NozzlePostViewModel instances
             NozzleList.DataContext = null;
 
-            CreateNozzlePosts(NozzlePostCount);
+            CreateNozzlePosts(_viewModel.NozzlePostCount);
             CurrentSession.CreateNewReceipt();
             _viewModel.UpdateReceiptItems(CurrentSession.CurrentReceipt);
         }
         //TODO: implement else
     }
 
-    private void HistoryInfoButton_OnClick(object sender, RoutedEventArgs e)
+    private void GoodsInfoButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (User.IsAdmin)
         {
@@ -173,6 +171,33 @@ public partial class MainWindow : Window
             Effect = null;
             CurrentSession.CreateNewReceipt();
             _viewModel.UpdateReceiptItems(CurrentSession.CurrentReceipt);
+        }
+        //TODO: implement else
+    }
+
+    private void SystemButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (User.IsAdmin)
+        {
+            var systemConfigurator = new SystemConfigurator()
+            {
+                Topmost = true,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            // Show the window
+            Effect = _blur;
+            systemConfigurator.ShowDialog();
+
+            Effect = null;
+            
+            NozzleList.Children.Clear();
+            NozzleList.DataContext = null;
+            _viewModel.UpdateNozzlePostCount();
+            CreateNozzlePosts(_viewModel.NozzlePostCount);
+            
+            CurrentSession.CreateNewReceipt();
+            _viewModel.UpdateReceiptItems(CurrentSession.CurrentReceipt);
+            
         }
         //TODO: implement else
     }

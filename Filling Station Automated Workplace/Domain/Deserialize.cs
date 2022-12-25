@@ -3,6 +3,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using Filling_Station_Automated_Workplace.Data;
 using Microsoft.VisualBasic.FileIO;
@@ -11,14 +12,14 @@ namespace Filling_Station_Automated_Workplace.Domain;
 
 public static class Deserialize
 {
-    public static readonly string csvFileDefault = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\";
+    
     
     public static DataTable GetDataTableFromCsvFile(string csvFilePath)
     {
         var csvData = new DataTable();
         try
         {
-            using var csvReader = new TextFieldParser(String.Concat(csvFileDefault, csvFilePath));
+            using var csvReader = new TextFieldParser(String.Concat(ConfigurationData.CsvFileDefault, csvFilePath));
             csvReader.SetDelimiters(";");
             csvReader.HasFieldsEnclosedInQuotes = true;
             var colFields = csvReader.ReadFields();
@@ -52,7 +53,7 @@ public static class Deserialize
     public static double GetTankReserveById(int id)
     {
         // Read the data from Tanks.csv
-        string csvData = File.ReadAllText(String.Concat(csvFileDefault,"Tanks.csv"));
+        string csvData = File.ReadAllText(String.Concat(ConfigurationData.CsvFileDefault,"Tanks.csv"));
     
         string[] lines = csvData.Split('\n');
     
@@ -82,5 +83,12 @@ public static class Deserialize
         var users = (UsersData.Users)serializer.Deserialize(fs)!;
 
         return users;
+    }
+    
+    public static int GetNozzlePostCountFromXml()
+    {
+        XDocument document = XDocument.Load(String.Concat(ConfigurationData.CsvFileDefault,"Configuration.xml"));
+        XElement nozzlePostCountElement = document.Root?.Element("NozzlePostCount") ?? throw new InvalidOperationException();
+        return int.Parse(nozzlePostCountElement.Value);
     }
 }

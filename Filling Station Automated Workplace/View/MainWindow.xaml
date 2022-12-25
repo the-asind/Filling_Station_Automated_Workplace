@@ -121,14 +121,14 @@
                     <StackPanel x:Name="FunctionalList" Orientation="Horizontal">
                         <Button x:Name="SystemButton" Content="Система" Height="40" Width="177.5" Margin="10,10,5,10"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                                BorderThickness="3,3,3,3" />
+                                BorderThickness="3,3,3,3" Click="SystemButton_OnClick"/>
                         <Button x:Name="FuelInfoButton" Content="Резервуары" Height="40" Width="177.5"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
                                 BorderThickness="3,3,3,3" Margin="5,10,5,10" Click="FuelInfoButton_OnClick"/>
-                        <Button x:Name="HistoryInfoButton" Content="Товары" Height="40" Width="177.5"
+                        <Button x:Name="GoodsInfoButton" Content="Товары" Height="40" Width="177.5"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                                BorderThickness="3,3,3,3" Margin="5,10,5,10" Click="HistoryInfoButton_OnClick"/>
-                        <Button x:Name="EndShiftButton" Content="Закрыть смену" Height="40" Width="177.5"
+                                BorderThickness="3,3,3,3" Margin="5,10,5,10" Click="GoodsInfoButton_OnClick"/>
+                        <Button x:Name="ShiftButton" Content="Смена" Height="40" Width="177.5"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
                                 BorderThickness="3,3,3,3" Margin="5,10,5,10" />
                     </StackPanel>

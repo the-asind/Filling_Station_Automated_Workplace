@@ -23,7 +23,7 @@ public partial class NozzlePost
         DataContext = viewModel;
     }
 
-    private void LitreAmountClicked(object sender, RoutedEventArgs e)
+    private void LiterAmountClicked(object sender, RoutedEventArgs e)
     {
         var t = (TextBox)sender;
         t.Text = "";
