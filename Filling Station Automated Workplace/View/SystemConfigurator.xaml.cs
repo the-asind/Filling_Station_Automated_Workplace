@@ -140,8 +140,12 @@ public partial class SystemConfigurator
                            string.IsNullOrWhiteSpace(user.FullName))
             .ToList();
 
-        // Remove the fully empty rows from the DataGrid
-        foreach (var row in emptyRows) UserChangeGrid.Items.Remove(row);
+        // Remove the fully empty rows from the source collection
+        foreach (var row in emptyRows)
+        {
+            var sourceCollection = UserChangeGrid.ItemsSource as IList;
+            if (sourceCollection != null) sourceCollection.Remove(row);
+        }
 
         // Check that at least one row exists in the data table
         if (UserChangeGrid.Items.OfType<UsersData.User>().All(user => user.AccessLevel != "admin"))

@@ -90,12 +90,6 @@
                                 </Style>
                             </DataGrid.CellStyle>
 
-                            <DataGrid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Delete Row" Click="DeleteRowMenuItem_Click" />
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
-
                             <DataGrid.RowStyle>
                                 <Style TargetType="{x:Type DataGridRow}">
                                     <Setter Property="Background" Value="#C8E6C9" />
@@ -161,12 +155,6 @@
                                 </Style>
                             </DataGrid.CellStyle>
 
-                            <DataGrid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Delete Row" Click="DeleteRowMenuItem_Click" />
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
-
                             <DataGrid.RowStyle>
                                 <Style TargetType="{x:Type DataGridRow}">
                                     <Setter Property="Background" Value="#C8E6C9" />
@@ -201,7 +189,7 @@
                         Click="ChangePostButton_Clicked" Padding="20" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7"
                         Foreground="#FF1B5E20"
                         BorderThickness="3,3,3,3" FontSize="18" Margin="30, 20, 30, 20" />
-                <Button x:Name="ChangePaymentButton" Content="Редактировать виды оплаты"
+                <Button x:Name="ChangePaymentButton" Content="Редактировать способы оплаты"
                         Click="ChangePaymentButton_Clicked" Padding="20" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7"
                         Foreground="#FF1B5E20"
                         BorderThickness="3,3,3,3" FontSize="18" Margin="30, 20, 30, 0" />

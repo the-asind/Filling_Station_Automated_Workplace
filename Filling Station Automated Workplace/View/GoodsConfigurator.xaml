@@ -56,7 +56,7 @@
 
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem x:Name="DeleteRowMenuItem" Header="Delete Row" Click="DeleteRowMenuItem_Click" />
+                        <MenuItem x:Name="DeleteRowMenuItem" Header="Удалить строку" Click="DeleteRowMenuItem_Click" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
 

@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using Filling_Station_Automated_Workplace.Domain;
 
 namespace Filling_Station_Automated_Workplace.Model;
 
 public class ShoppingCartItem
 {
-    public int Id { get; private init; }
-    public int Count { get; private init; }
+    public string? Name { get; set; }
+    public int Id { get; set; }
+    public int Count { get; set; }
+    public double TotalCost { get; set; }
 
-    public static DataTable Update(Receipt receipt)
+    public static DataTable? Update(Receipt receipt)
     {
         var commodityItem = receipt.CommodityItem;
         var table = new DataTable();
@@ -22,7 +23,7 @@ public class ShoppingCartItem
         // Add each item in the List to the DataTable
         foreach (var item in commodityItem)
         {
-            var (goodsName, _) = GoodsModel.GetNameAndPriceById(item.Id);
+            var (goodsName, goodsPrice) = GoodsModel.GetNameAndPriceById(item.Id);
 
             table.Rows.Add(item.Id, goodsName, item.Count, item.TotalCost);
         }
@@ -33,9 +34,24 @@ public class ShoppingCartItem
     public static IEnumerable<ShoppingCartItem> UpdateCart(Receipt receipt)
     {
         var commodityItem = receipt.CommodityItem;
+        var shoppingCartItems = new List<ShoppingCartItem>();
 
         // Create a ShoppingCartItem object for each item in the List and add it to the collection
+        foreach (var item in commodityItem)
+        {
+            var (goodsName, goodsPrice) = GoodsModel.GetNameAndPriceById(item.Id);
 
-        return commodityItem.Select(item => new ShoppingCartItem { Id = item.Id, Count = item.Count }).ToList();
+            var shoppingCartItem = new ShoppingCartItem
+            {
+                Name = goodsName,
+                Id = item.Id,
+                Count = item.Count,
+                TotalCost = item.TotalCost
+            };
+
+            shoppingCartItems.Add(shoppingCartItem);
+        }
+
+        return shoppingCartItems;
     }
 }
