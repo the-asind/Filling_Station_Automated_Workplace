@@ -2,7 +2,15 @@
 <Configuration>
     <NozzlePostCount>4</NozzlePostCount>
     <PaymentTypes>
-        <PaymentType>Cash</PaymentType>
-        <PaymentType>CreditCard</PaymentType>
+        <PaymentType>
+            <Name>Наличные</Name>
+            <IsActive>true</IsActive>
+            <IsCash>true</IsCash>
+        </PaymentType>
+        <PaymentType>
+            <Name>Пластиковая карта</Name>
+            <IsActive>true</IsActive>
+            <IsCash>false</IsCash>
+        </PaymentType>
     </PaymentTypes>
 </Configuration>

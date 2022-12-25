@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -90,5 +91,16 @@ public static class Deserialize
         XDocument document = XDocument.Load(String.Concat(ConfigurationData.CsvFileDefault,"Configuration.xml"));
         XElement nozzlePostCountElement = document.Root?.Element("NozzlePostCount") ?? throw new InvalidOperationException();
         return int.Parse(nozzlePostCountElement.Value);
+    }
+    
+    public static PaymentTypeData.PaymentTypes DeserializePaymentType()
+    {
+        var fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\PaymentTypes.xml";
+        var xmlSerializer = new XmlSerializer(typeof(PaymentTypeData.PaymentTypes));
+
+
+
+        using var stream = new StreamReader(fileName);
+        return (PaymentTypeData.PaymentTypes) xmlSerializer.Deserialize(stream)! ?? throw new InvalidOperationException();
     }
 }
