@@ -18,10 +18,6 @@
 
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="LayoutPatterns.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <view:FinishPaymentConverter x:Key="FinishPaymentConverter" />
             <view:UserAccessLevelConverter x:Key="UserAccessLevelConverter" />
         </ResourceDictionary>
@@ -53,7 +49,8 @@
                     </Rectangle.DataContext>
 
                 </Rectangle>
-                <Label Content="{Binding UserAccessLevel, Converter={StaticResource UserAccessLevelConverter}}" Foreground="#FFE8F5E9" HorizontalAlignment="Center"/>
+                <Label Content="{Binding UserAccessLevel, Converter={StaticResource UserAccessLevelConverter}}"
+                       Foreground="#FFE8F5E9" HorizontalAlignment="Center" />
             </Grid>
             <Grid x:Name="NameFoot" Height="30" Width="400" Margin="10,10,0,0" HorizontalAlignment="Left"
                   VerticalAlignment="Top">
@@ -112,30 +109,105 @@
 
             </Rectangle>
         </StackPanel>
-        <Viewbox Grid.Row="0" Grid.Column="0" x:Name="MainBox" MaxHeight="1645" MaxWidth="1645" Margin="10,10,10,10"> 
-            <Canvas x:Name="MainMenuCenter" Width="800" Height="600" Margin="10,10,10,10" IsHitTestVisible="{Binding IsWindowFree}">
+        <Viewbox Grid.Row="0" Grid.Column="0" x:Name="MainBox" MaxHeight="1645" MaxWidth="1645" Margin="10,10,10,10">
+            <Canvas x:Name="MainMenuCenter" Width="800" Height="600" Margin="10,10,10,10"
+                    IsHitTestVisible="{Binding IsWindowFree}">
                 <Rectangle RadiusX="10" RadiusY="10" Fill="#FF1B5E20" MinWidth="800" MinHeight="600" />
                 <Grid Height="60" Width="760" Canvas.Left="20" Canvas.Top="19">
                     <Rectangle Width="760" Fill="#FF4CAF50" RadiusX="10" RadiusY="10" />
 
+                    <Popup x:Name="ReservesUserOnlyPopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True"
+                           PopupAnimation="Fade" Placement="Mouse">
+                        <Grid Margin="20">
+                            <Border Background="#FF81C784" Padding="10" CornerRadius="10">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="black" ShadowDepth="2" BlurRadius="15" />
+                                </Border.Effect>
+                                <StackPanel>
+                                    <TextBlock Text="Информация о резервуарах"
+                                               FontSize="22" Foreground="#FF388E3C" />
+                                    <DataGrid RowHeaderWidth="0" x:Name="TanksReservesInfo" AutoGenerateColumns="False"
+                                              CanUserAddRows="True" CanUserDeleteRows="True"
+                                              CanUserReorderColumns="False" CanUserResizeColumns="False"
+                                              CanUserResizeRows="False"
+                                              CanUserSortColumns="False" Margin="10,5,10,10" Background="#FFC8E6C9"
+                                              IsReadOnly="True"
+                                              BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0"
+                                              FontSize="16" FontFamily="Bahnschrift" HorizontalAlignment="Center"
+                                              ItemsSource="{Binding TanksReservesInfo}"
+                                              VerticalAlignment="Bottom" Width="{Binding Path=ActualWidth}"
+                                              Height="200">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header=" Название " Binding="{Binding Name}"
+                                                                MaxWidth="150" />
+                                            <DataGridTextColumn Header=" Резерв (литры) " Binding="{Binding Reserve}"
+                                                                MaxWidth="150" />
+                                            <DataGridTextColumn Header=" Цена " Binding="{Binding Price}"
+                                                                MaxWidth="100" />
+                                        </DataGrid.Columns>
+
+                                        <DataGrid.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="10" />
+                                            </Style>
+                                        </DataGrid.Resources>
+                                        <DataGrid.ColumnHeaderStyle>
+                                            <Style TargetType="{x:Type DataGridColumnHeader}">
+                                                <Setter Property="Background" Value="#A5D6A7" />
+                                                <Setter Property="Foreground" Value="#FF1B5E20" />
+                                            </Style>
+                                        </DataGrid.ColumnHeaderStyle>
+                                        <DataGrid.CellStyle>
+                                            <Style TargetType="{x:Type DataGridCell}">
+                                                <Setter Property="Background" Value="#C8E6C9" />
+                                                <Setter Property="BorderBrush" Value="#C8E6C9" />
+                                                <Setter Property="Foreground" Value="#FF1B5E20" />
+                                            </Style>
+                                        </DataGrid.CellStyle>
+                                        <DataGrid.RowStyle>
+                                            <Style TargetType="{x:Type DataGridRow}">
+                                                <Setter Property="Background" Value="#C8E6C9" />
+                                                <Setter Property="BorderBrush" Value="#C8E6C9" />
+                                                <Setter Property="Foreground" Value="#FF1B5E20" />
+                                            </Style>
+                                        </DataGrid.RowStyle>
+                                    </DataGrid>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Popup>
+
+                    <Popup x:Name="AccessDeniedPopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True"
+                           PopupAnimation="Fade" Placement="Mouse">
+                        <Grid Margin="20">
+                            <Border Background="#FF81C784" Padding="10" CornerRadius="10">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="black" ShadowDepth="2" BlurRadius="15" />
+                                </Border.Effect>
+                                <TextBlock Text="Доступ к данной конфигурации имеют лишь администраторы"
+                                           FontSize="20" Foreground="#FF388E3C" />
+                            </Border>
+                        </Grid>
+                    </Popup>
                     <StackPanel x:Name="FunctionalList" Orientation="Horizontal">
                         <Button x:Name="SystemButton" Content="Система" Height="40" Width="177.5" Margin="10,10,5,10"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                                BorderThickness="3,3,3,3" Click="SystemButton_OnClick"/>
+                                BorderThickness="3,3,3,3" Click="SystemButton_OnClick" />
+
                         <Button x:Name="FuelInfoButton" Content="Резервуары" Height="40" Width="177.5"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                                BorderThickness="3,3,3,3" Margin="5,10,5,10" Click="FuelInfoButton_OnClick"/>
+                                BorderThickness="3,3,3,3" Margin="5,10,5,10" Click="FuelInfoButton_OnClick" />
                         <Button x:Name="GoodsInfoButton" Content="Товары" Height="40" Width="177.5"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                                BorderThickness="3,3,3,3" Margin="5,10,5,10" Click="GoodsInfoButton_OnClick"/>
+                                BorderThickness="3,3,3,3" Margin="5,10,5,10" Click="GoodsInfoButton_OnClick" />
                         <Button x:Name="ShiftButton" Content="Смена" Height="40" Width="177.5"
                                 Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                                BorderThickness="3,3,3,3" Margin="5,10,5,10" />
+                                BorderThickness="3,3,3,3" Margin="5,10,5,10" Click="ShiftButton_OnClick" />
                     </StackPanel>
 
                 </Grid>
 
-                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Visible" 
+                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Visible"
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="500" Width="800"
                               Canvas.Left="10" Canvas.Top="90">
 
@@ -219,7 +291,8 @@
                                    ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="0,0,0,0"
                                    FontStretch="SemiCondensed" d:DataContext="{d:DesignInstance }" />
                     </Grid>
-                    <Grid x:Name="GoodsMainMenu" Height="300" Margin="10,10,10,0" VerticalAlignment="Top" IsHitTestVisible="{Binding IsWindowFree}">
+                    <Grid x:Name="GoodsMainMenu" Height="300" Margin="10,10,10,0" VerticalAlignment="Top"
+                          IsHitTestVisible="{Binding IsWindowFree}">
                         <Rectangle Fill="#FFC8E6C9" RadiusX="10" RadiusY="10" Margin="0,0,0,-5">
                             <Rectangle.DataContext>
                                 <ComponentModel:Win32Exception />
@@ -299,10 +372,12 @@
                             <Run Text="В" /><Run Language="ru-ru" Text="сего" /><Run Text=":" />
                         </TextBlock>
                         <TextBox x:Name="TotalAmountInfo" HorizontalAlignment="Left" Height="40" Margin="120,0,0,75"
-                                 Text="{Binding Path=TotalCostText, Mode=OneWay}" Width="270" Foreground="#FF1B5E20" Background="#FFC8E6C9"
+                                 Text="{Binding Path=TotalCostText, Mode=OneWay}" Width="270" Foreground="#FF1B5E20"
+                                 Background="#FFC8E6C9"
                                  BorderBrush="#FFA5D6A7" SelectionBrush="#FF2E7D32" SelectionTextBrush="#FFC8E6C9"
                                  VerticalAlignment="Bottom" FontSize="30" TextWrapping="WrapWithOverflow"
-                                 HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" IsReadOnly="True"
+                                 HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch"
+                                 IsReadOnly="True"
                                  VerticalScrollBarVisibility="Disabled" BorderThickness="3,3,3,3" MaxLength="4"
                                  Focusable="False" />
                         <TextBox x:Name="DepositedCash" HorizontalAlignment="Left" Height="30" Margin="121,0,0,41"
@@ -317,11 +392,14 @@
                                  FontSize="20" TextWrapping="WrapWithOverflow" HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Disabled"
                                  BorderThickness="3,3,3,3" MaxLength="4" Focusable="False" />
-                        <Button x:Name="FinishPaymentButton" Content="{Binding FinishPaymentType, Converter={StaticResource FinishPaymentConverter}}" HorizontalAlignment="Right" Height="63"
+                        <Button x:Name="FinishPaymentButton"
+                                Content="{Binding FinishPaymentType, Converter={StaticResource FinishPaymentConverter}}"
+                                HorizontalAlignment="Right" Height="63"
                                 Margin="0,0,17,7" VerticalAlignment="Bottom" Width="130" Background="#FF66BB6A"
                                 BorderBrush="#FF388E3C" Foreground="#FFE8F5E9" BorderThickness="0,0,0,0" FontSize="28"
                                 VerticalContentAlignment="Center" RenderTransformOrigin="0.5,0.5"
-                                d:DataContext="{d:DesignInstance }" Click="FinishPaymentButton_OnClick" IsHitTestVisible="{Binding IsPaymentReady}"/>
+                                d:DataContext="{d:DesignInstance }" Click="FinishPaymentButton_OnClick"
+                                IsHitTestVisible="{Binding IsPaymentReady}" />
                     </Grid>
                 </StackPanel>
             </Grid>

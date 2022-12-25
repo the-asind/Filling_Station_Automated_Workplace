@@ -16,13 +16,13 @@
           IsHitTestVisible="{Binding IsNozzlePostBusy, Converter={StaticResource InverseBooleanConverter}}">
         <Popup x:Name="MessagePopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
             <Grid Margin="20, 0, 20, 20">
-            <Border Background="#FF81C784" Padding="10" CornerRadius="10">
-                <Border.Effect>
-                    <DropShadowEffect Color="black" ShadowDepth="1" BlurRadius="19" />
-                </Border.Effect>
-                <TextBlock Text="Ошибка: Вы пытаетесь добавить топлива больше,&#10;чем имеется в резервуарах"
-                           Foreground="#FF388E3C" />
-            </Border>
+                <Border Background="#FF81C784" Padding="10" CornerRadius="10">
+                    <Border.Effect>
+                        <DropShadowEffect Color="black" ShadowDepth="1" BlurRadius="19" />
+                    </Border.Effect>
+                    <TextBlock Text="Ошибка: Вы пытаетесь добавить топлива больше,&#10;чем имеется в резервуарах"
+                               Foreground="#FF388E3C" />
+                </Border>
             </Grid>
         </Popup>
         <Rectangle Fill="#FF66BB6A" RadiusX="8" RadiusY="8" StrokeThickness="3" />

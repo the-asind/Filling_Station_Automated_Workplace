@@ -5,36 +5,34 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:view="clr-namespace:Filling_Station_Automated_Workplace.View"
         mc:Ignorable="d"
-        Title="Конфигурация резервуаров" Height="540" Width="540" ResizeMode="NoResize" AllowsTransparency="True" WindowStyle="None" Background="#00000000"
+        Title="Конфигурация резервуаров" Height="540" Width="540" ResizeMode="NoResize" AllowsTransparency="True"
+        WindowStyle="None" Background="#00000000"
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FontFamily="Bahnschrift">
     <Window.Resources>
-        <ContextMenu x:Key="RowContextMenu"
-                     StaysOpen="True">
-            <MenuItem x:Name="DeleteRowMenuItem"
-                      Header="Delete"
-                      Click="DeleteRowMenuItem_Click"/>
-        </ContextMenu>
     </Window.Resources>
-    
+
     <Grid Margin="20">
         <Grid.Effect>
-        <DropShadowEffect BlurRadius="25" Direction="-90"
-                          RenderingBias="Quality" ShadowDepth="2" />
+            <DropShadowEffect BlurRadius="25" Direction="-90"
+                              RenderingBias="Quality" ShadowDepth="2" />
         </Grid.Effect>
         <view:CustomChromaTemplate />
         <Grid Margin="0, 2, 0, 0">
-            <Label Content="Конфигурация резервуаров" VerticalAlignment="Top" Focusable="False" HorizontalContentAlignment="Center"
+            <Label Content="Конфигурация резервуаров" VerticalAlignment="Top" Focusable="False"
+                   HorizontalContentAlignment="Center"
                    Padding="0,0,0,0"
                    Grid.IsSharedSizeScope="True" Background="{x:Null}" Foreground="#FFE8F5E9" FontSize="24"
                    HorizontalAlignment="Center" />
-            <DataGrid RowHeaderWidth="0" x:Name="TanksConfigurationGrid" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"
+            <DataGrid RowHeaderWidth="0" x:Name="TanksConfigurationGrid" AutoGenerateColumns="False"
+                      CanUserAddRows="True" CanUserDeleteRows="True"
                       CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
                       CanUserSortColumns="False" Margin="80,50,80,100" Background="#FFC8E6C9"
                       BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0"
-                      FontSize="16" FontFamily="Bahnschrift" HorizontalAlignment="Center"  PreviewMouseRightButtonDown="DataGrid_PreviewMouseRightButtonDown"
+                      FontSize="16" FontFamily="Bahnschrift" HorizontalAlignment="Center"
+                      PreviewMouseRightButtonDown="DataGrid_PreviewMouseRightButtonDown"
                       VerticalAlignment="Bottom" Width="{Binding Path=ActualWidth}" Height="340">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header=" Название " Binding="{Binding Name}" MaxWidth="150"/>
+                    <DataGridTextColumn Header=" Название " Binding="{Binding Name}" MaxWidth="150" />
                     <DataGridTextColumn Header=" Резерв (литры) " Binding="{Binding Reserve}" MaxWidth="150" />
                     <DataGridTextColumn Header=" Цена " Binding="{Binding Price}" MaxWidth="100" />
                 </DataGrid.Columns>
@@ -57,10 +55,10 @@
                         <Setter Property="Foreground" Value="#FF1B5E20" />
                     </Style>
                 </DataGrid.CellStyle>
-                
+
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem x:Name="DeleteRowMenuItem" Header="Delete Row" Click="DeleteRowMenuItem_Click"/>
+                        <MenuItem x:Name="DeleteRowMenuItem" Header="Delete Row" Click="DeleteRowMenuItem_Click" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
 
@@ -72,11 +70,13 @@
                     </Style>
                 </DataGrid.RowStyle>
             </DataGrid>
-            <DockPanel LastChildFill="True" Margin="50,430,50,35" >
-                <Button x:Name="AcceptChangesButton" Content="Принять изменения" Click="AcceptChangesButton_Click" Padding="12, 0, 12, 0" Background="#FFA5D6A7"
-                        BorderBrush="#FF388E3C" Foreground="#FF1B5E20" BorderThickness="0" FontSize="18"/>
-                <Button x:Name="CancelChangesButton" Content="Отменить изменения" Click="CancelChangesButton_Click" Margin="10,0,0,0" Background="#FFA5D6A7"
-                        BorderBrush="#FF388E3C" Foreground="#FF1B5E20" BorderThickness="0" FontSize="18"/>
+            <DockPanel LastChildFill="True" Margin="50,430,50,35">
+                <Button x:Name="AcceptChangesButton" Content="Принять изменения" Click="AcceptChangesButton_Click"
+                        Padding="12, 0, 12, 0" Background="#FFA5D6A7"
+                        BorderBrush="#FF388E3C" Foreground="#FF1B5E20" BorderThickness="0" FontSize="18" />
+                <Button x:Name="CancelChangesButton" Content="Отменить изменения" Click="CancelChangesButton_Click"
+                        Margin="10,0,0,0" Background="#FFA5D6A7"
+                        BorderBrush="#FF388E3C" Foreground="#FF1B5E20" BorderThickness="0" FontSize="18" />
             </DockPanel>
         </Grid>
     </Grid>

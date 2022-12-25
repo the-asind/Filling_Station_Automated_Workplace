@@ -37,7 +37,7 @@ public interface INozzlePostViewModel
 
 public class ConcreteNozzlePostViewModel : INozzlePostDataProvider
 {
-    private NozzlePostData _nozzlePostData;
+    private readonly NozzlePostData _nozzlePostData;
 
     public DataTable NozzlePostDataTable => _nozzlePostData.NozzlePostDataTable;
 
@@ -66,7 +66,6 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
         NozzlelId = count;
     }
 
-    
 
     public DataTable NozzlePostDataTable => _nozzlePostData.NozzlePostDataTable;
     public ObservableCollection<string?> NozzlePostNames { get; }
@@ -87,7 +86,7 @@ public sealed class NozzlePostViewModel : INotifyPropertyChanged, INozzlePostVie
 
     public string TextPrice => Price.ToString("C2");
 
-    public double Summary => Price * LiterCount + 0;
+    public double Summary => Price * LiterCount;
 
     public string TextSummary => (Price * LiterCount).ToString("C2");
 

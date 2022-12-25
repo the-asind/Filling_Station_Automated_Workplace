@@ -3,12 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:global="clr-namespace:"
         mc:Ignorable="d"
         Deactivated="WindowClose"
         Title="Выбор товара" ResizeMode="NoResize" AllowsTransparency="True" WindowStyle="None" Background="#00000000"
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FontFamily="Bahnschrift">
-    
+
     <Grid>
         <Rectangle Fill="#FF81C784" RadiusX="20" RadiusY="20" StrokeThickness="6" Stroke="#FF43A047" MinWidth="600"
                    Width="{Binding Path=ActualWidth, ElementName=GoodsGrid}" Height="600">
@@ -37,7 +36,7 @@
                     VerticalAlignment="Bottom" Width="200" Background="#FFA5D6A7" BorderBrush="#FF388E3C"
                     Foreground="#FF1B5E20" FontSize="22" FontFamily="Bahnschrift" BorderThickness="0,0,0,0"
                     Margin="0,0,250,21" Click="ClearShoppingCart" />
-            
+
             <Button Content="добавить товары" HorizontalAlignment="Center" Height="40"
                     VerticalAlignment="Bottom" Width="200" Background="#FFA5D6A7" BorderBrush="#FF388E3C"
                     Foreground="#FF1B5E20" FontSize="22" FontFamily="Bahnschrift" BorderThickness="0,0,0,0"
@@ -86,21 +85,17 @@
                 Data="M530,2.5011104E-12 L540,2.5011104E-12 540,9.9999943 C540,4.4771485 535.52283,-3.8146948E-06 530,2.5011104E-12 z M0,2.5011104E-12 L10.000002,2.5011104E-12 C4.4771523,-3.8146948E-06 0,4.4771485 0,9.9999943 z"
                 Fill="#FF81C784" HorizontalAlignment="Center" Height="10" Margin="0,274,0,0" Stretch="Fill"
                 VerticalAlignment="Top" Width="{Binding Path=ActualWidth, ElementName=GoodsGrid}" />
-            <AdornerDecorator>
-                <TextBox x:Name="SearchGoodsTextBox" HorizontalAlignment="Center" Height="40" Margin="0,0,0,341"
-                         Width="340" Foreground="#FF1B5E20" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7"
-                         SelectionBrush="#FF2E7D32" SelectionTextBrush="#FFC8E6C9" VerticalAlignment="Bottom"
-                         FontSize="30"
-                         TextWrapping="WrapWithOverflow" HorizontalContentAlignment="Left"
+            <Grid Height="40" Margin="0,0,0,341" Width="340" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                <TextBox x:Name="SearchGoodsTextBox" Foreground="#FF1B5E20" Background="#FFC8E6C9"
+                         BorderBrush="#FFA5D6A7"
+                         SelectionBrush="#FF2E7D32" SelectionTextBrush="#FFC8E6C9"
+                         FontSize="30" TextWrapping="WrapWithOverflow" HorizontalContentAlignment="Left"
                          VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Disabled"
                          BorderThickness="3,3,3,3" TextChanged="SearchGoodsTextBox_OnTextChanged"
-                         GotFocus="SearchGoodsTextBox_OnGotFocus" >
-                    
-                    <global:WatermarkService.Watermark>
-                        <TextBlock FontSize="24" FontFamily="Bahnschrift" Padding="5,8,0,5">Поиск</TextBlock>
-                    </global:WatermarkService.Watermark>
-                </TextBox>
-            </AdornerDecorator>
+                         GotFocus="SearchGoodsTextBox_OnGotFocus" />
+                <Label x:Name="SearchGoodsPlaceholder" Content="Поиск" FontSize="28" Foreground="#FFA5D6A7" 
+                       IsHitTestVisible="False"/>
+            </Grid>
 
 
             <Label Content="Выбор товара" VerticalAlignment="Top" Focusable="False" HorizontalContentAlignment="Center"
@@ -117,8 +112,9 @@
                     </Style>
                 </Button.Resources>
             </Button>
-            
-            <Popup x:Name="MessagePopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade" Placement="Mouse">
+
+            <Popup x:Name="MessagePopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True"
+                   PopupAnimation="Fade" Placement="Mouse">
                 <Grid Margin="20">
                     <Border Background="#FF81C784" Padding="10" CornerRadius="10">
                         <Border.Effect>
@@ -139,7 +135,8 @@
                     <DataGridTextColumn Header=" Артикуль " Binding="{Binding Id}" IsReadOnly="True" />
                     <DataGridTextColumn Header=" Название " Binding="{Binding Name}" IsReadOnly="True" />
                     <DataGridTextColumn Header=" Кол-во " Binding="{Binding Count}" />
-                    <DataGridTextColumn Header=" Сумма " Binding="{Binding TotalCost, StringFormat='#.##'}" IsReadOnly="True" />
+                    <DataGridTextColumn Header=" Сумма " Binding="{Binding TotalCost, StringFormat='#.##'}"
+                                        IsReadOnly="True" />
                 </DataGrid.Columns>
 
                 <DataGrid.Resources>

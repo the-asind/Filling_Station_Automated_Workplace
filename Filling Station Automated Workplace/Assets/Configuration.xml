@@ -3,14 +3,14 @@
     <NozzlePostCount>4</NozzlePostCount>
     <PaymentTypes>
         <PaymentType>
-            <Name>Наличные</Name>
-            <IsActive>true</IsActive>
-            <IsCash>true</IsCash>
-        </PaymentType>
-        <PaymentType>
             <Name>Пластиковая карта</Name>
             <IsActive>true</IsActive>
             <IsCash>false</IsCash>
+        </PaymentType>
+        <PaymentType>
+            <Name>Наличные</Name>
+            <IsActive>true</IsActive>
+            <IsCash>true</IsCash>
         </PaymentType>
     </PaymentTypes>
 </Configuration>

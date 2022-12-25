@@ -5,10 +5,10 @@ using Filling_Station_Automated_Workplace.ViewModel;
 
 namespace Filling_Station_Automated_Workplace.View;
 
-public partial class Login : Window
+public partial class Login
 {
-    private LoginViewModel _viewModel;
-    
+    private readonly LoginViewModel _viewModel;
+
     public Login()
     {
         InitializeComponent();
@@ -25,14 +25,13 @@ public partial class Login : Window
     {
         try
         {
-            _viewModel.TryToEnter(LoginBox.Text, PasswordBox.Password );
+            _viewModel.TryToEnter(LoginBox.Text, PasswordBox.Password);
             Close();
         }
         catch (ArgumentException)
         {
             ErrorBox.Text = "Неверное имя пользователя или пароль!";
         }
-        
     }
 
     private void ClearPasswordBox(object sender, RoutedEventArgs e)

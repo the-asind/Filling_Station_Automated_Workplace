@@ -1,8 +1,7 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Data;
-using System.Windows;
 using Filling_Station_Automated_Workplace.Data;
+using Filling_Station_Automated_Workplace.Model;
 
 namespace Filling_Station_Automated_Workplace.ViewModel;
 
@@ -24,7 +23,6 @@ public class ConcreteGoodsSelectorViewModel : IGoodsDataProvider
     }
 }
 
-
 // Data interface
 public interface IGoodsDataProvider
 {
@@ -38,19 +36,19 @@ public class GoodsSelectorViewModel : IGoodsSelectorViewModel
 
     public GoodsSelectorViewModel(IGoodsDataProvider goodsData)
     {
-        this._goodsData = goodsData;
+        _goodsData = goodsData;
     }
-    
-    public DataTable ShoppingCartDataTable { get; set; }
-    
+
+    private DataTable? ShoppingCartDataTable { get; } = new();
+
     public DataTable GoodsDataTable => _goodsData.GoodsDataTable;
 
     //TODO: закончить перенос логики из GoodsSelectorView во ViewModel, чтоб по-человечески было.
     public void UpdateShoppingCartData(int index, int count)
     {
-        var row = ShoppingCartDataTable.Rows[index];
-        object?[] values = row.ItemArray;
-        var id = (int)(values[0] ?? 0);
+        var row = ShoppingCartDataTable?.Rows[index];
+        var values = row?.ItemArray;
+        var id = (int)(values?[0] ?? 0);
 
         try
         {
@@ -61,14 +59,11 @@ public class GoodsSelectorViewModel : IGoodsSelectorViewModel
             // Ignored
         }
     }
-    
+
     // Define a method to filter the GoodsDataTable by a given text
     public DataTable GetFilteredGoodsDataTable(string filterText)
     {
-        if (string.IsNullOrEmpty(filterText))
-        {
-            return GoodsDataTable;
-        }
+        if (string.IsNullOrEmpty(filterText)) return GoodsDataTable;
 
         try
         {

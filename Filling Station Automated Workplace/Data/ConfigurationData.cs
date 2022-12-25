@@ -1,16 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using System.Xml.Serialization;
-using Filling_Station_Automated_Workplace.Domain;
 
 namespace Filling_Station_Automated_Workplace.Data;
 
 [XmlRoot("Configuration")]
 public class ConfigurationData
 {
-
     [XmlElement("NozzlePostCount")] public int NozzlePostCount { get; set; }
 
     [XmlArray("PaymentTypes")]

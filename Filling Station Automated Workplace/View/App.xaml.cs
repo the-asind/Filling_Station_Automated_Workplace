@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using Filling_Station_Automated_Workplace.Domain;
 
-namespace Filling_Station_Automated_Workplace
+namespace Filling_Station_Automated_Workplace.View;
+
+/// <summary>
+///     Interaction logic for App.xaml
+/// </summary>
+public partial class App
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    public App()
     {
+        new DataSecure().EnsureAssetsExists();
     }
 }

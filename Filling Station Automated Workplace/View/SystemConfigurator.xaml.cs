@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data;
-using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -13,33 +10,47 @@ using System.Windows.Data;
 using System.Windows.Input;
 using Filling_Station_Automated_Workplace.Data;
 using Filling_Station_Automated_Workplace.Domain;
+using Filling_Station_Automated_Workplace.Model;
 
 namespace Filling_Station_Automated_Workplace.View;
 
 public partial class SystemConfigurator
 {
     private ConfigurationData Configuration { get; set; }
-    
+
     public SystemConfigurator()
     {
         InitializeComponent();
-        
-        new ObservableCollection<UsersData.User>(Deserialize.DeserializeUsersData().UsersList);
+
         var users = Deserialize.DeserializeUsersData();
         UserChangeGrid.ItemsSource = users.UsersList;
-        
+
         Configuration = Deserialize.DeserializeConfiguration();
         PaymentChangeGrid.DataContext = Configuration;
         PaymentChangeGrid.ItemsSource = Configuration.PaymentTypes;
     }
-    
-    private void AcceptChangesButton_Click(object sender, RoutedEventArgs e) => Close();
 
-    private void ChangeUsersButton_Clicked(object sender, RoutedEventArgs e) => UserChangePopup.IsOpen = true;
+    private void AcceptChangesButton_Click(object sender, RoutedEventArgs e)
+    {
+        CurrentSession.CreateNewReceipt(0);
+        CurrentSession.HistoryOfReceipts = new List<Receipt>();
+        Close();
+    }
 
-    private void ChangePostButton_Clicked(object sender, RoutedEventArgs e) => NozzleCountPopup.IsOpen = true;
+    private void ChangeUsersButton_Clicked(object sender, RoutedEventArgs e)
+    {
+        UserChangePopup.IsOpen = true;
+    }
 
-    private void ChangePaymentButton_Clicked(object sender, RoutedEventArgs e) => PaymentChangePopup.IsOpen = true;
+    private void ChangePostButton_Clicked(object sender, RoutedEventArgs e)
+    {
+        NozzleCountPopup.IsOpen = true;
+    }
+
+    private void ChangePaymentButton_Clicked(object sender, RoutedEventArgs e)
+    {
+        PaymentChangePopup.IsOpen = true;
+    }
 
     private void SetNewPostCountButton_Clicked(object sender, RoutedEventArgs e)
     {
@@ -54,16 +65,14 @@ public partial class SystemConfigurator
         {
             MessageBox.Show("Файл конфигурации не найден либо бит", "Ошибка сериализации", MessageBoxButton.OK,
                 MessageBoxImage.Error);
-            return;
         }
         catch (FormatException)
         {
             MessageBox.Show("Значение не является числом", "Неверное число", MessageBoxButton.OK,
                 MessageBoxImage.Error);
-            return;
         }
     }
-    
+
     private void NewPostCountClicked(object sender, RoutedEventArgs e)
     {
         var t = (TextBox)sender;
@@ -74,17 +83,16 @@ public partial class SystemConfigurator
     {
         e.Handled = Regex.IsMatch(e.Text);
     }
-    
-    private void HandleCanExecute(object sender, CanExecuteRoutedEventArgs e) {
 
-        if ( e.Command == ApplicationCommands.Cut ||
-             e.Command == ApplicationCommands.Copy ||
-             e.Command == ApplicationCommands.Paste ) {
-
+    private void HandleCanExecute(object sender, CanExecuteRoutedEventArgs e)
+    {
+        if (e.Command == ApplicationCommands.Cut ||
+            e.Command == ApplicationCommands.Copy ||
+            e.Command == ApplicationCommands.Paste)
+        {
             e.CanExecute = false;
             e.Handled = true;
         }
-
     }
 
     private static readonly Regex Regex = new("[^0-9]+"); //regex that matches disallowed text
@@ -116,32 +124,29 @@ public partial class SystemConfigurator
             dataGrid.SelectedItem = selectedRow;
         }
     }
-    
+
     private void UserChangeDisagreeButton_Clicked(object sender, RoutedEventArgs e)
     {
         UserChangePopup.IsOpen = false;
-        new ObservableCollection<UsersData.User>(Deserialize.DeserializeUsersData().UsersList);
-        var users = Deserialize.DeserializeUsersData();
+        UsersData.Users users = Deserialize.DeserializeUsersData();
         UserChangeGrid.ItemsSource = users.UsersList;
     }
-    
+
     private void UserChangeAcceptButton_Clicked(object sender, RoutedEventArgs e)
     {
         // Find rows with empty Login, Password, and FullName fields
         var emptyRows = UserChangeGrid.Items.OfType<UsersData.User>()
-            .Where(user => string.IsNullOrWhiteSpace(user.Login) && string.IsNullOrWhiteSpace(user.Password) && string.IsNullOrWhiteSpace(user.FullName))
+            .Where(user => string.IsNullOrWhiteSpace(user.Login) && string.IsNullOrWhiteSpace(user.Password) &&
+                           string.IsNullOrWhiteSpace(user.FullName))
             .ToList();
 
         // Remove the fully empty rows from the DataGrid
-        foreach (var row in emptyRows)
-        {
-            UserChangeGrid.Items.Remove(row);
-        }
-        
+        foreach (var row in emptyRows) UserChangeGrid.Items.Remove(row);
+
         // Check that at least one row exists in the data table
         if (UserChangeGrid.Items.OfType<UsersData.User>().All(user => user.AccessLevel != "admin"))
         {
-            var errorOutput = new string(String.Concat("Вы не можете не иметь ни одного пользователя,",
+            var errorOutput = new string(string.Concat("Вы не можете не иметь ни одного пользователя,",
                 "являющегося администратором."));
             MessageBox.Show(errorOutput, "Отсутствие администраторов", MessageBoxButton.OK,
                 MessageBoxImage.Error);
@@ -150,7 +155,8 @@ public partial class SystemConfigurator
 
         // Find rows with empty or whitespace-only Login, Password, or FullName fields
         var invalidRows = UserChangeGrid.Items.OfType<UsersData.User>()
-            .Where(user => string.IsNullOrWhiteSpace(user.Login) || string.IsNullOrWhiteSpace(user.Password) || string.IsNullOrWhiteSpace(user.FullName))
+            .Where(user => string.IsNullOrWhiteSpace(user.Login) || string.IsNullOrWhiteSpace(user.Password) ||
+                           string.IsNullOrWhiteSpace(user.FullName))
             .ToList();
 
         if (invalidRows.Any())
@@ -171,31 +177,27 @@ public partial class SystemConfigurator
     private void PaymentChangeAcceptButton_Clicked(object sender, RoutedEventArgs e)
     {
         // 1. Remove rows where Name is not set or is filled with spaces
-        Configuration.PaymentTypes.RemoveAll(pt => string.IsNullOrWhiteSpace(pt.Name));
+        Configuration.PaymentTypes?.RemoveAll(pt => string.IsNullOrWhiteSpace(pt.Name));
 
         // 2. Check if there's at least one payment type left
-        if (Configuration.PaymentTypes.Count == 0)
+        if (Configuration.PaymentTypes is { Count: 0 })
         {
             MessageBox.Show(
                 "Должен быть хотя бы один способ оплаты. Пожалуйста, добавьте тип оплаты перед сохранением",
                 "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             return;
-            
         }
 
-        if (Configuration.PaymentTypes.Any(payment => payment.IsActive))
+        if (Configuration.PaymentTypes != null && Configuration.PaymentTypes.Any(payment => payment.IsActive))
         {
             Serialize.SerializeConfiguration(Configuration);
             PaymentChangePopup.IsOpen = false;
             return;
         }
-        
+
         MessageBox.Show(
             "Хотя бы один способ оплаты должен быть активен. Пожалуйста, добавьте активный тип оплаты перед сохранением",
             "Непродающий продажник", MessageBoxButton.OK, MessageBoxImage.Error);
-        return;
-
-        
     }
 
     private void PaymentChangeDisagreeButton_Clicked(object sender, RoutedEventArgs e)
@@ -211,20 +213,14 @@ public class AccessLevelConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is string accessLevel)
-        {
-            return accessLevel == "admin";
-        }
+        if (value is string accessLevel) return accessLevel == "admin";
 
         return false;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is bool isAdmin)
-        {
-            return isAdmin ? "admin" : "user";
-        }
+        if (value is bool isAdmin) return isAdmin ? "admin" : "user";
 
         return "user";
     }

@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 using Filling_Station_Automated_Workplace.Data;
 using Microsoft.VisualBasic.FileIO;
@@ -15,13 +13,13 @@ public static class Deserialize
 {
     public static readonly string CsvFileDefault =
         Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\";
-    
+
     public static DataTable GetDataTableFromCsvFile(string csvFilePath)
     {
         var csvData = new DataTable();
         try
         {
-            using var csvReader = new TextFieldParser(String.Concat(CsvFileDefault, csvFilePath));
+            using var csvReader = new TextFieldParser(string.Concat(CsvFileDefault, csvFilePath));
             csvReader.SetDelimiters(";");
             csvReader.HasFieldsEnclosedInQuotes = true;
             var colFields = csvReader.ReadFields();
@@ -44,34 +42,31 @@ public static class Deserialize
                 csvData.Rows.Add(fieldData);
             }
         }
-        catch (Exception ex)
+        catch 
         {
             // ignored
         }
 
         return csvData;
     }
-    
+
     public static double GetTankReserveById(int id)
     {
         // Read the data from Tanks.csv
-        string csvData = File.ReadAllText(String.Concat(CsvFileDefault,"Tanks.csv"));
-    
-        string[] lines = csvData.Split('\n');
-    
+        var csvData = File.ReadAllText(string.Concat(CsvFileDefault, "Tanks.csv"));
+
+        var lines = csvData.Split('\n');
+
         // Find the line with the matching id
-        foreach (string line in lines)
+        foreach (var line in lines)
         {
             if (line == lines[0]) continue;
-            
-            string[] fields = line.Split(';');
-            int lineId = int.Parse(fields[0]);
-            if (lineId == id)
-            {
-                return double.Parse(fields[2], CultureInfo.GetCultureInfo("en-US"));
-            }
+
+            var fields = line.Split(';');
+            var lineId = int.Parse(fields[0]);
+            if (lineId == id) return double.Parse(fields[2], CultureInfo.GetCultureInfo("en-US"));
         }
-    
+
         // If no matching id was found, return 0
         return 0;
     }
@@ -79,21 +74,14 @@ public static class Deserialize
     public static UsersData.Users DeserializeUsersData()
     {
         var fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\Users.xml";
-        XmlSerializer serializer = new XmlSerializer(typeof(UsersData.Users));
+        var serializer = new XmlSerializer(typeof(UsersData.Users));
 
-        using FileStream fs = new FileStream(fileName, FileMode.Open);
+        using var fs = new FileStream(fileName, FileMode.Open);
         var users = (UsersData.Users)serializer.Deserialize(fs)!;
 
         return users;
     }
-    
-    public static int GetNozzlePostCountFromXml()
-    {
-        XDocument document = XDocument.Load(String.Concat(CsvFileDefault,"Configuration.xml"));
-        XElement nozzlePostCountElement = document.Root?.Element("NozzlePostCount") ?? throw new InvalidOperationException();
-        return int.Parse(nozzlePostCountElement.Value);
-    }
-    
+
     public static ConfigurationData DeserializeConfiguration()
     {
         var fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Assets\Configuration.xml";
@@ -105,4 +93,3 @@ public static class Deserialize
         }
     }
 }
-

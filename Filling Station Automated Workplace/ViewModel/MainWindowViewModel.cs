@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using Filling_Station_Automated_Workplace.Data;
 using Filling_Station_Automated_Workplace.Domain;
@@ -144,6 +145,16 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
         }
     }
 
+    public double TotalCost
+    {
+        get
+        {
+            if (SelectedNozzlePostInstance != null)
+                return SelectedNozzlePostInstance.Summary + GoodsSummary;
+            return GoodsSummary;
+        }
+    }
+
     public void SetGoodsSummary(double getGoodsSummary)
     {
         GoodsSummary = getGoodsSummary;
@@ -185,7 +196,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
 
     public void UpdateReceiptItems(Receipt receipt)
     {
-        ReceiptItems = new ObservableCollection<ShoppingCartItem>(ShoppingCartItem.IUpdate(receipt));
+        ReceiptItems = new ObservableCollection<ShoppingCartItem>(ShoppingCartItem.UpdateCart(receipt));
         OnPropertyChanged(nameof(ReceiptItems));
         OnPropertyChanged(nameof(GoodsSummary));
         OnPropertyChanged(nameof(TextGoodsSummary));
@@ -201,7 +212,8 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
         {
             Serialize.UpdateGoodsFile(ReceiptItems);
 
-            CurrentSession.CreateNewReceipt();
+            OnPropertyChanged(nameof(TotalCost));
+            CurrentSession.CreateNewReceipt(TotalCost);
             UpdateReceiptItems(CurrentSession.CurrentReceipt);
             SetGoodsSummary(CurrentSession.CurrentReceipt.GetGoodsSummary());
 
@@ -262,6 +274,13 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged, IMainWindowVie
             OnPropertyChanged(nameof(UserAccessLevel));
         }
     }
+
+    public void UpdateTanksReservesInfo()
+    {
+        OnPropertyChanged(nameof(TanksReservesInfo));
+    }
+
+    public DataView TanksReservesInfo => Deserialize.GetDataTableFromCsvFile("Tanks.csv").DefaultView;
 }
 
 public class FillUpChangedMessage

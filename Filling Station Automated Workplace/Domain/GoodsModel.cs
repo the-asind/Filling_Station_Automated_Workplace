@@ -7,7 +7,7 @@ namespace Filling_Station_Automated_Workplace.Domain;
 
 public static class GoodsModel
 {
-    public static (string?, double?) GetNameAndPriceById(int id)
+    public static (string?, double) GetNameAndPriceById(int id)
     {
         // Create an instance of the GoodsData class
         var goodsData = new GoodsData();
@@ -23,7 +23,7 @@ public static class GoodsModel
                     CultureInfo.InvariantCulture))
             : throw new ValueUnavailableException($"Не удалось найти {id}");
     }
-    
+
     public static double GetPriceById(int id)
     {
         // Create an instance of the GoodsData class

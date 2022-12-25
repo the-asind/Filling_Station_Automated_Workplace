@@ -1,6 +1,7 @@
-namespace Filling_Station_Automated_Workplace.ViewModel;
-
-public class Payment
+namespace Filling_Station_Automated_Workplace.Model
 {
-    public int Id { get; set; }
+    public class Payment
+    {
+        public int Id { get; set; }
+    }
 }

@@ -32,7 +32,7 @@ public partial class GoodsSelector
         ShowShoppingCartChanges();
         GoodsGrid.GridLinesVisibility = DataGridGridLinesVisibility.All;
     }
-    
+
     private void Row_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         try
@@ -45,7 +45,8 @@ public partial class GoodsSelector
             var itemId = int.Parse(Convert.ToString(dr1?.ItemArray[0]) ?? throw new InvalidOperationException());
             var quantity = double.Parse(Convert.ToString(dr1?.ItemArray[2]) ?? throw new InvalidOperationException());
 
-            CurrentSession.CurrentReceipt.AddIdToCommodityItem(itemId, quantity);  
+
+            CurrentSession.CurrentReceipt.AddIdToCommodityItem(itemId, quantity);
             ShowShoppingCartChanges();
         }
         catch
@@ -58,15 +59,13 @@ public partial class GoodsSelector
     {
         var t = (TextBox)sender;
         var filterText = t.Text.ToLower();
-        
-        DataTable filteredDataTable = _viewModel.GetFilteredGoodsDataTable(filterText);
-        
+
+        var filteredDataTable = _viewModel.GetFilteredGoodsDataTable(filterText);
+
         if (filteredDataTable.Rows.Count == 0)
-        {
             // If the filtered DataTable is empty, set the ItemsSource to the last matching option that was displayed
             return;
-        }
-        
+
         GoodsGrid.ItemsSource = filteredDataTable.DefaultView;
     }
 
@@ -74,6 +73,7 @@ public partial class GoodsSelector
     {
         var t = (TextBox)sender;
         t.Text = "";
+        SearchGoodsPlaceholder.Visibility = Visibility.Hidden;
     }
 
     private void ShoppingCartGrid_OnCellEditEnding(object? sender, DataGridCellEditEndingEventArgs e)
@@ -108,7 +108,7 @@ public partial class GoodsSelector
         _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentSession.CurrentReceipt);
 
         var row = _shoppingCartGoodsTable?.Rows[index];
-        object?[]? values = row?.ItemArray;
+        var values = row?.ItemArray;
         var id = (int)(values?[0] ?? 0);
 
         try
@@ -147,7 +147,7 @@ public partial class GoodsSelector
                 // Ignored
             }
     }
-    
+
     private void ShowShoppingCartChanges()
     {
         _shoppingCartGoodsTable = ShoppingCartItem.Update(CurrentSession.CurrentReceipt);
@@ -172,6 +172,5 @@ public partial class GoodsSelector
         {
             // Ignored
         }
-        
     }
 }

@@ -4,25 +4,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:view="clr-namespace:Filling_Station_Automated_Workplace.View"
-        xmlns:local="clr-namespace:Filling_Station_Automated_Workplace.ViewModel"
         mc:Ignorable="d"
-        Title="Конфигурация резервуаров" Height="540" Width="540" ResizeMode="NoResize" AllowsTransparency="True" WindowStyle="None" Background="#00000000"
+        Title="Конфигурация резервуаров" Height="540" Width="540" ResizeMode="NoResize" AllowsTransparency="True"
+        WindowStyle="None" Background="#00000000"
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FontFamily="Bahnschrift">
     <Window.Resources>
-        <view:AccessLevelConverter x:Key="accessLevelConverter"/>
-        <ContextMenu x:Key="RowContextMenu"
-                     StaysOpen="True">
-            <MenuItem x:Name="DeleteRowMenuItem"
-                      Header="Delete"
-                      Click="DeleteRowMenuItem_Click"/>
-        </ContextMenu>
+        <view:AccessLevelConverter x:Key="accessLevelConverter" />
     </Window.Resources>
     <Grid Margin="20">
         <Grid.Effect>
             <DropShadowEffect BlurRadius="25" Direction="-90"
                               RenderingBias="Quality" ShadowDepth="2" />
         </Grid.Effect>
-        <Popup x:Name="NozzleCountPopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade" Placement="Mouse">
+        <Popup x:Name="NozzleCountPopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True"
+               PopupAnimation="Fade" Placement="Mouse">
             <Grid Margin="20">
                 <Border Background="#FF81C784" Padding="10" CornerRadius="10">
                     <Border.Effect>
@@ -37,16 +32,19 @@
                                  SelectionBrush="#FF2E7D32" SelectionTextBrush="#FFC8E6C9" VerticalAlignment="Top"
                                  FontSize="22" TextWrapping="WrapWithOverflow" HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Disabled"
-                                 GotFocus="NewPostCountClicked" PreviewTextInput="NewPostCountInput" CommandManager.PreviewCanExecute="HandleCanExecute"
+                                 GotFocus="NewPostCountClicked" PreviewTextInput="NewPostCountInput"
+                                 CommandManager.PreviewCanExecute="HandleCanExecute"
                                  BorderThickness="3,3,3,3" MaxLength="2" />
-                        <Button Content="Принять" Click="SetNewPostCountButton_Clicked" Padding="5" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                                BorderThickness="2,2,2,2" FontSize="16"/>
+                        <Button Content="Принять" Click="SetNewPostCountButton_Clicked" Padding="5"
+                                Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
+                                BorderThickness="2,2,2,2" FontSize="16" />
                     </StackPanel>
                 </Border>
             </Grid>
         </Popup>
-        
-        <Popup x:Name="UserChangePopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade" Placement="Mouse">
+
+        <Popup x:Name="UserChangePopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True"
+               PopupAnimation="Fade" Placement="Mouse">
             <Grid Margin="20">
                 <Border Background="#FF81C784" Padding="10" CornerRadius="10">
                     <Border.Effect>
@@ -55,62 +53,71 @@
                     <StackPanel>
                         <TextBlock Text="Заполните поля пользователя"
                                    FontSize="20" Foreground="#FF388E3C" />
-                        <DataGrid RowHeaderWidth="0" x:Name="UserChangeGrid" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"
-                          CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
-                          CanUserSortColumns="False" Margin="20,20,20,40" Background="#FFC8E6C9"
-                          BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0" ItemsSource="{Binding UsersCollection}" 
-                          FontSize="16" FontFamily="Bahnschrift" HorizontalAlignment="Center"  PreviewMouseRightButtonDown="ChangeGrid_PreviewMouseRightButtonDown"
-                          VerticalAlignment="Bottom" Width="{Binding Path=ActualWidth}" Height="300">
+                        <DataGrid RowHeaderWidth="0" x:Name="UserChangeGrid" AutoGenerateColumns="False"
+                                  CanUserAddRows="True" CanUserDeleteRows="True"
+                                  CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
+                                  CanUserSortColumns="False" Margin="20,20,20,40" Background="#FFC8E6C9"
+                                  BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0"
+                                  ItemsSource="{Binding UsersCollection}"
+                                  FontSize="16" FontFamily="Bahnschrift" HorizontalAlignment="Center"
+                                  PreviewMouseRightButtonDown="ChangeGrid_PreviewMouseRightButtonDown"
+                                  VerticalAlignment="Bottom" Width="{Binding Path=ActualWidth}" Height="300">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header=" Логин " Binding="{Binding Login}" MaxWidth="120"/>
+                                <DataGridTextColumn Header=" Логин " Binding="{Binding Login}" MaxWidth="120" />
                                 <DataGridTextColumn Header=" Пароль " Binding="{Binding Password}" MaxWidth="120" />
                                 <DataGridTextColumn Header=" Полное имя " Binding="{Binding FullName}" MaxWidth="320" />
-                                <DataGridCheckBoxColumn Header=" Админ. права " Binding="{Binding AccessLevel, Converter={StaticResource accessLevelConverter}}" MaxWidth="120" />
+                                <DataGridCheckBoxColumn Header=" Админ. права "
+                                                        Binding="{Binding AccessLevel, Converter={StaticResource accessLevelConverter}}"
+                                                        MaxWidth="120" />
                             </DataGrid.Columns>
 
-                        <DataGrid.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="10" />
-                            </Style>
-                        </DataGrid.Resources>
-                        <DataGrid.ColumnHeaderStyle>
-                            <Style TargetType="{x:Type DataGridColumnHeader}">
-                                <Setter Property="Background" Value="#A5D6A7" />
-                                <Setter Property="Foreground" Value="#FF1B5E20" />
-                            </Style>
-                        </DataGrid.ColumnHeaderStyle>
-                        <DataGrid.CellStyle>
-                            <Style TargetType="{x:Type DataGridCell}">
-                                <Setter Property="Background" Value="#C8E6C9" />
-                                <Setter Property="BorderBrush" Value="#C8E6C9" />
-                                <Setter Property="Foreground" Value="#FF1B5E20" />
-                            </Style>
-                        </DataGrid.CellStyle>
-                        
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Delete Row" Click="DeleteRowMenuItem_Click"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
+                            <DataGrid.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="10" />
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}">
+                                    <Setter Property="Background" Value="#A5D6A7" />
+                                    <Setter Property="Foreground" Value="#FF1B5E20" />
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="{x:Type DataGridCell}">
+                                    <Setter Property="Background" Value="#C8E6C9" />
+                                    <Setter Property="BorderBrush" Value="#C8E6C9" />
+                                    <Setter Property="Foreground" Value="#FF1B5E20" />
+                                </Style>
+                            </DataGrid.CellStyle>
 
-                        <DataGrid.RowStyle>
-                            <Style TargetType="{x:Type DataGridRow}">
-                                <Setter Property="Background" Value="#C8E6C9" />
-                                <Setter Property="BorderBrush" Value="#C8E6C9" />
-                                <Setter Property="Foreground" Value="#FF1B5E20" />
-                            </Style>
-                        </DataGrid.RowStyle>
-                    </DataGrid>
-                        <Button Content="Принять" Click="UserChangeAcceptButton_Clicked" Padding="5" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                                BorderThickness="2,2,2,2" FontSize="16"/>
-                        <Button Content="Отменить" Click="UserChangeDisagreeButton_Clicked" Padding="5" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                                BorderThickness="2,2,2,2" FontSize="16"/>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Delete Row" Click="DeleteRowMenuItem_Click" />
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
+
+                            <DataGrid.RowStyle>
+                                <Style TargetType="{x:Type DataGridRow}">
+                                    <Setter Property="Background" Value="#C8E6C9" />
+                                    <Setter Property="BorderBrush" Value="#C8E6C9" />
+                                    <Setter Property="Foreground" Value="#FF1B5E20" />
+                                </Style>
+                            </DataGrid.RowStyle>
+                        </DataGrid>
+                        <Button Content="Принять" Click="UserChangeAcceptButton_Clicked" Padding="5"
+                                Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
+                                BorderThickness="2,2,2,2" FontSize="16" />
+                        <Button Content="Отменить" Click="UserChangeDisagreeButton_Clicked" Padding="5"
+                                Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
+                                BorderThickness="2,2,2,2" FontSize="16" />
                     </StackPanel>
                 </Border>
             </Grid>
         </Popup>
-        
-        <Popup x:Name="PaymentChangePopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade" Placement="Mouse">
+
+
+        <Popup x:Name="PaymentChangePopup" IsOpen="False" StaysOpen="False" AllowsTransparency="True"
+               PopupAnimation="Fade" Placement="Mouse">
             <Grid Margin="20">
                 <Border Background="#FF81C784" Padding="10" CornerRadius="10">
                     <Border.Effect>
@@ -119,76 +126,90 @@
                     <StackPanel>
                         <TextBlock Text="Отредактируйте или отключите способы оплаты"
                                    FontSize="20" Foreground="#FF388E3C" />
-                        <DataGrid RowHeaderWidth="0" x:Name="PaymentChangeGrid" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"
-                          CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
-                          CanUserSortColumns="False" Margin="20,20,20,40" Background="#FFC8E6C9"
-                          BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0" ItemsSource="{Binding Configuration.PaymentTypes}" 
-                          FontSize="16" FontFamily="Bahnschrift" HorizontalAlignment="Center"  PreviewMouseRightButtonDown="ChangeGrid_PreviewMouseRightButtonDown"
-                          VerticalAlignment="Bottom" Width="{Binding Path=ActualWidth}" Height="300">
+                        <DataGrid RowHeaderWidth="0" x:Name="PaymentChangeGrid" AutoGenerateColumns="False"
+                                  CanUserAddRows="True" CanUserDeleteRows="True"
+                                  CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
+                                  CanUserSortColumns="False" Margin="20,20,20,40" Background="#FFC8E6C9"
+                                  BorderBrush="#FF66BB6A" Foreground="#FF1B5E20" BorderThickness="0,0,0,0"
+                                  ItemsSource="{Binding Configuration.PaymentTypes}"
+                                  FontSize="16" FontFamily="Bahnschrift" HorizontalAlignment="Center"
+                                  PreviewMouseRightButtonDown="ChangeGrid_PreviewMouseRightButtonDown"
+                                  VerticalAlignment="Bottom" Width="{Binding Path=ActualWidth}" Height="300">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header=" Название " Binding="{Binding Name}" MaxWidth="220"/>
+                                <DataGridTextColumn Header=" Название " Binding="{Binding Name}" MaxWidth="220" />
                                 <DataGridCheckBoxColumn Header=" Активен " Binding="{Binding IsActive}" MaxWidth="100" />
-                                <DataGridCheckBoxColumn Header=" Предполагает сдачу " Binding="{Binding IsCash}" MaxWidth="220" />
+                                <DataGridCheckBoxColumn Header=" Предполагает сдачу " Binding="{Binding IsCash}"
+                                                        MaxWidth="220" />
                             </DataGrid.Columns>
 
-                        <DataGrid.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="10" />
-                            </Style>
-                        </DataGrid.Resources>
-                        <DataGrid.ColumnHeaderStyle>
-                            <Style TargetType="{x:Type DataGridColumnHeader}">
-                                <Setter Property="Background" Value="#A5D6A7" />
-                                <Setter Property="Foreground" Value="#FF1B5E20" />
-                            </Style>
-                        </DataGrid.ColumnHeaderStyle>
-                        <DataGrid.CellStyle>
-                            <Style TargetType="{x:Type DataGridCell}">
-                                <Setter Property="Background" Value="#C8E6C9" />
-                                <Setter Property="BorderBrush" Value="#C8E6C9" />
-                                <Setter Property="Foreground" Value="#FF1B5E20" />
-                            </Style>
-                        </DataGrid.CellStyle>
-                        
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Delete Row" Click="DeleteRowMenuItem_Click"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
+                            <DataGrid.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="10" />
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="{x:Type DataGridColumnHeader}">
+                                    <Setter Property="Background" Value="#A5D6A7" />
+                                    <Setter Property="Foreground" Value="#FF1B5E20" />
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="{x:Type DataGridCell}">
+                                    <Setter Property="Background" Value="#C8E6C9" />
+                                    <Setter Property="BorderBrush" Value="#C8E6C9" />
+                                    <Setter Property="Foreground" Value="#FF1B5E20" />
+                                </Style>
+                            </DataGrid.CellStyle>
 
-                        <DataGrid.RowStyle>
-                            <Style TargetType="{x:Type DataGridRow}">
-                                <Setter Property="Background" Value="#C8E6C9" />
-                                <Setter Property="BorderBrush" Value="#C8E6C9" />
-                                <Setter Property="Foreground" Value="#FF1B5E20" />
-                            </Style>
-                        </DataGrid.RowStyle>
-                    </DataGrid>
-                        <Button Content="Принять" Click="PaymentChangeAcceptButton_Clicked" Padding="5" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                                BorderThickness="2,2,2,2" FontSize="16"/>
-                        <Button Content="Отменить" Click="PaymentChangeDisagreeButton_Clicked" Padding="5" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                                BorderThickness="2,2,2,2" FontSize="16"/>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Delete Row" Click="DeleteRowMenuItem_Click" />
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
+
+                            <DataGrid.RowStyle>
+                                <Style TargetType="{x:Type DataGridRow}">
+                                    <Setter Property="Background" Value="#C8E6C9" />
+                                    <Setter Property="BorderBrush" Value="#C8E6C9" />
+                                    <Setter Property="Foreground" Value="#FF1B5E20" />
+                                </Style>
+                            </DataGrid.RowStyle>
+                        </DataGrid>
+                        <Button Content="Принять" Click="PaymentChangeAcceptButton_Clicked" Padding="5"
+                                Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
+                                BorderThickness="2,2,2,2" FontSize="16" />
+                        <Button Content="Отменить" Click="PaymentChangeDisagreeButton_Clicked" Padding="5"
+                                Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
+                                BorderThickness="2,2,2,2" FontSize="16" />
                     </StackPanel>
                 </Border>
             </Grid>
         </Popup>
         <view:CustomChromaTemplate />
         <Grid Margin="0, 2, 0, 0">
-            <Label Content="Конфигурация системы" VerticalAlignment="Top" Focusable="False" HorizontalContentAlignment="Center"
+            <Label Content="Конфигурация системы" VerticalAlignment="Top" Focusable="False"
+                   HorizontalContentAlignment="Center"
                    Padding="0,0,0,0"
                    Grid.IsSharedSizeScope="True" Background="{x:Null}" Foreground="#FFE8F5E9" FontSize="24"
                    HorizontalAlignment="Center" />
             <StackPanel Margin="50,70,50,140">
-                <Button x:Name="ChangeUsersButton" Content="Редактировать пользователей" Click="ChangeUsersButton_Clicked" Padding="20" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                        BorderThickness="3,3,3,3" FontSize="18" Margin="30, 0, 30, 20"/>
-                <Button x:Name="ChangePostButton" Content="Редактировать количество постов" Click="ChangePostButton_Clicked" Padding="20" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                        BorderThickness="3,3,3,3" FontSize="18" Margin="30, 20, 30, 20"/>
-                <Button x:Name="ChangePaymentButton" Content="Редактировать виды оплаты" Click="ChangePaymentButton_Clicked" Padding="20" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7" Foreground="#FF1B5E20"
-                        BorderThickness="3,3,3,3" FontSize="18" Margin="30, 20, 30, 0"/>
+                <Button x:Name="ChangeUsersButton" Content="Редактировать пользователей"
+                        Click="ChangeUsersButton_Clicked" Padding="20" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7"
+                        Foreground="#FF1B5E20"
+                        BorderThickness="3,3,3,3" FontSize="18" Margin="30, 0, 30, 20" />
+                <Button x:Name="ChangePostButton" Content="Редактировать количество постов"
+                        Click="ChangePostButton_Clicked" Padding="20" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7"
+                        Foreground="#FF1B5E20"
+                        BorderThickness="3,3,3,3" FontSize="18" Margin="30, 20, 30, 20" />
+                <Button x:Name="ChangePaymentButton" Content="Редактировать виды оплаты"
+                        Click="ChangePaymentButton_Clicked" Padding="20" Background="#FFC8E6C9" BorderBrush="#FFA5D6A7"
+                        Foreground="#FF1B5E20"
+                        BorderThickness="3,3,3,3" FontSize="18" Margin="30, 20, 30, 0" />
             </StackPanel>
-            <DockPanel LastChildFill="True" Margin="50,400,50,35" >
-                <Button x:Name="AcceptChangesButton" Content="Завершить конфигурирование системы" Click="AcceptChangesButton_Click" Padding="12, 12, 12, 12" Background="#FFA5D6A7"
-                        BorderBrush="#FF388E3C" Foreground="#FF1B5E20" BorderThickness="0" FontSize="18"/>
+            <DockPanel LastChildFill="True" Margin="50,400,50,35">
+                <Button x:Name="AcceptChangesButton" Content="Завершить конфигурирование системы"
+                        Click="AcceptChangesButton_Click" Padding="12, 12, 12, 12" Background="#FFA5D6A7"
+                        BorderBrush="#FF388E3C" Foreground="#FF1B5E20" BorderThickness="0" FontSize="18" />
             </DockPanel>
         </Grid>
     </Grid>
