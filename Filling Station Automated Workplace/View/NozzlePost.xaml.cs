@@ -63,6 +63,8 @@ public partial class NozzlePost
 
     private void SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        LiterAmount.Text = "";
+        
         if (sender is not ComboBox { SelectedItem: DataRowView rowView }) return;
 
         var selectedString = rowView["Name"].ToString();
@@ -120,6 +122,32 @@ public class ProgressToEndPointConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value is double progress) return new Point(0.5, 1 - progress);
+
+        return new Point(0.5, 1);
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException();
+    }
+}
+
+public class ProgressToNumberGradientFillingConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is double progress)
+        {
+            const double minimum = 0.725;
+            const double maximum = 0.905;
+            
+            return progress switch
+            {
+                < minimum => new Point(0.5, 1),
+                < maximum => new Point(0.5, 1 - (progress - minimum) / (maximum - minimum)),
+                _ => new Point(0.5, 0)
+            };
+        }
 
         return new Point(0.5, 1);
     }
